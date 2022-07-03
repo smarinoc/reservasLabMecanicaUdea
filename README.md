@@ -33,6 +33,7 @@ Hemos definido las siguientes tecnologías:
 7. Paquete de seguridad (opcional) 
 8. Paquete de busquedas
 9. Paquete de escalabilidad 
+10. Paquete de reservas
 
 | ROL # | Roles |
 | ------ | ------ |
@@ -67,6 +68,9 @@ Definición de historias usuario:
 | HU-002 | El administrador puede agregar usuarios (se crea usuario en estado activo), validar usuarios (activo/inactivo).|
 | HU-003 | El usuario puede registrarse ingresando sus datos y aceptando el habeas data que requiera el laboratorio con `su correo de google`.|
 | HU-004 | El usuario puede auntenticarse desde `su correo de google` siempre y cuando esté habilitado.|
+
+| HU # | Descripción del paquete de reservas|
+| ------ | ------ |
 | HU-005 | El usuario puede seleccionar el/los horario(s) que desea reservar desde una interfaz gráfica.|
 | HU-006 | El usuario puede seleccionar la(s) maquinaria(s) que desea reservar.|
 | HU-007 | El usuario puede completar la reserva.|
