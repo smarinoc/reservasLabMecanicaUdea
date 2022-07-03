@@ -75,15 +75,15 @@ Definición de historias usuario:
 | HU-006 | El usuario puede seleccionar la(s) maquinaria(s) que desea reservar.|
 | HU-007 | El usuario puede completar la reserva.|
 | HU-008 | El usuario puede consultar, editar HU-005, cancelar su(s) reserva(s).|
-| HU-008 | El administrador y superusuario pueden habilitar y deshabilitar horarios.|
-| HU-009 | El administrador y superusuario pueden nombrar las secciones de horario de acuerdo a su uso.|
-| HU-010 | El administrador y superusuario pueden crear, modificar, deshabilitar maquinas.|
+| HU-009 | El administrador y superusuario pueden habilitar y deshabilitar horarios.|
+| HU-010 | El administrador y superusuario pueden nombrar las secciones de horario de acuerdo a su uso.|
+| HU-011 | El administrador y superusuario pueden crear, modificar, deshabilitar maquinas.|
 | HU-012 | El administrador y superusuario pueden asignar maquinas a horarios.|
 | HU-013 | El administrador y superusuario pueden establecer reglas de horas maximo de uso semanal por usuario.|
-| HU-013 | El administrador y superusuario pueden crear reservas genericas HU-005, HU-008.|
-| HU-014 | El administrador y superusuario pueden deshabilitar todas las reservas de la semana|
-| HU-015 | El administrador y superusuario pueden deshabilitar usuarios**|
-| HU-015 | El administrador y superusuario pueden generar informes con un rango de fechas que ellos determinen ( por días, mensual, trimestral, semestral, anual, o cualquier cantidad de meses que seleccione).|
+| HU-014 | El administrador y superusuario pueden crear reservas genericas HU-005, HU-008.|
+| HU-015 | El administrador y superusuario pueden deshabilitar todas las reservas de la semana|
+| HU-016 | El administrador y superusuario pueden deshabilitar usuarios**|
+| HU-017 | El administrador y superusuario pueden generar informes con un rango de fechas que ellos determinen ( por días, mensual, trimestral, semestral, anual, o cualquier cantidad de meses que seleccione).|
 
 ### En este sistema, aún no está claro como el laboratorio validaría que las horas reservadas fueron utilizadas. En el momento, el laboratorio valida este tipo de cuestiones desde unos formatos en papel que diligencian los usuarios dentro del laboratorio.
 
