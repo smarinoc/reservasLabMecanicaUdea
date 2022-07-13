@@ -85,6 +85,74 @@ Definición de historias usuario:
 | HU-016 | El administrador y superusuario pueden deshabilitar usuarios**|
 | HU-017 | El administrador y superusuario pueden generar informes con un rango de fechas que ellos determinen ( por días, mensual, trimestral, semestral, anual, o cualquier cantidad de meses que seleccione).|
 
+#HU-000 HU-001
+
+Comienzo a proporcionar mis datos basado que nadie excepto yo tengo los derechos exclusivos sobre ellos, dicho esto, me acojo a la ley vigente de Habeas Data que tiene este sitio resevado para mi.
+
+Este compendio recibido o permisos de proporcionar mis datos están limitados al/los bien(es) o servicio(s) que voy a recibir y que ha sido emitido desde un lugar físico con sus leyes vigentes en la Republica de Colombia, la ultima actualización de este documento fué realizada en junio de 2022. 
+
+Reporte de versiones de Habeas Data previamente aceptadas por mi y los datos proporcionados:
+HD-V1.0.0 Datos:
+HD-V1.0.0 Datos:
+
+Eliminación de datos del repositorio de Habeas Data:
+Debido a que los registros realizados por ley son suceptibles de ser eliminados siempre que el usuario que es el dueño de la información solicite borrarlo, la información deberá ser reemplazada en la base de datos por datos genéricos con consecutivos que tengan el mismo número en cada dato recopilado.
+
+Los datos que proporcionaré y su uso serán los siguientes:
+Los datos que he proporcionado y su uso son los siguientes:
+
+Documentación para programadores futuros que deseen mejorar el sistema:
+
+Cambio mayor de versionado x.0.0 
+Cambio menor de versionado 1.x.0
+Cambio mínimo de versionado 1.0.x
+
+Definición para cambios de versión con Habeas Data
+
+Cambio mayor de versionado x.0.0 con Habeas Data: 
+
+El sistema se entrega utilizando tres datos importantes para funcionar: nombre del usuario, número de identificación, registros de actividad en la plataforma.  Los tres datos importantes serán utilizados por los algoritmos que dan funcionamiento al sistema.
+
+Se considera un cambio mayor al Habeas Data original, eliminar cualquiera de estos tres datos o cambiarlo por uno diferente que requiera un cambio de reglas en los algoritmos 
+
+Cada cambio reiniciará los contadores de cambios menores y mínimos en cero, ejemplo, HD-V1.0.0, HD-V2.0.0, HD-V3.0.0, etc HD-Vx.0.0
+
+Cambio menor de versionado 1.x.0 con Habeas Data:
+Se genera la inclusión de nuevos datos que no requieren el uso de algoritmos. Cada cambio reiniciará los contadores de cambios mínimos en cero, ejemplo, HDV1.1.0, HDV1.2.0, HDV1.3.0, etc HDV1.x.0.
+
+Cambio mínimo de versionado 1.0.x:
+Se hace leves correciones textuales al dato que se requiere y al uso que se le va a dar a la información recolectada que usualmente son conocidas como fe de erratas o cambios de buena fe.
+
+Requisito:
+Cada cambio generado al Habeas Data en cualquiera de sus versiones requerirá nuevamente de la aprobación del usuario
+
+Data:
+Based on:
+Querys:
+Entrances:
+
+Documento de Habeas Data - Versión 1.0.0
+Dato:	Nombre del usuario
+Uso: 	Permitirá identificarme como usuario real. Es un requisito importante para funcionamiento del sistema.
+Dato: 	Número de identificación.
+Uso:	Es el número de verificación que se requiere para establecer mi responsabilidad en el uso del bien o servicio que recibo. Es un requisito importante para funcionamiento del sistema.
+Dato: Registros de actividad en la plataforma.
+Uso: Le permite conocer a quienes proporcionan el bien o servicio que estoy dando buen uso de las herramientas que me proporcionan. Es un requisito importante para funcionamiento del sistema.
+
+Dato:
+Uso:
+
+Dato:
+Uso:
+
+Dato:
+Uso:
+
+Dato:
+Uso:
+
+
+
 ### En este sistema, aún no está claro como el laboratorio validaría que las horas reservadas fueron utilizadas. En el momento, el laboratorio valida este tipo de cuestiones desde unos formatos en papel que diligencian los usuarios dentro del laboratorio.
 
 # Informe que se presenta cada cierto tiempo que se requiera
