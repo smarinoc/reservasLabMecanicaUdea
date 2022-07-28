@@ -1,18 +1,11 @@
 import Head from 'next/head'
 import React, { useEffect } from 'react';
-import { gql, useQuery } from '@apollo/client'
-import { signIn } from 'next-auth/react';
+import { signIn, signOut } from 'next-auth/react';
+import Button from '@components/Button';
+import ItemRegisterUser from '@components/ItemRegisterUser';
 
-const get= gql ` 
-query ExampleQuery {
-  prueba
-}`
 const Home = () => {
-  const {data} = useQuery(get);
 
-  useEffect(()=>{
-     console.log(data)
-  }, [data])
   return (
     <div >
     <Head>
@@ -22,10 +15,15 @@ const Home = () => {
     </Head>
 
     <div className='bg-red-800'>Hola</div>
-    <button onClick={() => {
+    <Button onClick={() => {
       signIn('google')
-    }}> Iniciar</button>
+    }} text="Iniciar" isSubmit={false}/>
 
+<button onClick={() => {
+      signOut('google')
+    }}> salir</button>
+
+<ItemRegisterUser email="Santiagomarinocapo" />
   </div>
   );
 };

@@ -2,8 +2,8 @@ import 'reflect-metadata';
 import 'ts-tiny-invariant';
 import { ApolloServer } from 'apollo-server-micro';
 import Cors from 'micro-cors';
-import { types } from '../../graphql/types';
-import { CourseResolvers } from '../../graphql/resolvers';
+import { types } from 'graphql/types';
+import { resolvers } from 'graphql/resolvers';
 
 const cors = Cors({
   allowMethods: ['POST', 'OPTIONS', 'GET', 'HEAD'],
@@ -18,7 +18,7 @@ export const config = {
 const functionHandler = async (req, res) => {
   const apolloServer = new ApolloServer({
     typeDefs: types,
-    resolvers: CourseResolvers
+    resolvers: resolvers
   });
 
   const startServer = apolloServer.start();

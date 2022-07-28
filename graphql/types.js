@@ -1,4 +1,5 @@
 import { gql } from 'apollo-server-micro';
+import { UserTypes } from 'graphql/models/user/types';
 
 const GenericTypes = gql`
   scalar Date
@@ -22,12 +23,8 @@ const GenericTypes = gql`
   input UserId {
     id: ID!
   }
-
-  type Query {
-      prueba: String
-  }
 `;
 
 export const types = [
-  GenericTypes,
+  GenericTypes, UserTypes
 ];

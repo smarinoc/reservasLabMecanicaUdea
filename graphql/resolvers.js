@@ -1,5 +1,5 @@
-export const CourseResolvers = {
-    Query: {
-    prueba: async () => "Hola mundo"
+import { UserResolvers } from "graphql/models/user/resolvers";
 
-  }}
+export const resolvers = [
+  UserResolvers
+]
