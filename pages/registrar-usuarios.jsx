@@ -3,6 +3,7 @@ import Button from '@components/Button';
 import ItemRegisterUser from '@components/ItemRegisterUser';
 import { CREATE_PROFILES } from 'graphql/mutations/user';
 import React, { useState } from 'react';
+import { toast } from 'react-toastify';
 
 const registerUsers = () => {
     const [email, setEmail] = useState("");
@@ -19,14 +20,16 @@ const registerUsers = () => {
         setEmails(aux)
     }
     const registerEmails = async () => {
-        await CreateProfiles({
-            variables: {
-                data: emails
-            }
-        })
+            await CreateProfiles({
+                variables: {
+                    data: emails
+                }
+            })
+            toast.success('Correos registrados');     
+        
     }
     return (
-        <div className='flex flex-col drop-shadow-sm border-2 px-8 w-[876px] mx-auto gap-5 py-3 bg-white items-center'>
+        <div className='flex flex-col drop-shadow-sm border-2 px-8 w-[876px] mx-auto gap-5 py-5 mt-10 bg-white items-center'>
             <form onSubmit={addEmail} className="flex flex-row gap-2 w-full">
                 <input
                     value={email}
@@ -50,3 +53,7 @@ const registerUsers = () => {
 };
 
 export default registerUsers;
+
+registerUsers.auth = {
+    role: ['admin']
+}

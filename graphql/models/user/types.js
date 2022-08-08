@@ -19,7 +19,7 @@ const UserTypes = gql`
   state:  State
   documentType: String
   document: String
-  rol: String
+  userType: String
   phoneNumber: String  
   }
 
@@ -32,7 +32,7 @@ const UserTypes = gql`
    email: String!
    documentType: String
    document: String
-   rol: String
+   userType: String
    phoneNumber: String  
   }
 

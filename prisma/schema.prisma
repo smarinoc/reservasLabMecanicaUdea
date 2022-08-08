@@ -39,6 +39,7 @@ model User {
   emailVerified DateTime?
   image         String?
   profileId     String?
+  rol           Rol      @default(user)
   accounts      Account[]
   sessions      Session[]
   profile       Profile?
@@ -54,8 +55,13 @@ model Profile {
   state  State   @default(authorized)
   documentType  String?
   document String?
-  rol String?
+  userType String?
   phoneNumber String?
+}
+
+enum Rol {
+  admin
+  user
 }
 
 enum State {

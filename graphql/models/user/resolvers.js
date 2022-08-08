@@ -27,7 +27,7 @@ const UserResolvers = {
         data: {
           documentType: args.data.documentType,
           document:  args.data.document,
-          rol: args.data.rol,
+          userType: args.data.userType,
           phoneNumber: args.data.phoneNumber,
           state: "registered",
           user: {
