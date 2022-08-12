@@ -21,6 +21,7 @@ model Account {
   id_token          String? @db.Text
   session_state     String?
   user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   @@unique([provider, providerAccountId])
 }
 
@@ -39,7 +40,7 @@ model User {
   emailVerified DateTime?
   image         String?
   profileId     String?
-  rol           Rol      @default(user)
+  rol           Rol       @default(user)
   accounts      Account[]
   sessions      Session[]
   profile       Profile?
@@ -48,15 +49,15 @@ model User {
 }
 
 model Profile {
-  id     String  @id @default(cuid())
-  userId String? @unique
-  user   User?   @relation(fields: [userId], references: [id])
-  email  String  @unique
-  state  State   @default(authorized)
-  documentType  String?
-  document String?
-  userType String?
-  phoneNumber String?
+  id           String  @id @default(cuid())
+  userId       String? @unique
+  user         User?   @relation(fields: [userId], references: [id])
+  email        String  @unique
+  state        State   @default(authorized)
+  documentType String?
+  document     String?
+  userType     String?
+  phoneNumber  String?
 }
 
 enum Rol {
@@ -68,6 +69,43 @@ enum State {
   authorized
   registered
   disabled
+}
+
+model Machine {
+  id              String        @id @default(cuid())
+  name            String
+  image           String?
+  description     String?
+  recommendations String[]
+  units           Int?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  UnitMachine     UnitMachine[]
+}
+
+model UnitMachine {
+  id        String     @id @default(cuid())
+  machineId String
+  machine   Machine    @relation(fields: [machineId], references: [id])
+  location  String
+  SchedulesOnUnitMachine SchedulesOnUnitMachine[]
+}
+
+model Schedule {
+  id                     String                   @id @default(cuid())
+  day                    String
+  hour                   String
+  SchedulesOnUnitMachine SchedulesOnUnitMachine[]
+}
+
+model SchedulesOnUnitMachine {
+  unitMachine   UnitMachine @relation(fields: [unitMachineId], references: [id])
+  schedule      Schedule    @relation(fields: [scheduleId], references: [id])
+  unitMachineId String
+  scheduleId    String
+  state         String
+
+  @@id([unitMachineId, scheduleId])
 }
 
 model VerificationToken {

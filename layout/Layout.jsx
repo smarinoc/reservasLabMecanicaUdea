@@ -8,9 +8,8 @@ const Layout = ({ children }) => {
   const { data: session, status } = useSession()
   const [loading, setLoading] = useState(false);
   if (status === 'loading') {
-    return <div>Loading</div>
+    return <></>
   }
-  console.log(session)
   var navigation
   switch (session?.user.rol) {
     case 'user':
@@ -35,7 +34,7 @@ const Layout = ({ children }) => {
     <LayoutContext.Provider value={{ loading, setLoading }}>
       <div className='flex flex-col justify-items-center w-full'>
         <NavBar navigation={navigation} />
-        <div className='fixed right-14 top-20'>
+        <div className='fixed left-10 top-96'>
           <ClipLoader size={70} color='#00F47F' loading={loading} />
         </div>
         {children}
