@@ -4,7 +4,7 @@ import { ReserveContext } from 'context/ReserveContext';
 import React, { useState } from 'react';
 
 const Home = () => {
-  const [scheduleId, setSheduleId] = useState("")
+  const [scheduleId, setSheduleId] = useState("cl6vhlgze10989ibl0rjddmnq")
   const [machine, setMachine] = useState({})
 
   const onClickReserve = () =>{
@@ -14,7 +14,7 @@ const Home = () => {
   return (
     <div>
       <ReserveContext.Provider value={{scheduleId, setSheduleId, machine, setMachine, onClickReserve}}>
-        <CatalogMachines />
+        <CatalogMachines isReserve={true}/>
       </ReserveContext.Provider>
     </div>
   );

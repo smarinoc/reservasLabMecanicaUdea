@@ -2,26 +2,101 @@ const { default: prisma } = require("config/prisma");
 
 const MachineResolvers = {
 
-    UnitMachine: {
-        machine: async (parent)=> await prisma.machine.findUnique({
+    Machine: {
+        machineUnits: async (parent) => await prisma.machineUnit.findMany({
+            where: {
+                machineId: parent.id
+            }
+        })
+    },
+
+    MachineUnit: {
+        machine: async (parent) => await prisma.machine.findUnique({
             where: {
                 id: parent.machineId
             }
         }),
         schedulesOnUnitMachine: async (parent) => await prisma.schedulesOnUnitMachine.findMany({
             where: {
-                unitMachineId: parent.id
+                machineUnitId: parent.id
             }
         })
     },
 
     Query: {
         getMachines: async () => await prisma.machine.findMany(),
+        getMachinesAvailable: async () => await prisma.machineUnit.findMany(),
+        getMachineByID: async (parent, args) => await prisma.machine.findUnique({
+            where: {
+                id: args.id
+            }
+        })
+    },
 
-        getMachinesAvailable: async () => await prisma.unitMachine.findMany(),
+    Mutation: {
+        createMachine: async (parent, args) => await prisma.machine.create({
+            data: {
+                ...args.machine,
+                machineUnits: {
+                    create:
+                        args.machine.machineUnits
+                }
+            }
+        }),
+        updateMachine: async (parent, args) => {
+            await prisma.machine.update({
+                where: {
+                    id: args.machine.id
+                },
+                data: {
+                    name: {
+                        set: args.machine.name
+                    },
+                    image: {
+                        set: args.machine.image
+                    },
+                    description: {
+                        set: args.machine.description
+                    },
+                    recommendations: {
+                        set: args.machine.recommendations
+                    },
+                }
+            })
 
+            await prisma.machineUnit.deleteMany({
+                where: {
+                    machineId: args.machine.id
+                }
+            })
+
+            return await prisma.machine.update({
+                where: {
+                    id: args.machine.id
+                },
+                data: {
+                    machineUnits: {
+                        create: args.machine.machineUnits
+                    }
+                }
+
+            })
+
+        },
+        deleteMachine: async (parent, args) => {
+            await prisma.machineUnit.deleteMany({
+                where: {
+                    machineId: args.id
+                }
+            })
+
+            return await prisma.machine.delete({
+                where: {
+                    id: args.id
+                }
+            })
+        }
     }
-
 }
 
 export { MachineResolvers }
