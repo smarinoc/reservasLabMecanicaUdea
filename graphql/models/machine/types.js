@@ -8,25 +8,48 @@ type Machine {
     image: String
     description: String
     recommendations: [String]
-    units: Int
+    machineUnits: [MachineUnit]
 }
 
-type CatalogMachine{
-  machine: Machine
-  location: String
-}
 
-type UnitMachine {
+type MachineUnit {
     id: ID
     machine: Machine
+    machineId: ID
     location: String
+    count: Int
     schedulesOnUnitMachine: [SchedulesOnUnitMachine]
 }
 
+type MachineCatalogReserve {
+    machine: Machine
+    location: String
+}
+
+input MachineInput {
+    id: ID
+    name: String
+    image: String
+    description: String
+    recommendations: [String]
+    machineUnits: [MachineUnitInput]
+}
+
+input MachineUnitInput {
+    location: String
+    count: Int
+}
 
 type Query{
     getMachines: [Machine]
-    getMachinesAvailable: [UnitMachine]
+    getMachinesAvailable: [MachineUnit]
+    getMachineByID(id: ID): Machine    
+}
+
+type Mutation {
+    createMachine(machine: MachineInput):Machine
+    updateMachine(machine: MachineInput):Machine
+    deleteMachine(id: ID): Machine
 }
 
 `

@@ -11,15 +11,15 @@ type Schedule {
 
 type SchedulesOnUnitMachine {
   schedule: Schedule
-  unitMachine: UnitMachine
-  unitMachineId: String
+  machineUnit: MachineUnit
+  machineUnitId: String
   scheduleId:    String
   state:         String
 }
 
 
 type Query {
-  getMachineBySchedule(scheduleId: ID!): [CatalogMachine]
+  getMachineBySchedule(scheduleId: ID!): [MachineCatalogReserve]
 }
 `
 

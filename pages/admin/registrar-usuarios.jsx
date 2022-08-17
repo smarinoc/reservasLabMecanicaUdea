@@ -25,7 +25,7 @@ const registerUsers = () => {
                     data: emails
                 }
             })
-            toast.success('Correos registrados');     
+            toast.success('Máquina Creada');     
         
     }
     return (

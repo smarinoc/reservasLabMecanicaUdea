@@ -7,9 +7,9 @@ const ScheduleResolvers = {
                 id: parent.scheduleId
             }
         }),
-        unitMachine: async (parent) => await prisma.unitMachine.findUnique({
+        machineUnit: async (parent) => await prisma.machineUnit.findUnique({
             where: {
-                id: parent.unitMachineId
+                id: parent.machineUnitId
             }
         })
     },
@@ -21,7 +21,7 @@ const ScheduleResolvers = {
                     state: "Disponible"
                 },
                 include: {
-                    unitMachine: {
+                    machineUnit: {
                         include: {
                             machine: true
                         }
@@ -30,17 +30,17 @@ const ScheduleResolvers = {
             })
 
             const availableFilter = available.reduce((acc,item)=>{
-                var aux=acc.filter(element => element.machine.id===item.unitMachine.machineId)
+                var aux=acc.filter(element => element.machine.id===item.machineUnit.machineId)
                 if(aux.length===0){
                     acc.push({
-                        machine: item.unitMachine.machine,
-                        location: item.unitMachine.location
+                        machine: item.machineUnit.machine,
+                        location: item.machineUnit.location
                     });
                 }else{
-                   if(aux.filter(element => element.location===item.unitMachine.location).length===0){
+                   if(aux.filter(element => element.location===item.machineUnit.location).length===0){
                     acc.push({
-                        machine: item.unitMachine.machine,
-                        location: item.unitMachine.location
+                        machine: item.machineUnit.machine,
+                        location: item.machineUnit.location
                     });
                    }
                 }

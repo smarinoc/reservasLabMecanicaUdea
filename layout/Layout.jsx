@@ -15,13 +15,16 @@ const Layout = ({ children }) => {
     case 'user':
       navigation = [
         { name: 'Log out', href: '/api/auth/signout' },
-        { name: 'Formulario', href: '/formulario' },
+        { name: 'Formulario', href: '/user/formulario' },
+        { name: 'reservar', href: '/user/' },
       ]
       break;
     case 'admin':
       navigation = [
         { name: 'Log out', href: '/api/auth/signout' },
-        { name: 'Registrar usuarios', href: '/registrar-usuarios' },
+        { name: 'Registrar usuarios', href: '/admin/registrar-usuarios' },
+        { name: 'Máquinas', href: '/admin/maquinas' },
+        { name: 'Crear máquina', href: '/admin/crear-maquina' },
       ]
       break;
     default:

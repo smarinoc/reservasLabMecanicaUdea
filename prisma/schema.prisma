@@ -77,17 +77,17 @@ model Machine {
   image           String?
   description     String?
   recommendations String[]
-  units           Int?
+  machineUnits    MachineUnit[]
   createdAt       DateTime      @default(now())
   updatedAt       DateTime      @updatedAt
-  UnitMachine     UnitMachine[]
 }
 
-model UnitMachine {
-  id        String     @id @default(cuid())
-  machineId String
-  machine   Machine    @relation(fields: [machineId], references: [id])
-  location  String
+model MachineUnit {
+  id                     String                   @id @default(cuid())
+  machineId              String
+  machine                Machine                  @relation(fields: [machineId], references: [id])
+  location               String
+  count                  Int
   SchedulesOnUnitMachine SchedulesOnUnitMachine[]
 }
 
@@ -99,13 +99,13 @@ model Schedule {
 }
 
 model SchedulesOnUnitMachine {
-  unitMachine   UnitMachine @relation(fields: [unitMachineId], references: [id])
+  machineUnit   MachineUnit @relation(fields: [machineUnitId], references: [id])
   schedule      Schedule    @relation(fields: [scheduleId], references: [id])
-  unitMachineId String
+  machineUnitId String
   scheduleId    String
   state         String
 
-  @@id([unitMachineId, scheduleId])
+  @@id([machineUnitId, scheduleId])
 }
 
 model VerificationToken {

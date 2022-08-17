@@ -6,6 +6,7 @@ import { ScheduleTypes } from './models/schedule/types';
 const GenericTypes = gql`
   scalar Date
   scalar Decimal
+  scalar Upload
 
   input StringEditField {
     set: String
