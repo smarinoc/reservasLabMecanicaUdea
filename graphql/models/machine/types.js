@@ -11,14 +11,13 @@ type Machine {
     machineUnits: [MachineUnit]
 }
 
-
 type MachineUnit {
     id: ID
     machine: Machine
     machineId: ID
     location: String
     count: Int
-    schedulesOnUnitMachine: [SchedulesOnUnitMachine]
+    machineUnitsOnSchedule: [MachineUnitOnSchedule]
 }
 
 type MachineCatalogReserve {
@@ -36,6 +35,7 @@ input MachineInput {
 }
 
 input MachineUnitInput {
+    id: ID
     location: String
     count: Int
 }

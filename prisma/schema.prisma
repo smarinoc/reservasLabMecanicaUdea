@@ -83,29 +83,37 @@ model Machine {
 }
 
 model MachineUnit {
-  id                     String                   @id @default(cuid())
+  id                     String                  @id @default(cuid())
   machineId              String
-  machine                Machine                  @relation(fields: [machineId], references: [id])
+  machine                Machine                 @relation(fields: [machineId], references: [id])
   location               String
   count                  Int
-  SchedulesOnUnitMachine SchedulesOnUnitMachine[]
+  machineUnitsOnSchedule MachineUnitOnSchedule[]
+}
+
+model Diary {
+  id            String     @id @default(cuid())
+  name          String
+  machinesCount String
+  schedules     Schedule[]
 }
 
 model Schedule {
-  id                     String                   @id @default(cuid())
+  id                     String                  @id @default(cuid())
   day                    String
   hour                   String
-  SchedulesOnUnitMachine SchedulesOnUnitMachine[]
+  Diary                  Diary?                  @relation(fields: [diaryId], references: [id])
+  diaryId                String?
+  machineUnitsOnSchedule MachineUnitOnSchedule[]
 }
 
-model SchedulesOnUnitMachine {
-  machineUnit   MachineUnit @relation(fields: [machineUnitId], references: [id])
-  schedule      Schedule    @relation(fields: [scheduleId], references: [id])
-  machineUnitId String
-  scheduleId    String
-  state         String
-
-  @@id([machineUnitId, scheduleId])
+model MachineUnitOnSchedule {
+  id             String      @id @default(cuid())
+  machineUnit    MachineUnit @relation(fields: [machineUnitId], references: [id])
+  schedule       Schedule    @relation(fields: [scheduleId], references: [id])
+  machineUnitId  String
+  scheduleId     String
+  countAvailable Int
 }
 
 model VerificationToken {

@@ -1,12 +1,11 @@
 import React from 'react';
 
-const index = () => {
+const diaryDetails = () => {
     return (
         <div>
-         
+            
         </div>
     );
 };
 
-export default index; <lu>
-</lu>
+export default diaryDetails;

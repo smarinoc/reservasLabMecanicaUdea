@@ -23,6 +23,20 @@ query GetMachineByID($id: ID) {
     }
   }
 }
-
 `
-export { GET_MACHINES, GET_MACHINE_BY_ID }
+
+const GET_MACHINES_AVAILABLE = gql`
+query GetMachinesAvailable {
+  getMachinesAvailable {
+    location
+    id
+    count
+    machine {
+      name
+      image
+    }
+  }
+}`
+
+
+export { GET_MACHINES, GET_MACHINE_BY_ID, GET_MACHINES_AVAILABLE }

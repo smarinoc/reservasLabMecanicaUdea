@@ -25,6 +25,9 @@ const Layout = ({ children }) => {
         { name: 'Registrar usuarios', href: '/admin/registrar-usuarios' },
         { name: 'Máquinas', href: '/admin/maquinas' },
         { name: 'Crear máquina', href: '/admin/crear-maquina' },
+        { name: 'Crear horario', href: '/admin/crear-horario' },
+        { name: 'Horarios', href: '/admin/horarios' },
+        { name: 'Reservar', href: '/user/' },
       ]
       break;
     default:

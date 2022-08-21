@@ -16,7 +16,7 @@ const MachineResolvers = {
                 id: parent.machineId
             }
         }),
-        schedulesOnUnitMachine: async (parent) => await prisma.schedulesOnUnitMachine.findMany({
+        machineUnitsOnSchedule: async (parent) => await prisma.machineUnitOnSchedule.findMany({
             where: {
                 machineUnitId: parent.id
             }
@@ -25,7 +25,15 @@ const MachineResolvers = {
 
     Query: {
         getMachines: async () => await prisma.machine.findMany(),
-        getMachinesAvailable: async () => await prisma.machineUnit.findMany(),
+        getMachinesAvailable: async () => await prisma.machineUnit.findMany({
+            where: {
+                machineUnitsOnSchedule: {
+                    every: {
+                        id: ""
+                    }
+                }
+            }
+        }),
         getMachineByID: async (parent, args) => await prisma.machine.findUnique({
             where: {
                 id: args.id

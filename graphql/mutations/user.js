@@ -14,13 +14,4 @@ const REGISTER_USER = gql`
 }
 `;
 
-const UPDATE_COURSE = gql`
-  mutation UpdateCourse($where: CourseFilterId!, $data: CourseUpdateInput!) {
-    updateCourse(where: $where, data: $data) {
-      id
-      name
-    }
-  }
-`;
-
-export { CREATE_PROFILES, REGISTER_USER, UPDATE_COURSE };
+export { CREATE_PROFILES, REGISTER_USER };
