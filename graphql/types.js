@@ -1,7 +1,8 @@
 import { gql } from 'apollo-server-micro';
 import { UserTypes } from 'graphql/models/user/types';
-import { DiaryTypes } from './models/diary/types';
-import { MachineTypes } from './models/machine/types';
+import { DiaryTypes } from 'graphql/models/diary/types';
+import { MachineTypes } from 'graphql/models/machine/types';
+import { ReserveTypes } from 'graphql/models/reserve/types';
 
 const GenericTypes = gql`
   scalar Date
@@ -29,5 +30,9 @@ const GenericTypes = gql`
 `;
 
 export const types = [
-  GenericTypes, UserTypes, MachineTypes, DiaryTypes
+  GenericTypes,
+  UserTypes,
+  MachineTypes,
+  DiaryTypes,
+  ReserveTypes,
 ];

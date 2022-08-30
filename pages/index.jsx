@@ -1,12 +1,6 @@
 import React from 'react';
 
-const index = () => {
-    return (
-        <div>
-         
-        </div>
-    );
-};
+const index = () => <div />;
 
-export default index; <lu>
-</lu>
+export default index;
+<lu />;

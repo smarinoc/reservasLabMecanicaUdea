@@ -1,11 +1,5 @@
 import React from 'react';
 
-const diaryDetails = () => {
-    return (
-        <div>
-            
-        </div>
-    );
-};
+const diaryDetails = () => <div />;
 
 export default diaryDetails;

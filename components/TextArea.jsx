@@ -1,15 +1,11 @@
 import React from 'react';
 
-const TextArea = ({
-  text,
-  placeholder,
-  value,
-  name,
-  isRequired,
-  onChange
-}) => (
+const TextArea = ({ text, placeholder, value, name, isRequired, onChange }) => (
   <div className='flex flex-col w-full'>
-    <label htmlFor={name} className='block text-sm font-medium px-1 text-gray-700'>
+    <label
+      htmlFor={name}
+      className='block text-sm font-medium px-1 text-gray-700'
+    >
       <span>{text}</span>
     </label>
     <textarea

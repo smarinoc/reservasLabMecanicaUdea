@@ -18,7 +18,7 @@ export const config = {
 const functionHandler = async (req, res) => {
   const apolloServer = new ApolloServer({
     typeDefs: types,
-    resolvers: resolvers
+    resolvers,
   });
 
   const startServer = apolloServer.start();

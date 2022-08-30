@@ -13,14 +13,14 @@ const UserTypes = gql`
   }
 
   type Profile {
-  id: ID
-  user: User
-  email:  String 
-  state:  State
-  documentType: String
-  document: String
-  userType: String
-  phoneNumber: String  
+    id: ID
+    user: User
+    email: String
+    state: State
+    documentType: String
+    document: String
+    userType: String
+    phoneNumber: String
   }
 
   input ProfileCreateInput {
@@ -29,11 +29,11 @@ const UserTypes = gql`
   }
 
   input registerUserInput {
-   email: String!
-   documentType: String
-   document: String
-   userType: String
-   phoneNumber: String  
+    email: String!
+    documentType: String
+    document: String
+    userType: String
+    phoneNumber: String
   }
 
   enum State {
@@ -49,7 +49,7 @@ const UserTypes = gql`
 
   type Mutation {
     createProfiles(data: [ProfileCreateInput]): Boolean
-    registerUser(data: registerUserInput): Profile  
+    registerUser(data: registerUserInput): Profile
   }
 `;
 

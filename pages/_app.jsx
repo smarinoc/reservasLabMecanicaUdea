@@ -1,6 +1,6 @@
-import '../styles/globals.css'
-import { ApolloClient, InMemoryCache, ApolloProvider, gql } from '@apollo/client';
-import { SessionProvider } from "next-auth/react"
+import 'styles/globals.css';
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+import { SessionProvider } from 'next-auth/react';
 import Layout from 'layout/Layout';
 import Auth from '@components/Auth';
 import { ToastContainer } from 'react-toastify';
@@ -12,7 +12,7 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
-function MyApp({ Component, pageProps: { session, ...pageProps }, }) {
+function MyApp({ Component, pageProps: { session, ...pageProps } }) {
   return (
     <SessionProvider session={session}>
       <ApolloProvider client={client}>
@@ -41,8 +41,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps }, }) {
         </Layout>
       </ApolloProvider>
     </SessionProvider>
-
-  )
+  );
 }
 
-export default MyApp
+export default MyApp;

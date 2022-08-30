@@ -46,6 +46,7 @@ model User {
   profile       Profile?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  Reserve       Reserve[]
 }
 
 model Profile {
@@ -114,6 +115,16 @@ model MachineUnitOnSchedule {
   machineUnitId  String
   scheduleId     String
   countAvailable Int
+  Reserve        Reserve[]
+}
+
+model Reserve {
+  id                      String                @id @default(cuid())
+  machineUnitOnSchedule   MachineUnitOnSchedule @relation(fields: [machineUnitOnScheduleId], references: [id])
+  machineUnitOnScheduleId String
+  user                    User                  @relation(fields: [userId], references: [id])
+  userId                  String
+  state                   String                @default("Reserved")
 }
 
 model VerificationToken {
