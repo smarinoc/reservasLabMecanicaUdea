@@ -46,6 +46,7 @@ model User {
   profile       Profile?
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
+  Reserve       Reserve[]
 }
 
 model Profile {
@@ -83,29 +84,47 @@ model Machine {
 }
 
 model MachineUnit {
-  id                     String                   @id @default(cuid())
+  id                     String                  @id @default(cuid())
   machineId              String
-  machine                Machine                  @relation(fields: [machineId], references: [id])
+  machine                Machine                 @relation(fields: [machineId], references: [id])
   location               String
   count                  Int
-  SchedulesOnUnitMachine SchedulesOnUnitMachine[]
+  machineUnitsOnSchedule MachineUnitOnSchedule[]
+}
+
+model Diary {
+  id            String     @id @default(cuid())
+  name          String
+  machinesCount String
+  schedules     Schedule[]
 }
 
 model Schedule {
-  id                     String                   @id @default(cuid())
+  id                     String                  @id @default(cuid())
   day                    String
   hour                   String
-  SchedulesOnUnitMachine SchedulesOnUnitMachine[]
+  Diary                  Diary?                  @relation(fields: [diaryId], references: [id])
+  diaryId                String?
+  machineUnitsOnSchedule MachineUnitOnSchedule[]
 }
 
-model SchedulesOnUnitMachine {
-  machineUnit   MachineUnit @relation(fields: [machineUnitId], references: [id])
-  schedule      Schedule    @relation(fields: [scheduleId], references: [id])
-  machineUnitId String
-  scheduleId    String
-  state         String
+model MachineUnitOnSchedule {
+  id             String      @id @default(cuid())
+  machineUnit    MachineUnit @relation(fields: [machineUnitId], references: [id])
+  schedule       Schedule    @relation(fields: [scheduleId], references: [id])
+  machineUnitId  String
+  scheduleId     String
+  countAvailable Int
+  Reserve        Reserve[]
+}
 
-  @@id([machineUnitId, scheduleId])
+model Reserve {
+  id                      String                @id @default(cuid())
+  machineUnitOnSchedule   MachineUnitOnSchedule @relation(fields: [machineUnitOnScheduleId], references: [id])
+  machineUnitOnScheduleId String
+  user                    User                  @relation(fields: [userId], references: [id])
+  userId                  String
+  state                   String                @default("Reserved")
 }
 
 model VerificationToken {

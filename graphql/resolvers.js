@@ -1,9 +1,11 @@
-import { UserResolvers } from "graphql/models/user/resolvers";
-import { MachineResolvers } from "./models/machine/resolvers";
-import { ScheduleResolvers } from "./models/schedule/resolvers";
+import { UserResolvers } from 'graphql/models/user/resolvers';
+import { DiaryResolvers } from 'graphql/models/diary/resolvers';
+import { MachineResolvers } from 'graphql/models/machine/resolvers';
+import { ReserveResolvers } from 'graphql/models/reserve/resolvers';
 
 export const resolvers = [
   UserResolvers,
   MachineResolvers,
-  ScheduleResolvers
-]
+  DiaryResolvers,
+  ReserveResolvers,
+];

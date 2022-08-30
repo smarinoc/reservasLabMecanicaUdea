@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-constructed-context-values */
 import NavBar from '@components/NavBar';
 import { LayoutContext } from 'context/LayoutContext';
 import { useSession } from 'next-auth/react';
@@ -5,19 +6,19 @@ import React, { useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 
 const Layout = ({ children }) => {
-  const { data: session, status } = useSession()
+  const { data: session, status } = useSession();
   const [loading, setLoading] = useState(false);
   if (status === 'loading') {
-    return <></>
+    return <></>;
   }
-  var navigation
+  let navigation;
   switch (session?.user.rol) {
     case 'user':
       navigation = [
         { name: 'Log out', href: '/api/auth/signout' },
         { name: 'Formulario', href: '/user/formulario' },
         { name: 'reservar', href: '/user/' },
-      ]
+      ];
       break;
     case 'admin':
       navigation = [
@@ -25,12 +26,13 @@ const Layout = ({ children }) => {
         { name: 'Registrar usuarios', href: '/admin/registrar-usuarios' },
         { name: 'Máquinas', href: '/admin/maquinas' },
         { name: 'Crear máquina', href: '/admin/crear-maquina' },
-      ]
+        { name: 'Crear horario', href: '/admin/crear-horario' },
+        { name: 'Horarios', href: '/admin/horarios' },
+        { name: 'Reservar', href: '/user/' },
+      ];
       break;
     default:
-      navigation = [
-        { name: 'Log in', href: '/api/auth/signin/:google' },
-      ]
+      navigation = [{ name: 'Log in', href: '/api/auth/signin/:google' }];
       break;
   }
   return (

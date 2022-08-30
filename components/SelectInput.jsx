@@ -3,7 +3,10 @@ import Select from 'react-select';
 
 const SelectInput = ({ options, onChange, text, name }) => (
   <div className='flex flex-col w-full px-3'>
-    <label htmlFor={name} className='block text-sm font-medium px-1 text-gray-700'>
+    <label
+      htmlFor={name}
+      className='block text-sm font-medium px-1 text-gray-700'
+    >
       <span>{text}</span>
     </label>
     <Select
@@ -13,6 +16,5 @@ const SelectInput = ({ options, onChange, text, name }) => (
     />
   </div>
 );
-
 
 export default SelectInput;
