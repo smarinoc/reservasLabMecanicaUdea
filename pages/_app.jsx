@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Head from 'next/head';
 
 const client = new ApolloClient({
-  uri: 'https://prueba-orcin-five.vercel.app/',
+  uri: 'https://prueba-orcin-five.vercel.app/api/graphql',
   cache: new InMemoryCache(),
 });
 
