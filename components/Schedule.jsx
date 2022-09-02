@@ -1,15 +1,29 @@
 import React from 'react';
 import ItemSchedule from '@components/ItemSchedule';
 
-const Schedule = ({ onItemSchedule, schedules, available, isReserve }) => {
+const Schedule = ({
+  onItemSchedule,
+  schedules,
+  available,
+  isReserve,
+  selectScheduleIndexes,
+}) => {
+  const orderAvailable = available?.sort((a, b) => a - b);
+  const orderSelect = selectScheduleIndexes?.sort((a, b) => a - b);
   const itemSchedule = [];
   const sizeDays = schedules.days.length;
   let aux = 0;
+  let auxSelect = 0;
   for (let i = 0; i < 42; i += 1) {
+    let isSelect = false;
+    if (orderSelect[auxSelect] === i) {
+      isSelect = true;
+      auxSelect += 1;
+    }
     let isAvailable = true;
     if (isReserve) {
       isAvailable = false;
-      if (available[aux] === i) {
+      if (orderAvailable[aux] === i) {
         isAvailable = true;
         aux += 1;
       }
@@ -18,10 +32,11 @@ const Schedule = ({ onItemSchedule, schedules, available, isReserve }) => {
       <ItemSchedule
         isAvailable={isAvailable}
         isReserve={isReserve}
+        isSelectParam={isSelect}
         onClick={() => {
           const day = schedules.days[i % sizeDays];
           const hour = schedules.hours[Math.trunc(i / sizeDays)];
-          onItemSchedule(day, hour);
+          onItemSchedule(day, hour, i);
         }}
       />
     );

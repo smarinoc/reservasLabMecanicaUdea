@@ -5,6 +5,7 @@ const DiaryTypes = gql`
     id: ID
     name: String
     schedules: [Schedule]
+    machineUnits: [MachineUnit]
   }
 
   type Schedule {
@@ -67,6 +68,7 @@ const DiaryTypes = gql`
     getDiaries: [diaryTableItem]
     getMachinesUnitBySchedule(schedule: scheduleGetMachinesUnit): [MachineUnit]
     getScheduleAvailable: [Schedule]
+    getDiaryById(id: ID): Diary
   }
 
   type Mutation {

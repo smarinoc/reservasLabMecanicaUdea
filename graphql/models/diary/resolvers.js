@@ -10,6 +10,22 @@ const DiaryResolvers = {
           diaryId: parent.id,
         },
       }),
+    machineUnits: async (parent) => {
+      const res = await prisma.schedule.findMany({
+        where: {
+          diaryId: parent.id,
+        },
+        include: {
+          machineUnitsOnSchedule: {
+            include: {
+              machineUnit: true,
+            },
+          },
+        },
+      });
+      console.log(res);
+      return res.machineUnitsOnSchedule.machineUnit;
+    },
   },
   Schedule: {
     diary: async (parent) =>
@@ -98,6 +114,12 @@ const DiaryResolvers = {
 
       return result;
     },
+    getDiaryById: async (parent, args) =>
+      await prisma.diary.findUnique({
+        where: {
+          id: args.id,
+        },
+      }),
   },
   Mutation: {
     createDiary: async (parent, args) => {
