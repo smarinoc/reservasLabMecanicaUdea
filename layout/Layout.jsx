@@ -17,7 +17,7 @@ const Layout = ({ children }) => {
       navigation = [
         { name: 'Log out', href: '/api/auth/signout' },
         { name: 'Formulario', href: '/user/formulario' },
-        { name: 'reservar', href: '/user/' },
+        { name: 'reservar', href: '/' },
       ];
       break;
     case 'admin':
@@ -28,7 +28,7 @@ const Layout = ({ children }) => {
         { name: 'Crear máquina', href: '/admin/crear-maquina' },
         { name: 'Crear horario', href: '/admin/crear-horario' },
         { name: 'Horarios', href: '/admin/horarios' },
-        { name: 'Reservar', href: '/user/' },
+        { name: 'Reservar', href: '/' },
       ];
       break;
     default:

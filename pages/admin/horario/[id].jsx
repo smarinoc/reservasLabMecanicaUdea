@@ -10,7 +10,7 @@ const diaryDetails = () => {
   const [machines, setMachines] = useState([]);
   const router = useRouter();
   const { id } = router.query;
-  console.log(id)
+  console.log(id);
 
   const { data: diary, loading: loadingGetDiary } = useQuery(GET_DIARY_BY_ID, {
     fetchPolicy: 'cache-and-network',
@@ -19,7 +19,7 @@ const diaryDetails = () => {
     },
   });
   useEffect(() => {
-    console.log(diary)
+    console.log(diary);
     if (diary) {
       setMachines(diary.getDiaryById.machineUnits);
       setSchedules(diary.getDiaryById.schedules);
@@ -29,7 +29,7 @@ const diaryDetails = () => {
     }
   }, [diary]);
 
-  if (loadingGetDiary) {  
+  if (loadingGetDiary) {
     return <></>;
   }
   return (

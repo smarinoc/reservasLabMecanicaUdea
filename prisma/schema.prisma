@@ -90,21 +90,23 @@ model MachineUnit {
   location               String
   count                  Int
   machineUnitsOnSchedule MachineUnitOnSchedule[]
+  Diary                  Diary?                  @relation(fields: [diaryId], references: [id])
+  diaryId                String?
 }
 
 model Diary {
-  id            String     @id @default(cuid())
+  id            String        @id @default(cuid())
   name          String
   machinesCount String
   schedules     Schedule[]
+  machineUnits  MachineUnit[]
 }
 
 model Schedule {
   id                     String                  @id @default(cuid())
   day                    String
   hour                   String
-  Diary                  Diary?                  @relation(fields: [diaryId], references: [id])
-  diaryId                String?
+  diaries                Diary[]
   machineUnitsOnSchedule MachineUnitOnSchedule[]
 }
 

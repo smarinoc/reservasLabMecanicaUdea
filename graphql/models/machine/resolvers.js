@@ -24,6 +24,12 @@ const MachineResolvers = {
           machineUnitId: parent.id,
         },
       }),
+    diary: async (parent) =>
+      await prisma.diary.findUnique({
+        where: {
+          id: parent.diaryId,
+        },
+      }),
   },
 
   Query: {

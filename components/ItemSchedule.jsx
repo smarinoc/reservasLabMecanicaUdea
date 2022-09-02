@@ -29,7 +29,7 @@ const ItemSchedule = ({ onClick, isAvailable, isReserve, isSelectParam }) => {
   return (
     <button
       type='button'
-      disabled={!isAvailable}
+      disabled={!isAvailable && isReserve}
       onClick={() => {
         onClick();
         setIsSelect(!isSelect || isReserve);

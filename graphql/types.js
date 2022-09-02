@@ -27,6 +27,9 @@ const GenericTypes = gql`
   input UserId {
     id: ID!
   }
+  input InputID {
+    id: ID
+  }
 `;
 
 export const types = [

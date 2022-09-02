@@ -17,6 +17,8 @@ const MachineTypes = gql`
     location: String
     count: Int
     machineUnitsOnSchedule: [MachineUnitOnSchedule]
+    diary: Diary
+    diaryId: String
   }
 
   type MachineCatalogReserve {

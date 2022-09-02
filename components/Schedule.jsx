@@ -1,65 +1,68 @@
 import React from 'react';
 import ItemSchedule from '@components/ItemSchedule';
+import { GET_ALL_SCHEDULES } from 'graphql/queries/diary';
+import { useQuery } from '@apollo/client';
 
-const Schedule = ({
-  onItemSchedule,
-  schedules,
-  available,
-  isReserve,
-  selectScheduleIndexes,
-}) => {
-  const orderAvailable = available?.sort((a, b) => a - b);
-  const orderSelect = selectScheduleIndexes?.sort((a, b) => a - b);
-  const itemSchedule = [];
-  const sizeDays = schedules.days.length;
-  let aux = 0;
-  let auxSelect = 0;
-  for (let i = 0; i < 42; i += 1) {
-    let isSelect = false;
-    if (orderSelect[auxSelect] === i) {
-      isSelect = true;
-      auxSelect += 1;
+const Schedule = ({ onItemSchedule, availableSchedules, isReserve }) => {
+  const { data: allSchedules, loading: loadingGetAllSchedules } = useQuery(
+    GET_ALL_SCHEDULES,
+    {
+      fetchPolicy: 'cache-and-network',
     }
-    let isAvailable = true;
-    if (isReserve) {
-      isAvailable = false;
-      if (orderAvailable[aux] === i) {
-        isAvailable = true;
-        aux += 1;
-      }
-    }
-    itemSchedule.push(
-      <ItemSchedule
-        isAvailable={isAvailable}
-        isReserve={isReserve}
-        isSelectParam={isSelect}
-        onClick={() => {
-          const day = schedules.days[i % sizeDays];
-          const hour = schedules.hours[Math.trunc(i / sizeDays)];
-          onItemSchedule(day, hour, i);
-        }}
-      />
-    );
+  );
+
+  if (loadingGetAllSchedules) {
+    return <></>;
   }
+
+  const schedulesHeadsDay = allSchedules.getAllSchedules.reduce((acc, item) => {
+    if (!acc.find((element) => item.day === element.day)) {
+      acc.push(item);
+    }
+    return acc;
+  }, []);
+  const schedulesHeadsHour = allSchedules.getAllSchedules.reduce(
+    (acc, item) => {
+      if (!acc.find((element) => item.hour === element.hour)) {
+        acc.push(item);
+      }
+      return acc;
+    },
+    []
+  );
+
   return (
     <div className='mx-auto grid w-[1200px] h-[800px] grid-rows-8 grid-cols-7 items-end'>
       <div className='col-start-2 col-span-6 grid grid-cols-6'>
-        {schedules.days.map((day) => (
+        {schedulesHeadsDay.map((item) => (
           <span className='w-full text-center text-base font-medium text-gray-700 row-span-1 pb-4'>
-            {day}
+            {item.day}
           </span>
         ))}
       </div>
       <div className='col-span-1 row-span-7 grid grid-cols-1 items-center w-full h-full'>
-        {schedules.hours.map((hour) => (
+        {schedulesHeadsHour.map((item) => (
           <span className='w-full text-base font-medium text-gray-700'>
-            {hour}
+            {item.hour}
           </span>
         ))}
       </div>
 
       <div className='col-span-6 row-span-7 grid grid-cols-6 gap-1 w-full h-full'>
-        {itemSchedule}
+        {allSchedules.getAllSchedules.map((item) => {
+          const aux = availableSchedules?.find(
+            (element) => item.id === element.id
+          );
+          return (
+            <ItemSchedule
+              isReserve={isReserve}
+              isAvailable={!!aux || !isReserve}
+              onClick={() => {
+                onItemSchedule(item);
+              }}
+            />
+          );
+        })}
       </div>
     </div>
   );
