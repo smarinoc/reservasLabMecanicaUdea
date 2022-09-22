@@ -8,4 +8,12 @@ const CREATE_RESERVATION = gql`
   }
 `;
 
-export { CREATE_RESERVATION };
+const CANCEL_RESERVATION = gql`
+  mutation cancelReservation($reservation: ReservationCancelInput) {
+    cancelReservation(reservation: $reservation) {
+      state
+    }
+  }
+`;
+
+export { CREATE_RESERVATION, CANCEL_RESERVATION };

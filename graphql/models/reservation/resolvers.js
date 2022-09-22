@@ -24,6 +24,39 @@ const ReservationResolvers = {
   },
   Query: {
     getReservations: async () => await prisma.reservation.findMany(),
+    getReservationsByUser: async (parent, args) =>
+      await prisma.reservation.findMany({
+        where: {
+          userId: args.userId,
+          state: 'reserved',
+        },
+        include: {
+          user: {
+            include: {
+              profile: {
+                select: {
+                  document: true,
+                },
+              },
+            },
+          },
+          schedule: {
+            select: {
+              hour: true,
+            },
+          },
+          machineUnit: {
+            include: {
+              machine: {
+                select: {
+                  name: true,
+                  image: true,
+                },
+              },
+            },
+          },
+        },
+      }),
   },
   Mutation: {
     createReservation: async (parent, args) => {
@@ -38,11 +71,8 @@ const ReservationResolvers = {
         const machineUnitOnSchedule =
           await prisma.machineUnitOnSchedule.findFirst({
             where: {
-              schedule: {
-                day: args.reservation.day,
-                hour: args.reservation.hour,
-              },
-              machineUnitId: args.reservation.machineUnitID,
+              scheduleId: args.reservation.scheduleId,
+              machineUnitId: args.reservation.machineUnitId,
               state: 'available',
             },
           });
@@ -57,7 +87,7 @@ const ReservationResolvers = {
               },
               machineUnit: {
                 connect: {
-                  id: args.reservation.machineUnitID,
+                  id: args.reservation.machineUnitId,
                 },
               },
               schedule: {
@@ -91,6 +121,30 @@ const ReservationResolvers = {
       }
 
       return res;
+    },
+    cancelReservation: async (parent, args) => {
+      await prisma.machineUnitOnSchedule.updateMany({
+        where: {
+          scheduleId: args.reservation.scheduleId,
+          machineUnitId: args.reservation.machineUnitId,
+          state: 'reserved',
+        },
+        data: {
+          state: {
+            set: 'available',
+          },
+        },
+      });
+      return await prisma.reservation.update({
+        where: {
+          id: args.reservation.id,
+        },
+        data: {
+          state: {
+            set: 'cancel',
+          },
+        },
+      });
     },
   },
 };

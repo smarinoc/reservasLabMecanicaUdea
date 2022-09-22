@@ -18,6 +18,7 @@ const Layout = ({ children }) => {
         { name: 'Log out', href: '/api/auth/signout' },
         { name: 'Formulario', href: '/user/formulario' },
         { name: 'reservar', href: '/' },
+        { name: 'Mis reservas', href: '/user/reservaciones' },
       ];
       break;
     case 'admin':
@@ -29,6 +30,7 @@ const Layout = ({ children }) => {
         { name: 'Crear horario', href: '/admin/crear-horario' },
         { name: 'Horarios', href: '/admin/horarios' },
         { name: 'Reservar', href: '/' },
+        { name: 'Reservas', href: '/user/reservaciones' },
       ];
       break;
     default:
