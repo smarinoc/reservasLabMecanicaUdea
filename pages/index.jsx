@@ -68,9 +68,7 @@ const Home = () => {
     const res = await createReservation({
       variables: {
         reservation: {
-          machineUnitID: machine.id,
-          day: schedule.day,
-          hour: schedule.hour,
+          machineUnitId: machine.id,
           scheduleId: schedule.id,
           userId: session.user.id,
           date: moment().startOf('week').add(schedule.indexDay, 'days'),

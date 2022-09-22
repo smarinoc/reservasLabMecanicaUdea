@@ -138,7 +138,7 @@ model Reservation {
   user          User        @relation(fields: [userId], references: [id])
   userId        String
   date          DateTime
-  state         String      @default("Reserved")
+  state         String      @default("reserved")
   createdAt     DateTime    @default(now())
   updatedAt     DateTime    @updatedAt
   scheduleId    String
