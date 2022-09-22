@@ -1,17 +1,16 @@
 /* eslint-disable no-param-reassign */
 import React, { useState, useEffect } from 'react';
 import Input from '@components/Input';
-import BsXlgButton from '@components/BsXlgButton';
 
-const InputMachineUnit = ({ unit, onCancelMachineUnit, index }) => {
+const InputMachineUnit = ({ unit }) => {
   const [location, setLocation] = useState(unit.location);
-  const [count, setCount] = useState(unit.count);
+  const [serial, setSerial] = useState(unit.serial);
   useEffect(() => {
     setLocation(unit.location);
-    setCount(unit.count);
+    setSerial(unit.serial);
   }, [unit]);
   return (
-    <div className='flex flex-row gap-2 border-2 border-blue-100 p-2 pr-2'>
+    <div className='flex flex-row gap-1 border-2 border-blue-100 pr-2 p-1'>
       <div className='flex flex-col gap-1 w-full  p-2'>
         <Input
           name='location'
@@ -24,25 +23,16 @@ const InputMachineUnit = ({ unit, onCancelMachineUnit, index }) => {
           type='text'
         />
         <Input
-          name='count'
-          value={count}
+          name='serial'
+          value={serial}
           onChange={(e) => {
-            setCount(e.target.value);
-            unit.count = parseInt(e.target.value, 10);
+            setSerial(e.target.value);
+            unit.serial = e.target.value;
           }}
-          text='Número de unidades'
-          type='number'
+          text='Serial'
+          type='text'
         />
       </div>
-      {index === 0 ? (
-        <></>
-      ) : (
-        <BsXlgButton
-          onClick={() => {
-            onCancelMachineUnit(index);
-          }}
-        />
-      )}
     </div>
   );
 };

@@ -1,10 +1,8 @@
-/* eslint-disable no-unused-vars */
 import { useMutation, useQuery } from '@apollo/client';
 import Button from '@components/Button';
 import CatalogMachines from '@components/CatalogMachines';
 import Schedule from '@components/Schedule';
 import { useLayoutContext } from 'context/LayoutContext';
-import { CREATE_RESERVE } from 'graphql/mutations/reserve';
 import {
   GET_MACHINES_UNIT_BY_SCHEDULE,
   GET_SCHEDULE_AVAILABLE,
@@ -15,6 +13,9 @@ import React, { useEffect, useState } from 'react';
 import ConfirmReserveDialog from '@components/ConfirmReserveDialog';
 import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
+import moment from 'moment';
+import 'moment/locale/es';
+import { CREATE_RESERVATION } from 'graphql/mutations/reservation';
 
 const Home = () => {
   const [schedule, setShedule] = useState({ id: '-1' });
@@ -22,10 +23,8 @@ const Home = () => {
   const changeDialog = () => {
     setOpenDeleteDialog(!openDeleteDialog);
   };
-
   const [availableSchedules, setAvailableSchedules] = useState([]);
   const [machine, setMachine] = useState(null);
-  const [selectScheduleIndex, setSelectScheduleIndex] = useState(-1);
   const layoutContext = useLayoutContext();
   const { data: session } = useSession();
   const {
@@ -44,7 +43,7 @@ const Home = () => {
     },
   });
 
-  const [createReserve] = useMutation(CREATE_RESERVE);
+  const [createReservation] = useMutation(CREATE_RESERVATION);
 
   useEffect(() => {
     layoutContext.setLoading(loading);
@@ -56,9 +55,8 @@ const Home = () => {
     }
   }, [schedules]);
 
-  const onItemSchedule = (shedule) => {
-    setShedule(shedule);
-    setSelectScheduleIndex(shedule.id);
+  const onItemSchedule = (scheduleP) => {
+    setShedule(scheduleP);
     refetch();
   };
 
@@ -67,17 +65,19 @@ const Home = () => {
   };
 
   const onReserve = async () => {
-    const res = await createReserve({
+    const res = await createReservation({
       variables: {
-        reserve: {
+        reservation: {
           machineUnitID: machine.id,
           day: schedule.day,
           hour: schedule.hour,
+          scheduleId: schedule.id,
           userId: session.user.id,
+          date: moment().startOf('week').add(schedule.indexDay, 'days'),
         },
       },
     });
-    switch (res.data.createReserve.id) {
+    switch (res.data.createReservation.id) {
       case '-1':
         toast.error('El usuario ya tiene el limite de reservas activa');
         break;
@@ -89,7 +89,6 @@ const Home = () => {
         break;
     }
     refetchScheduleAvailable();
-    setSelectScheduleIndex(-1);
     setMachine(null);
     setShedule({ id: '-1' });
   };
@@ -101,12 +100,10 @@ const Home = () => {
       <Schedule
         onItemSchedule={onItemSchedule}
         availableSchedules={availableSchedules}
-        isSelect={schedule}
-        selectScheduleIndexes={[selectScheduleIndex]}
-        isReserve
+        type='reserve'
       />
       <CatalogMachines
-        isReserve
+        type='reserve'
         machines={data?.getMachinesUnitBySchedule}
         onMachine={onItemMachine}
       />
@@ -128,7 +125,10 @@ const Home = () => {
           data={{
             name: machine?.machine?.name,
             location: machine?.location,
-            day: schedule?.day,
+            day: `${schedule?.day} ${moment()
+              .startOf('week')
+              .add(schedule.indexDay, 'days')
+              .format('D MMMM')}`,
             hour: schedule?.hour,
             userName: session?.user?.name,
             userDocument: session?.profile?.document,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-const ItemSchedule = ({ onClick, isAvailable, isReserve, isSelectParam }) => {
+const ItemSchedule = ({ onClick, isAvailable, type, isSelectParam }) => {
   const [isSelect, setIsSelect] = useState(false);
 
   useEffect(() => {
@@ -11,7 +11,7 @@ const ItemSchedule = ({ onClick, isAvailable, isReserve, isSelectParam }) => {
   let text = '';
   if (isAvailable) {
     className += ' hover:border-4';
-    if (isReserve) {
+    if (type === 'reserve') {
       className += ' bg-green-500';
       text = 'disponible';
       if (isSelect) {
@@ -29,10 +29,10 @@ const ItemSchedule = ({ onClick, isAvailable, isReserve, isSelectParam }) => {
   return (
     <button
       type='button'
-      disabled={!isAvailable && isReserve}
+      disabled={!isAvailable}
       onClick={() => {
         onClick();
-        setIsSelect(!isSelect || isReserve);
+        setIsSelect(!isSelect);
       }}
       className={className}
     >

@@ -6,6 +6,8 @@ const DiaryTypes = gql`
     name: String
     schedules: [Schedule]
     machineUnits: [MachineUnit]
+    firstDate: Date
+    lastDate: Date
   }
 
   type Schedule {
@@ -14,6 +16,7 @@ const DiaryTypes = gql`
     hour: String
     diaries: [Diary]
     machineUnitsOnSchedule: [MachineUnitOnSchedule]
+    reservations: [Reservation]
   }
 
   type MachineUnitOnSchedule {
@@ -26,15 +29,13 @@ const DiaryTypes = gql`
   }
 
   input DiaryInput {
+    id: ID
     name: String
     machinesCount: String
     schedules: [InputID]
-    machineUnits: [InputMachineUnits]
-  }
-
-  input InputMachineUnits {
-    id: String
-    count: Int
+    machineUnits: [InputID]
+    firstDate: Date
+    lastDate: Date
   }
 
   type diaryTableItem {
@@ -59,6 +60,8 @@ const DiaryTypes = gql`
   type Mutation {
     createDiary(diary: DiaryInput): Diary
     createSchedules(schedules: [scheduleGetMachinesUnit]): String
+    updateDiary(diary: DiaryInput): Diary
+    deleteDiary(id: ID): Diary
   }
 `;
 

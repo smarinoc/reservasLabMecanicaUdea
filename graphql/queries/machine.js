@@ -6,6 +6,7 @@ const GET_MACHINES = gql`
       id
       name
       image
+      amount
     }
   }
 `;
@@ -17,9 +18,10 @@ const GET_MACHINE_BY_ID = gql`
       image
       description
       recommendations
+      amount
       machineUnits {
         location
-        count
+        serial
       }
     }
   }
@@ -30,7 +32,7 @@ const GET_MACHINES_AVAILABLE = gql`
     getMachinesAvailable {
       location
       id
-      count
+      serial
       machine {
         name
         image

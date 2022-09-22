@@ -14,11 +14,12 @@ const GET_MACHINES_UNIT_BY_SCHEDULE = gql`
   query GetMachinesUnitBySchedule($id: ID) {
     getMachinesUnitBySchedule(id: $id) {
       id
+      location
+      serial
       machine {
         name
         image
       }
-      location
     }
   }
 `;
@@ -26,18 +27,23 @@ const GET_MACHINES_UNIT_BY_SCHEDULE = gql`
 const GET_DIARY_BY_ID = gql`
   query GetDiaryById($id: ID) {
     getDiaryById(id: $id) {
+      id
       name
+      firstDate
+      lastDate
       schedules {
         day
         hour
+        id
       }
       machineUnits {
         id
+        location
+        serial
         machine {
           name
           image
         }
-        location
       }
     }
   }

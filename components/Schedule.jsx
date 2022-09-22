@@ -1,27 +1,38 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ItemSchedule from '@components/ItemSchedule';
 import { GET_ALL_SCHEDULES } from 'graphql/queries/diary';
 import { useQuery } from '@apollo/client';
+import moment from 'moment';
+import 'moment/locale/es';
 
-const Schedule = ({ onItemSchedule, availableSchedules, isReserve }) => {
+const Schedule = ({
+  onItemSchedule,
+  availableSchedules,
+  type,
+  alreadyChosen,
+}) => {
   const { data: allSchedules, loading: loadingGetAllSchedules } = useQuery(
     GET_ALL_SCHEDULES,
     {
       fetchPolicy: 'cache-and-network',
     }
   );
+  const [select, setSelect] = useState(null);
 
   if (loadingGetAllSchedules) {
     return <></>;
   }
 
-  const schedulesHeadsDay = allSchedules.getAllSchedules.reduce((acc, item) => {
-    if (!acc.find((element) => item.day === element.day)) {
-      acc.push(item);
-    }
-    return acc;
-  }, []);
-  const schedulesHeadsHour = allSchedules.getAllSchedules.reduce(
+  const schedulesHeadsDay = allSchedules?.getAllSchedules.reduce(
+    (acc, item) => {
+      if (!acc.find((element) => item.day === element.day)) {
+        acc.push(item);
+      }
+      return acc;
+    },
+    []
+  );
+  const schedulesHeadsHour = allSchedules?.getAllSchedules.reduce(
     (acc, item) => {
       if (!acc.find((element) => item.hour === element.hour)) {
         acc.push(item);
@@ -32,15 +43,22 @@ const Schedule = ({ onItemSchedule, availableSchedules, isReserve }) => {
   );
 
   return (
-    <div className='mx-auto grid w-[1200px] h-[800px] grid-rows-8 grid-cols-7 items-end'>
+    <div className='mx-auto grid w-[1200px] h-[1400px] grid-rows-14 grid-cols-7 items-end'>
       <div className='col-start-2 col-span-6 grid grid-cols-6'>
-        {schedulesHeadsDay.map((item) => (
-          <span className='w-full text-center text-base font-medium text-gray-700 row-span-1 pb-4'>
-            {item.day}
-          </span>
-        ))}
+        {schedulesHeadsDay.map((item, index) => {
+          const dayNumber = moment()
+            .startOf('week')
+            .add(index, 'days')
+            .format('D');
+
+          return (
+            <span className='w-full text-center text-base font-medium text-gray-700 row-span-1 pb-4'>
+              {item.day} {type === 'reserve' ? dayNumber : <></>}
+            </span>
+          );
+        })}
       </div>
-      <div className='col-span-1 row-span-7 grid grid-cols-1 items-center w-full h-full'>
+      <div className='col-span-1 row-span-13 grid grid-cols-1 items-center w-full h-full'>
         {schedulesHeadsHour.map((item) => (
           <span className='w-full text-base font-medium text-gray-700'>
             {item.hour}
@@ -48,21 +66,39 @@ const Schedule = ({ onItemSchedule, availableSchedules, isReserve }) => {
         ))}
       </div>
 
-      <div className='col-span-6 row-span-7 grid grid-cols-6 gap-1 w-full h-full'>
-        {allSchedules.getAllSchedules.map((item) => {
-          const aux = availableSchedules?.find(
-            (element) => item.id === element.id
-          );
-          return (
-            <ItemSchedule
-              isReserve={isReserve}
-              isAvailable={!!aux || !isReserve}
-              onClick={() => {
-                onItemSchedule(item);
-              }}
-            />
-          );
-        })}
+      <div className='col-span-6 row-span-13 grid grid-cols-6 gap-1 w-full h-full'>
+        {type === 'formSchedule'
+          ? allSchedules.getAllSchedules.map((item) => {
+              const found = alreadyChosen?.find(
+                (element) => element.id === item.id
+              );
+              return (
+                <ItemSchedule
+                  type={type}
+                  isAvailable
+                  isSelectParam={!!found}
+                  onClick={() => {
+                    onItemSchedule(item);
+                  }}
+                />
+              );
+            })
+          : allSchedules.getAllSchedules.map((item, index) => {
+              const available = availableSchedules?.find(
+                (element) => item.id === element.id
+              );
+              return (
+                <ItemSchedule
+                  type={type}
+                  isAvailable={available}
+                  isSelectParam={item.id === select}
+                  onClick={() => {
+                    setSelect(item.id);
+                    onItemSchedule({ ...item, indexDay: index % 6 });
+                  }}
+                />
+              );
+            })}
       </div>
     </div>
   );

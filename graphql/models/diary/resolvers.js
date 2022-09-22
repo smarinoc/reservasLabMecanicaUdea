@@ -1,13 +1,18 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable no-return-await */
 const { default: prisma } = require('config/prisma');
+const schedulesJson = require('res/schedules.json');
 
 const DiaryResolvers = {
   Diary: {
     schedules: async (parent) =>
       await prisma.schedule.findMany({
         where: {
-          diaryId: parent.id,
+          diaries: {
+            some: {
+              id: parent.id,
+            },
+          },
         },
       }),
     machineUnits: async (parent) =>
@@ -20,6 +25,12 @@ const DiaryResolvers = {
   Schedule: {
     machineUnitsOnSchedule: async (parent) =>
       await prisma.machineUnitOnSchedule.findMany({
+        where: {
+          scheduleId: parent.id,
+        },
+      }),
+    reservations: async (parent) =>
+      await prisma.reservation.findMany({
         where: {
           scheduleId: parent.id,
         },
@@ -45,9 +56,7 @@ const DiaryResolvers = {
       const aux = await prisma.machineUnitOnSchedule.findMany({
         where: {
           scheduleId: args.id,
-          countAvailable: {
-            gt: 0,
-          },
+          state: 'available',
         },
         include: {
           machineUnit: {
@@ -59,15 +68,21 @@ const DiaryResolvers = {
       });
       return aux.map((item) => item.machineUnit);
     },
-    getAllSchedules: async () => await prisma.schedule.findMany(),
+    getAllSchedules: async () => {
+      const res = await prisma.schedule.findMany();
+      if (res.length === 0) {
+        await prisma.schedule.createMany({
+          data: schedulesJson.schedules,
+        });
+      }
+      return await prisma.schedule.findMany();
+    },
     getScheduleAvailable: async () => {
       const schedules = await prisma.schedule.findMany({
         where: {
           machineUnitsOnSchedule: {
             some: {
-              countAvailable: {
-                gt: 0,
-              },
+              state: 'available',
             },
           },
         },
@@ -91,6 +106,14 @@ const DiaryResolvers = {
         where: {
           id: args.id,
         },
+        include: {
+          schedules: true,
+          machineUnits: {
+            include: {
+              machine: true,
+            },
+          },
+        },
       }),
   },
   Mutation: {
@@ -98,22 +121,31 @@ const DiaryResolvers = {
       const diary = await prisma.diary.create({
         data: {
           name: args.diary.name,
+          firstDate: args.diary.firstDate,
+          lastDate: args.diary.lastDate,
           machinesCount: args.diary.machinesCount,
           schedules: {
-            connect: args.schedules,
+            connect: args.diary.schedules,
           },
           machineUnits: {
-            connect: args.machineUnits,
+            connect: args.diary.machineUnits,
           },
         },
       });
       args.diary.schedules.forEach(async (element) => {
-        await prisma.machineUnitOnSchedule.createMany({
-          data: args.diary.machineUnits.map((element2) => ({
-            scheduleId: element.id,
-            machineUnitId: element2.id,
-            countAvailable: element2.count,
-          })),
+        await prisma.schedule.update({
+          where: {
+            id: element.id,
+          },
+          data: {
+            machineUnitsOnSchedule: {
+              createMany: {
+                data: args.diary.machineUnits.map((item) => ({
+                  machineUnitId: item.id,
+                })),
+              },
+            },
+          },
         });
       });
       return diary;
@@ -122,6 +154,77 @@ const DiaryResolvers = {
       await prisma.schedule.createMany({
         data: args.schedules,
       }),
+
+    updateDiary: async (parent, args) => {
+      await prisma.machineUnitOnSchedule.deleteMany({
+        where: {
+          machineUnit: {
+            Diary: {
+              id: args.diary.id,
+            },
+          },
+        },
+      });
+
+      await prisma.diary.update({
+        where: {
+          id: args.diary.id,
+        },
+        data: {
+          name: {
+            set: args.diary.name,
+          },
+          machinesCount: {
+            set: args.diary.machinesCount,
+          },
+          firstDate: {
+            set: args.diary.firstDate,
+          },
+          lastDate: {
+            set: args.diary.lastDate,
+          },
+          schedules: {
+            set: args.diary.schedules,
+          },
+          machineUnits: {
+            set: args.diary.machineUnits,
+          },
+        },
+      });
+
+      args.diary.schedules.forEach(async (element) => {
+        await prisma.schedule.update({
+          where: {
+            id: element.id,
+          },
+          data: {
+            machineUnitsOnSchedule: {
+              createMany: {
+                data: args.diary.machineUnits.map((item) => ({
+                  machineUnitId: item.id,
+                })),
+              },
+            },
+          },
+        });
+      });
+    },
+    deleteDiary: async (parent, args) => {
+      await prisma.machineUnitOnSchedule.deleteMany({
+        where: {
+          machineUnit: {
+            Diary: {
+              id: args.id,
+            },
+          },
+        },
+      });
+      return await prisma.diary.delete({
+        where: {
+          id: args.id,
+        },
+      });
+    },
   },
 };
 

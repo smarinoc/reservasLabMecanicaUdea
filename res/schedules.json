@@ -1,0 +1,392 @@
+{
+    "schedules": [
+        {
+            "hour": "6:00 Am - 7:00 Am",
+            "day": "Lunes"
+        },
+        {
+            "hour": "6:00 Am - 7:00 Am",
+            "day": "Martes"
+        },
+        {
+            "hour": "6:00 Am - 7:00 Am",
+            "day": "Miércoles"
+        },
+        {
+            "hour": "6:00 Am - 7:00 Am",
+            "day": "Jueves"
+        },
+        {
+            "hour": "6:00 Am - 7:00 Am",
+            "day": "Viernes"
+        },
+        {
+            "hour": "6:00 Am - 7:00 Am",
+            "day": "Sábado"
+        },
+
+      
+        {
+            "hour": "7:00 Am - 8:00 Am",
+            "day": "Lunes"
+        },
+        {
+            "hour": "7:00 Am - 8:00 Am",
+            "day": "Martes"
+        },
+        {
+            "hour": "7:00 Am - 8:00 Am",
+            "day": "Miércoles"
+        },
+        {
+            "hour": "7:00 Am - 8:00 Am",
+            "day": "Jueves"
+        },
+        {
+            "hour": "7:00 Am - 8:00 Am",
+            "day": "Viernes"
+        },
+        {
+            "hour": "7:00 Am - 8:00 Am",
+            "day": "Sábado"
+        },
+
+
+        {
+            "hour": "8:00 Am - 9:00 Am",
+            "day": "Lunes"
+        },
+        {
+            "hour": "8:00 Am - 9:00 Am",
+            "day": "Martes"
+        },
+        {
+            "hour": "8:00 Am - 9:00 Am",
+            "day": "Miércoles"
+        },
+        {
+            "hour": "8:00 Am - 9:00 Am",
+            "day": "Jueves"
+        },
+        {
+            "hour": "8:00 Am - 9:00 Am",
+            "day": "Viernes"
+        },
+        {
+            "hour": "8:00 Am - 9:00 Am",
+            "day": "Sábado"
+        },
+
+
+        {
+            "hour": "9:00 Am - 10:00 Am",
+            "day": "Lunes"
+        },
+        {
+            "hour": "9:00 Am - 10:00 Am",
+            "day": "Martes"
+        },
+        {
+            "hour": "9:00 Am - 10:00 Am",
+            "day": "Miércoles"
+        },
+        {
+            "hour": "9:00 Am - 10:00 Am",
+            "day": "Jueves"
+        },
+        {
+            "hour": "9:00 Am - 10:00 Am",
+            "day": "Viernes"
+        },
+        {
+            "hour": "9:00 Am - 10:00 Am",
+            "day": "Sábado"
+        },
+
+
+        {
+            "hour": "10:00 Am - 11:00 Am",
+            "day": "Lunes"
+        },
+        {
+            "hour": "10:00 Am - 11:00 Am",
+            "day": "Martes"
+        },
+        {
+            "hour": "10:00 Am - 11:00 Am",
+            "day": "Miércoles"
+        },
+        {
+            "hour": "10:00 Am - 11:00 Am",
+            "day": "Jueves"
+        },
+        {
+            "hour": "10:00 Am - 11:00 Am",
+            "day": "Viernes"
+        },
+        {
+            "hour": "10:00 Am - 11:00 Am",
+            "day": "Sábado"
+        },
+
+
+        {
+            "hour": "11:00 Am - 12:00 Pm",
+            "day": "Lunes"
+        },
+        {
+            "hour": "11:00 Am - 12:00 Pm",
+            "day": "Martes"
+        },
+        {
+            "hour": "11:00 Am - 12:00 Pm",
+            "day": "Miércoles"
+        },
+        {
+            "hour": "11:00 Am - 12:00 Pm",
+            "day": "Jueves"
+        },
+        {
+            "hour": "11:00 Am - 12:00 Pm",
+            "day": "Viernes"
+        },
+        {
+            "hour": "11:00 Am - 12:00 Pm",
+            "day": "Sábado"
+        },
+
+
+        {
+            "hour": "12:00 Pm - 1:00 Pm",
+            "day": "Lunes"
+        },
+        {
+            "hour": "12:00 Pm - 1:00 Pm",
+            "day": "Martes"
+        },
+        {
+            "hour": "12:00 Pm - 1:00 Pm",
+            "day": "Miércoles"
+        },
+        {
+            "hour": "12:00 Pm - 1:00 Pm",
+            "day": "Jueves"
+        },
+        {
+            "hour": "12:00 Pm - 1:00 Pm",
+            "day": "Viernes"
+        },
+        {
+            "hour": "12:00 Pm - 1:00 Pm",
+            "day": "Sábado"
+        },
+
+
+        {
+            "hour": "1:00 Pm - 2:00 Pm",
+            "day": "Lunes"
+        },
+        {
+            "hour": "1:00 Pm - 2:00 Pm",
+            "day": "Martes"
+        },
+        {
+            "hour": "1:00 Pm - 2:00 Pm",
+            "day": "Miércoles"
+        },
+        {
+            "hour": "1:00 Pm - 2:00 Pm",
+            "day": "Jueves"
+        },
+        {
+            "hour": "1:00 Pm - 2:00 Pm",
+            "day": "Viernes"
+        },
+        {
+            "hour": "1:00 Pm - 2:00 Pm",
+            "day": "Sábado"
+        },
+
+
+        {
+            "hour": "2:00 Pm - 3:00 Pm",
+            "day": "Lunes"
+        },
+        {
+            "hour": "2:00 Pm - 3:00 Pm",
+            "day": "Martes"
+        },
+        {
+            "hour": "2:00 Pm - 3:00 Pm",
+            "day": "Miércoles"
+        },
+        {
+            "hour": "2:00 Pm - 3:00 Pm",
+            "day": "Jueves"
+        },
+        {
+            "hour": "2:00 Pm - 3:00 Pm",
+            "day": "Viernes"
+        },
+        {
+            "hour": "2:00 Pm - 3:00 Pm",
+            "day": "Sábado"
+        },
+
+
+        {
+            "hour": "3:00 Pm - 4:00 Pm",
+            "day": "Lunes"
+        },
+        {
+            "hour": "3:00 Pm - 4:00 Pm",
+            "day": "Martes"
+        },
+        {
+            "hour": "3:00 Pm - 4:00 Pm",
+            "day": "Miércoles"
+        },
+        {
+            "hour": "3:00 Pm - 4:00 Pm",
+            "day": "Jueves"
+        },
+        {
+            "hour": "3:00 Pm - 4:00 Pm",
+            "day": "Viernes"
+        },
+        {
+            "hour": "3:00 Pm - 4:00 Pm",
+            "day": "Sábado"
+        },
+
+
+        {
+            "hour": "4:00 Pm - 5:00 Pm",
+            "day": "Lunes"
+        },
+        {
+            "hour": "4:00 Pm - 5:00 Pm",
+            "day": "Martes"
+        },
+        {
+            "hour": "4:00 Pm - 5:00 Pm",
+            "day": "Miércoles"
+        },
+        {
+            "hour": "4:00 Pm - 5:00 Pm",
+            "day": "Jueves"
+        },
+        {
+            "hour": "4:00 Pm - 5:00 Pm",
+            "day": "Viernes"
+        },
+        {
+            "hour": "4:00 Pm - 5:00 Pm",
+            "day": "Sábado"
+        },
+
+
+        {
+            "hour": "5:00 Pm - 6:00 Pm",
+            "day": "Lunes"
+        },
+        {
+            "hour": "5:00 Pm - 6:00 Pm",
+            "day": "Martes"
+        },
+        {
+            "hour": "5:00 Pm - 6:00 Pm",
+            "day": "Miércoles"
+        },
+        {
+            "hour": "5:00 Pm - 6:00 Pm",
+            "day": "Jueves"
+        },
+        {
+            "hour": "5:00 Pm - 6:00 Pm",
+            "day": "Viernes"
+        },
+        {
+            "hour": "5:00 Pm - 6:00 Pm",
+            "day": "Sábado"
+        },
+
+
+        {
+            "hour": "6:00 Pm - 8:00 Pm",
+            "day": "Lunes"
+        },
+        {
+            "hour": "6:00 Pm - 8:00 Pm",
+            "day": "Martes"
+        },
+        {
+            "hour": "6:00 Pm - 8:00 Pm",
+            "day": "Miércoles"
+        },
+        {
+            "hour": "6:00 Pm - 8:00 Pm",
+            "day": "Jueves"
+        },
+        {
+            "hour": "6:00 Pm - 8:00 Pm",
+            "day": "Viernes"
+        },
+        {
+            "hour": "6:00 Pm - 8:00 Pm",
+            "day": "Sábado"
+        },
+
+
+        {
+            "hour": "8:00 Pm - 9:00 Pm",
+            "day": "Lunes"
+        },
+        {
+            "hour": "8:00 Pm - 9:00 Pm",
+            "day": "Martes"
+        },
+        {
+            "hour": "8:00 Pm - 9:00 Pm",
+            "day": "Miércoles"
+        },
+        {
+            "hour": "8:00 Pm - 9:00 Pm",
+            "day": "Jueves"
+        },
+        {
+            "hour": "8:00 Pm - 9:00 Pm",
+            "day": "Viernes"
+        },
+        {
+            "hour": "8:00 Pm - 9:00 Pm",
+            "day": "Sábado"
+        },
+
+
+        {
+            "hour": "9:00 Pm - 10:00 Pm",
+            "day": "Lunes"
+        },
+        {
+            "hour": "9:00 Pm - 10:00 Pm",
+            "day": "Martes"
+        },
+        {
+            "hour": "9:00 Pm - 10:00 Pm",
+            "day": "Miércoles"
+        },
+        {
+            "hour": "9:00 Pm - 10:00 Pm",
+            "day": "Jueves"
+        },
+        {
+            "hour": "9:00 Pm - 10:00 Pm",
+            "day": "Viernes"
+        },
+        {
+            "hour": "9:00 Pm - 10:00 Pm",
+            "day": "Sábado"
+        }
+           ]
+}

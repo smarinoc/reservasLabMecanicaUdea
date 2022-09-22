@@ -1,48 +1,29 @@
 import { useMutation } from '@apollo/client';
 import FormSchedule from '@components/FormSchedule';
 import { CREATE_DIARY } from 'graphql/mutations/diary';
-import React, { useState } from 'react';
+import React from 'react';
 import { toast } from 'react-toastify';
 
 const createSchedule = () => {
-  const [schedules, setSchedules] = useState([]);
-  const [machines, setMachines] = useState([]);
-  const [name, setName] = useState('');
   const [createDiary] = useMutation(CREATE_DIARY);
 
-  const onCreateDiary = async () => {
-    let machinesCount = 0;
+  const onCreateDiary = async (diary) => {
     await createDiary({
       variables: {
         diary: {
-          name,
-          schedules,
-          machineUnits: machines.map((machine) => {
-            machinesCount += machine.count;
-            return {
-              count: machine.count,
-              id: machine.id,
-            };
-          }),
-          machinesCount: String(machinesCount),
+          name: diary.name,
+          firstDate: diary.firstDate,
+          lastDate: diary.lastDate,
+          schedules: diary.schedules,
+          machineUnits: diary.machines.map((item) => ({ id: item.id })),
+          machinesCount: String(diary.machines.length),
         },
       },
     });
     toast.success('Horario creado');
   };
 
-  return (
-    <FormSchedule
-      type='create'
-      name={name}
-      setName={setName}
-      schedules={schedules}
-      setSchedules={setSchedules}
-      machines={machines}
-      setMachines={setMachines}
-      onSubmit={onCreateDiary}
-    />
-  );
+  return <FormSchedule type='create' onSubmitP={onCreateDiary} />;
 };
 
 export default createSchedule;

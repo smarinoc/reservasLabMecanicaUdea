@@ -7,6 +7,7 @@ const MachineTypes = gql`
     image: String
     description: String
     recommendations: [String]
+    amount: Int
     machineUnits: [MachineUnit]
   }
 
@@ -15,7 +16,7 @@ const MachineTypes = gql`
     machine: Machine
     machineId: ID
     location: String
-    count: Int
+    serial: String
     machineUnitsOnSchedule: [MachineUnitOnSchedule]
     diary: Diary
     diaryId: String
@@ -31,6 +32,7 @@ const MachineTypes = gql`
     name: String
     image: String
     description: String
+    amount: Int
     recommendations: [String]
     machineUnits: [MachineUnitInput]
   }
@@ -38,7 +40,7 @@ const MachineTypes = gql`
   input MachineUnitInput {
     id: ID
     location: String
-    count: Int
+    serial: String
   }
 
   type Query {

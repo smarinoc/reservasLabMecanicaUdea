@@ -80,6 +80,9 @@ const MachineResolvers = {
           recommendations: {
             set: args.machine.recommendations,
           },
+          amount: {
+            set: args.machine.amount,
+          },
         },
       });
 

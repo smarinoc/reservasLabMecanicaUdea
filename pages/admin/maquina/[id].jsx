@@ -26,7 +26,7 @@ const machineDetails = () => {
           ...machine,
           machineUnits: machine.machineUnits.map((item) => ({
             location: item.location,
-            count: item.count,
+            serial: item.serial,
           })),
         },
       },
@@ -67,7 +67,7 @@ const machineDetails = () => {
       />
       <Dialog open={openDeleteDialog} onClose={changeDialog}>
         <DeleteDialog
-          deleteMachine={onDeleteMachine}
+          onSubmit={onDeleteMachine}
           closeDialog={changeDialog}
           question='¿Seguro que quiere eliminar esta máquina?'
           title='Eliminar'
