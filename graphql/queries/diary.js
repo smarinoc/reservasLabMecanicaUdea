@@ -11,14 +11,40 @@ const GET_DIARIES = gql`
 `;
 
 const GET_MACHINES_UNIT_BY_SCHEDULE = gql`
-  query GetMachinesUnitBySchedule($schedule: scheduleGetMachinesUnit) {
-    getMachinesUnitBySchedule(schedule: $schedule) {
+  query GetMachinesUnitBySchedule($id: ID) {
+    getMachinesUnitBySchedule(id: $id) {
       id
+      location
+      serial
       machine {
         name
         image
       }
-      location
+    }
+  }
+`;
+
+const GET_DIARY_BY_ID = gql`
+  query GetDiaryById($id: ID) {
+    getDiaryById(id: $id) {
+      id
+      name
+      firstDate
+      lastDate
+      schedules {
+        day
+        hour
+        id
+      }
+      machineUnits {
+        id
+        location
+        serial
+        machine {
+          name
+          image
+        }
+      }
     }
   }
 `;
@@ -26,10 +52,27 @@ const GET_MACHINES_UNIT_BY_SCHEDULE = gql`
 const GET_SCHEDULE_AVAILABLE = gql`
   query Query {
     getScheduleAvailable {
+      id
       day
       hour
     }
   }
 `;
 
-export { GET_DIARIES, GET_MACHINES_UNIT_BY_SCHEDULE, GET_SCHEDULE_AVAILABLE };
+const GET_ALL_SCHEDULES = gql`
+  query Query {
+    getAllSchedules {
+      day
+      hour
+      id
+    }
+  }
+`;
+
+export {
+  GET_DIARIES,
+  GET_MACHINES_UNIT_BY_SCHEDULE,
+  GET_SCHEDULE_AVAILABLE,
+  GET_DIARY_BY_ID,
+  GET_ALL_SCHEDULES,
+};

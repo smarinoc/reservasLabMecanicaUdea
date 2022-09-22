@@ -19,7 +19,11 @@ const maquinas = () => {
 
   return (
     <div>
-      <CatalogMachines onMachine={onMachine} machines={data.getMachines} />
+      <CatalogMachines
+        onMachine={onMachine}
+        machines={data.getMachines}
+        type='machines'
+      />
     </div>
   );
 };

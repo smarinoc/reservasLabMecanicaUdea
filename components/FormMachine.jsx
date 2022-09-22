@@ -16,29 +16,41 @@ const FormMachine = ({ machine, onSubmit, onDelete, loading }) => {
   const [recommendations, setRecommendations] = useState(
     machine?.recommendations || []
   );
+  const [amount, setAmount] = useState(machine?.amount || 1);
   const [image, setImage] = useState(machine?.image || []);
   const [machineUnits, setMachineUnits] = useState(
     machine?.machineUnits.map((item) => ({
       location: item.location,
-      count: item.count,
+      serial: item.serial,
     })) || [
       {
         location: '',
-        count: 0,
+        serial: '',
       },
     ]
   );
   const [disabledButton, setDisabledButton] = useState(false);
   const layoutContext = useLayoutContext();
 
+  const changeAmount = (newAmount) => {
+    const gap = newAmount - amount;
+
+    if (gap > 0) {
+      const repeat = Array(gap)
+        .fill([{ location: '', serial: '' }])
+        .flat();
+      setMachineUnits([...machineUnits, ...repeat]);
+    } else if (gap < 0) {
+      const aux = [...machineUnits];
+      aux.splice(newAmount);
+      setMachineUnits(aux);
+    }
+  };
+
   useEffect(() => {
     layoutContext.setLoading(loading);
     setDisabledButton(loading);
   }, [loading]);
-
-  const addLocation = () => {
-    setMachineUnits([...machineUnits, { location: '', count: 0 }]);
-  };
 
   const onSubmitRecommendation = (e) => {
     e.preventDefault(false);
@@ -52,22 +64,17 @@ const FormMachine = ({ machine, onSubmit, onDelete, loading }) => {
     setRecommendations(aux);
   };
 
-  const onCancelMachineUnit = (index) => {
-    const aux = [...machineUnits];
-    aux.splice(index, 1);
-    setMachineUnits(aux);
-  };
-
   const resetForm = () => {
     setName('');
     setDescription('');
     setImage('');
+    setAmount(1);
     setRecommendation('');
     setRecommendations([]);
     setMachineUnits([
       {
         location: '',
-        count: 0,
+        serial: '',
       },
     ]);
   };
@@ -145,16 +152,23 @@ const FormMachine = ({ machine, onSubmit, onDelete, loading }) => {
             ))}
           </ul>
         </div>
-        {machineUnits.map((item, index) => (
-          <div className='w-full'>
-            <InputMachineUnit
-              unit={item}
-              onCancelMachineUnit={onCancelMachineUnit}
-              index={index}
-            />
-          </div>
-        ))}
-        <Button text='Añadir otra ubicación' onClick={addLocation} />
+        <Input
+          name='amount'
+          value={amount}
+          onChange={(e) => {
+            changeAmount(e.target.value);
+            setAmount(e.target.value);
+          }}
+          text='Cantidad'
+          type='number'
+        />
+        <div className='flex w-full flex-col gap-1 items-center'>
+          {machineUnits.map((item) => (
+            <div className='w-full'>
+              <InputMachineUnit unit={item} />
+            </div>
+          ))}
+        </div>
       </div>
       <div
         className={`flex w-full ${
@@ -172,6 +186,7 @@ const FormMachine = ({ machine, onSubmit, onDelete, loading }) => {
               image: url,
               description,
               recommendations,
+              amount: parseInt(amount, 10),
               machineUnits,
             });
             resetForm();

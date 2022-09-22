@@ -5,15 +5,18 @@ const DiaryTypes = gql`
     id: ID
     name: String
     schedules: [Schedule]
+    machineUnits: [MachineUnit]
+    firstDate: Date
+    lastDate: Date
   }
 
   type Schedule {
     id: ID
     day: String
     hour: String
-    diary: Diary
-    diaryId: String
+    diaries: [Diary]
     machineUnitsOnSchedule: [MachineUnitOnSchedule]
+    reservations: [Reservation]
   }
 
   type MachineUnitOnSchedule {
@@ -25,31 +28,14 @@ const DiaryTypes = gql`
     countAvailable: Int
   }
 
-  input MachineUnitID {
-    id: ID
-  }
-
   input DiaryInput {
+    id: ID
     name: String
     machinesCount: String
-    schedules: [ScheduleInput]
-    machineUnits: [machineUnitsCreateDiary]
-  }
-
-  input ScheduleInput {
-    day: String
-    hour: String
-    machineUnitsOnSchedule: [MachineUnitOnScheduleInput]
-  }
-
-  input MachineUnitOnScheduleInput {
-    machineUnitId: String
-    countAvailable: Int
-  }
-
-  input machineUnitsCreateDiary {
-    countAvailable: Int
-    machineUnitId: ID
+    schedules: [InputID]
+    machineUnits: [InputID]
+    firstDate: Date
+    lastDate: Date
   }
 
   type diaryTableItem {
@@ -65,12 +51,17 @@ const DiaryTypes = gql`
 
   type Query {
     getDiaries: [diaryTableItem]
-    getMachinesUnitBySchedule(schedule: scheduleGetMachinesUnit): [MachineUnit]
+    getMachinesUnitBySchedule(id: ID): [MachineUnit]
     getScheduleAvailable: [Schedule]
+    getAllSchedules: [Schedule]
+    getDiaryById(id: ID): Diary
   }
 
   type Mutation {
     createDiary(diary: DiaryInput): Diary
+    createSchedules(schedules: [scheduleGetMachinesUnit]): String
+    updateDiary(diary: DiaryInput): Diary
+    deleteDiary(id: ID): Diary
   }
 `;
 

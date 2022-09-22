@@ -2,7 +2,7 @@ import React from 'react';
 import Button from 'components/Button';
 
 const DeleteDialog = ({
-  deleteMachine,
+  onSubmit,
   closeDialog,
   title,
   question,
@@ -12,7 +12,7 @@ const DeleteDialog = ({
     closeDialog();
   };
   const onDelete = async () => {
-    deleteMachine();
+    onSubmit();
     closeDialog();
   };
   return (

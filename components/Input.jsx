@@ -8,6 +8,7 @@ const Input = ({
   name,
   text,
   disabled,
+  inputRef,
 }) => (
   <div className='flex flex-col w-full'>
     <label
@@ -25,6 +26,7 @@ const Input = ({
       name={name}
       id={name}
       disabled={disabled}
+      ref={inputRef}
     />
   </div>
 );
