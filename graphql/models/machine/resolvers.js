@@ -50,6 +50,29 @@ const MachineResolvers = {
           id: args.id,
         },
       }),
+    getMachinesInfo: async () => {
+      const resData = await prisma.machineUnit.findMany({
+        include: {
+          machine: true,
+        },
+      });
+      const res = resData.map(async (item) => ({
+        location: item.location,
+        state: item.state,
+        serial: item.serial,
+        name: item.machine.name,
+        reservationCount: String(
+          await prisma.reservation.count({
+            where: {
+              machineUnitId: item.id,
+              state: 'completada',
+            },
+          })
+        ),
+      }));
+
+      return res;
+    },
   },
 
   Mutation: {

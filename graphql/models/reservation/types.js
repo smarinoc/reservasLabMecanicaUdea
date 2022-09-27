@@ -13,6 +13,15 @@ const ReservationTypes = gql`
     machineUnit: MachineUnit
   }
 
+  type ReservationInfo {
+    userDocument: String
+    state: String
+    hour: String
+    date: Date
+    serial: String
+    machineName: String
+  }
+
   input ReservationInput {
     scheduleId: ID
     machineUnitId: ID
@@ -30,6 +39,7 @@ const ReservationTypes = gql`
   type Query {
     getReservations: [Reservation]
     getReservationsByUser(userId: ID): [Reservation]
+    getReservationInfo: [ReservationInfo]
   }
 
   type Mutation {

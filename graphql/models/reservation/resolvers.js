@@ -57,6 +57,49 @@ const ReservationResolvers = {
           },
         },
       }),
+    getReservationInfo: async () => {
+      const resData = await prisma.reservation.findMany({
+        select: {
+          date: true,
+          state: true,
+          schedule: {
+            select: {
+              hour: true,
+            },
+          },
+          user: {
+            select: {
+              profile: {
+                select: {
+                  document: true,
+                },
+              },
+            },
+          },
+          machineUnit: {
+            select: {
+              serial: true,
+              machine: {
+                select: {
+                  name: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      const res = resData.map((item) => ({
+        userDocument: item.user.profile?.document || '',
+        state: item.state,
+        hour: item.schedule.hour,
+        date: item.date,
+        serial: item.machineUnit.serial,
+        machineName: item.machineUnit.machine.name,
+      }));
+
+      return res;
+    },
   },
   Mutation: {
     createReservation: async (parent, args) => {

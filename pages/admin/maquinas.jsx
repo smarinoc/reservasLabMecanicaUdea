@@ -15,6 +15,8 @@ const maquinas = () => {
     router.push(`/admin/maquina/${machine.id}`);
   };
 
+  console.log('here front');
+
   if (loading) return <div>Loading....</div>;
 
   return (
