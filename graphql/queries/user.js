@@ -22,4 +22,18 @@ const GET_USER_ID = gql`
   }
 `;
 
-export { GET_USER_ID };
+const GET_USERS_INFO = gql`
+  query GetUsersInfo {
+    getUsersInfo {
+      name
+      email
+      state
+      documentType
+      document
+      userType
+      phoneNumber
+    }
+  }
+`;
+
+export { GET_USER_ID, GET_USERS_INFO };

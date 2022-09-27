@@ -22,6 +22,14 @@ const MachineTypes = gql`
     diaryId: String
   }
 
+  type MachineInfo {
+    name: String
+    location: String
+    serial: String
+    state: String
+    reservationCount: String
+  }
+
   type MachineCatalogReserve {
     machine: Machine
     location: String
@@ -47,6 +55,7 @@ const MachineTypes = gql`
     getMachines: [Machine]
     getMachinesAvailable: [MachineUnit]
     getMachineByID(id: ID): Machine
+    getMachinesInfo: [MachineInfo]
   }
 
   type Mutation {

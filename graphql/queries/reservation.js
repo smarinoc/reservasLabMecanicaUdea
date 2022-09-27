@@ -27,4 +27,17 @@ const GET_RESERVATIONS_BY_USER = gql`
   }
 `;
 
-export { GET_RESERVATIONS_BY_USER };
+const GET_RESERVATION_INFO = gql`
+  query GetReservationInfo {
+    getReservationInfo {
+      userDocument
+      state
+      hour
+      date
+      serial
+      machineName
+    }
+  }
+`;
+
+export { GET_RESERVATIONS_BY_USER, GET_RESERVATION_INFO };

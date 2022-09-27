@@ -31,6 +31,7 @@ const Layout = ({ children }) => {
         { name: 'Horarios', href: '/admin/horarios' },
         { name: 'Reservar', href: '/' },
         { name: 'Reservas', href: '/user/reservaciones' },
+        { name: 'Usuarios', href: '/admin/usuarios' },
       ];
       break;
     default:

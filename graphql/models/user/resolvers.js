@@ -10,6 +10,25 @@ const UserResolvers = {
           id: args.id,
         },
       }),
+    getUsersInfo: async () => {
+      const restData = await prisma.profile.findMany({
+        include: {
+          user: true,
+        },
+      });
+      const res = restData.map((profile) => ({
+        id: profile.user?.id || '',
+        name: profile.user?.name || '',
+        email: profile.user?.email || '',
+        state: profile.state,
+        documentType: profile.documentType || '',
+        document: profile.document || '',
+        userType: profile.userType || '',
+        phoneNumber: profile.phoneNumber || '',
+      }));
+
+      return res;
+    },
   },
   Mutation: {
     createProfiles: async (parent, args) => {

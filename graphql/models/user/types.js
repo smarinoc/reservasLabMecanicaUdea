@@ -23,6 +23,16 @@ const UserTypes = gql`
     phoneNumber: String
   }
 
+  type UserInfo {
+    name: String
+    email: String
+    state: String
+    documentType: String
+    document: String
+    userType: String
+    phoneNumber: String
+  }
+
   input ProfileCreateInput {
     email: String!
     state: State
@@ -45,6 +55,7 @@ const UserTypes = gql`
   type Query {
     getUsers: [User]
     getUser(id: ID!): User
+    getUsersInfo: [UserInfo]
   }
 
   type Mutation {
