@@ -2,10 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import Button from '@components/Button';
+import { useRouter } from 'next/router';
 
 const ItemMachine = ({ machine, type, onClick, isSelectParam }) => {
   const [isSelect, setIsSelect] = useState(false);
-
+  const router = useRouter();
   useEffect(() => {
     setIsSelect(isSelectParam);
   }, [isSelectParam]);
@@ -89,7 +90,12 @@ const ItemMachine = ({ machine, type, onClick, isSelectParam }) => {
           <span className='text-lg font-semibold px-1 text-gray-700'>
             {machine.serial}
           </span>
-          <Button text='Detalles' />
+          <Button
+            onClick={() => {
+              router.push(`/user/detalles-maquina/${machine.id}`);
+            }}
+            text='Detalles'
+          />
         </div>
       )}
     </button>

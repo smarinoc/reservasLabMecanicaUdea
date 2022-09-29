@@ -42,6 +42,15 @@ const MachineTypes = gql`
     location: String
   }
 
+  type MachineDetails {
+    name: String
+    image: String
+    description: String
+    recommendations: [String]
+    location: String
+    serial: String
+  }
+
   input MachineInput {
     id: ID
     name: String
@@ -68,6 +77,7 @@ const MachineTypes = gql`
     getMachinesAvailable: [MachineUnit]
     getMachineByID(id: ID): Machine
     getMachinesInfo: [MachineInfo]
+    getMachineDetails(id: ID): MachineDetails
   }
 
   type Mutation {
