@@ -32,7 +32,7 @@ const machineDetails = () => {
       },
     });
     toast.success('Máquina editada');
-    router.push('/admin/maquinas');
+    router.push('/admin/maquinas/maquinas');
   };
 
   const onDelete = (machine) => {
@@ -47,7 +47,7 @@ const machineDetails = () => {
       },
     });
     toast.success('Máquina Eliminada');
-    router.push('/admin/maquinas');
+    router.push('/admin/maquinas/maquinas');
   };
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);

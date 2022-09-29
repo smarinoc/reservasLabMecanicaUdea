@@ -28,7 +28,7 @@ const ReservationResolvers = {
       await prisma.reservation.findMany({
         where: {
           userId: args.userId,
-          state: 'reserved',
+          state: 'reservada',
         },
         include: {
           user: {
@@ -107,7 +107,7 @@ const ReservationResolvers = {
       const countReservationUser = await prisma.reservation.count({
         where: {
           userId: args.reservation.userId,
-          state: 'reserved',
+          state: 'reservada',
         },
       });
       if (countReservationUser < 1) {
@@ -148,7 +148,7 @@ const ReservationResolvers = {
             },
             data: {
               state: {
-                set: 'reserved',
+                set: 'busy',
               },
             },
           });
@@ -170,7 +170,7 @@ const ReservationResolvers = {
         where: {
           scheduleId: args.reservation.scheduleId,
           machineUnitId: args.reservation.machineUnitId,
-          state: 'reserved',
+          state: 'reservada',
         },
         data: {
           state: {
@@ -184,7 +184,7 @@ const ReservationResolvers = {
         },
         data: {
           state: {
-            set: 'cancel',
+            set: 'cancelada',
           },
         },
       });

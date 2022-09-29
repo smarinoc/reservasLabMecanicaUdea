@@ -50,17 +50,17 @@ model User {
 }
 
 model Profile {
-  id           String   @id @default(cuid())
-  userId       String?  @unique
-  user         User?    @relation(fields: [userId], references: [id])
-  email        String   @unique
-  state        State    @default(authorized)
+  id           String       @id @default(cuid())
+  userId       String?      @unique
+  user         User?        @relation(fields: [userId], references: [id])
+  email        String       @unique
+  state        ProfileState @default(habilitado)
   documentType String?
   document     String?
   userType     String?
   phoneNumber  String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
 }
 
 enum Rol {
@@ -68,10 +68,10 @@ enum Rol {
   user
 }
 
-enum State {
-  authorized
-  registered
-  disabled
+enum ProfileState {
+  habilitado
+  registrado
+  inhabilitado
 }
 
 model Machine {
@@ -91,7 +91,7 @@ model MachineUnit {
   machineId              String
   machine                Machine                 @relation(fields: [machineId], references: [id])
   location               String
-  state                  String                  @default("available")
+  state                  MachineUnitState        @default(habilitada)
   machineUnitsOnSchedule MachineUnitOnSchedule[]
   Diary                  Diary?                  @relation(fields: [diaryId], references: [id])
   diaryId                String?
@@ -101,16 +101,29 @@ model MachineUnit {
   reservation            Reservation[]
 }
 
+enum MachineUnitState {
+  habilitada
+  mantenimiento
+  inhabilitada
+}
+
 model Diary {
   id            String        @id @default(cuid())
   name          String
   machinesCount String
   schedules     Schedule[]
   machineUnits  MachineUnit[]
+  state         DiaryState    @default(habilitado)
   firstDate     DateTime
   lastDate      DateTime
   createdAt     DateTime      @default(now())
   updatedAt     DateTime      @updatedAt
+}
+
+enum DiaryState {
+  habilitado
+  finalizado
+  inhabilitado
 }
 
 model Schedule {
@@ -123,26 +136,38 @@ model Schedule {
 }
 
 model MachineUnitOnSchedule {
-  id            String      @id @default(cuid())
-  machineUnit   MachineUnit @relation(fields: [machineUnitId], references: [id])
-  schedule      Schedule    @relation(fields: [scheduleId], references: [id])
+  id            String                     @id @default(cuid())
+  machineUnit   MachineUnit                @relation(fields: [machineUnitId], references: [id])
+  schedule      Schedule                   @relation(fields: [scheduleId], references: [id])
   machineUnitId String
   scheduleId    String
-  state         String      @default("available")
+  state         MachineUnitOnScheduleState @default(available)
+}
+
+enum MachineUnitOnScheduleState {
+  available
+  busy
+  disabled
 }
 
 model Reservation {
-  id            String      @id @default(cuid())
-  schedule      Schedule    @relation(fields: [scheduleId], references: [id])
-  machineUnit   MachineUnit @relation(fields: [machineUnitId], references: [id])
-  user          User        @relation(fields: [userId], references: [id])
+  id            String           @id @default(cuid())
+  schedule      Schedule         @relation(fields: [scheduleId], references: [id])
+  machineUnit   MachineUnit      @relation(fields: [machineUnitId], references: [id])
+  user          User             @relation(fields: [userId], references: [id])
   userId        String
   date          DateTime
-  state         String      @default("reserved")
-  createdAt     DateTime    @default(now())
-  updatedAt     DateTime    @updatedAt
+  state         ReservationState @default(reservada)
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
   scheduleId    String
   machineUnitId String
+}
+
+enum ReservationState {
+  reservada
+  cancelada
+  completada
 }
 
 model VerificationToken {

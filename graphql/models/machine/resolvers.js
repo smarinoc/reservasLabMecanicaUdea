@@ -52,13 +52,22 @@ const MachineResolvers = {
       }),
     getMachinesInfo: async () => {
       const resData = await prisma.machineUnit.findMany({
-        include: {
-          machine: true,
+        select: {
+          machine: {
+            select: {
+              name: true,
+            },
+          },
+          location: true,
+          serial: true,
+          id: true,
+          state: true,
         },
       });
       const res = resData.map(async (item) => ({
         location: item.location,
         state: item.state,
+        id: item.id,
         serial: item.serial,
         name: item.machine.name,
         reservationCount: String(
@@ -136,6 +145,18 @@ const MachineResolvers = {
       return await prisma.machine.delete({
         where: {
           id: args.id,
+        },
+      });
+    },
+    changeMachineUnitState: async (parent, args) => {
+      await prisma.machineUnit.update({
+        where: {
+          id: args.data.id,
+        },
+        data: {
+          state: {
+            set: args.data.state,
+          },
         },
       });
     },

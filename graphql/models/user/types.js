@@ -16,7 +16,7 @@ const UserTypes = gql`
     id: ID
     user: User
     email: String
-    state: State
+    state: ProfileState
     documentType: String
     document: String
     userType: String
@@ -26,16 +26,23 @@ const UserTypes = gql`
   type UserInfo {
     name: String
     email: String
-    state: String
+    state: ProfileState
     documentType: String
     document: String
     userType: String
     phoneNumber: String
   }
 
+  type UserInfoTableAdmin {
+    id: ID
+    document: String
+    email: String
+    state: ProfileState
+  }
+
   input ProfileCreateInput {
     email: String!
-    state: State
+    state: ProfileState
   }
 
   input registerUserInput {
@@ -46,21 +53,28 @@ const UserTypes = gql`
     phoneNumber: String
   }
 
-  enum State {
-    authorized
-    registered
-    disabled
+  enum ProfileState {
+    habilitado
+    registrado
+    inhabilitado
+  }
+
+  input changeUserState {
+    id: ID
+    state: ProfileState
   }
 
   type Query {
     getUsers: [User]
     getUser(id: ID!): User
     getUsersInfo: [UserInfo]
+    getUsersInfoTableAdmin: [UserInfoTableAdmin]
   }
 
   type Mutation {
     createProfiles(data: [ProfileCreateInput]): Boolean
     registerUser(data: registerUserInput): Profile
+    changeUserState(data: changeUserState): ID
   }
 `;
 

@@ -36,4 +36,15 @@ const GET_USERS_INFO = gql`
   }
 `;
 
-export { GET_USER_ID, GET_USERS_INFO };
+const GET_USERS_INFO_TABLE_ADMIN = gql`
+  query getUsersInfoTableAdmin {
+    getUsersInfoTableAdmin {
+      id
+      email
+      document
+      state
+    }
+  }
+`;
+
+export { GET_USER_ID, GET_USERS_INFO, GET_USERS_INFO_TABLE_ADMIN };

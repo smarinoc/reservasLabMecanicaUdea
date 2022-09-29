@@ -15,9 +15,28 @@ const Table = ({ headers, data }) => {
         rows.filter((row) => {
           const rowValue = row.values[id];
           const date = moment(rowValue, 'DD/MM/YYYY').format('YYYY-MM-DD');
+
+          if (filterValue[0] === '') {
+            if (filterValue[1] === '') {
+              return true;
+            }
+            const res = moment(date).isBefore(
+              filterValue[1]?.format('YYYY-MM-DD')
+            );
+            return res;
+          }
+          if (filterValue[1] === '') {
+            if (filterValue[0] === '') {
+              return true;
+            }
+            const res = moment(date).isAfter(
+              filterValue[0]?.format('YYYY-MM-DD')
+            );
+            return res;
+          }
           return moment(date).isBetween(
-            filterValue[0]?.format('YYYY-MM-DD'),
-            filterValue[1]?.format('YYYY-MM-DD'),
+            filterValue[0].format('YYYY-MM-DD'),
+            filterValue[1].format('YYYY-MM-DD'),
             'days',
             '[]'
           );
@@ -44,7 +63,7 @@ const Table = ({ headers, data }) => {
         Número de registros: {rows.length}
       </span>
       <table
-        className='table-fixed border-collapse drop-shadow-sm border-2 bg-white '
+        className='table-fixed border-collapse drop-shadow-sm border-2 bg-white'
         {...getTableProps()}
       >
         <thead className='bg-gray-800'>

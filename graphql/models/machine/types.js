@@ -23,11 +23,18 @@ const MachineTypes = gql`
   }
 
   type MachineInfo {
+    id: ID
     name: String
     location: String
     serial: String
-    state: String
+    state: MachineUnitState
     reservationCount: String
+  }
+
+  enum MachineUnitState {
+    habilitada
+    mantenimiento
+    inhabilitada
   }
 
   type MachineCatalogReserve {
@@ -51,6 +58,11 @@ const MachineTypes = gql`
     serial: String
   }
 
+  input changeMachineUnitState {
+    id: ID
+    state: MachineUnitState
+  }
+
   type Query {
     getMachines: [Machine]
     getMachinesAvailable: [MachineUnit]
@@ -62,6 +74,7 @@ const MachineTypes = gql`
     createMachine(machine: MachineInput): Machine
     updateMachine(machine: MachineInput): Machine
     deleteMachine(id: ID): Machine
+    changeMachineUnitState(data: changeMachineUnitState): ID
   }
 `;
 

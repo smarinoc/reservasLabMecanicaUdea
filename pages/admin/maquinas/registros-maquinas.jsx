@@ -1,15 +1,32 @@
-import { useQuery } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import SelectFilter from '@components/SelectFilter';
 import RangeFilter from '@components/RangeFilter';
 import Table from '@components/Table';
 import TextFilter from '@components/TextFilter';
 import { GET_MACHINES_INFO } from 'graphql/queries/machine';
 import React from 'react';
+import ActionsCell from '@components/ActionsCell';
+import { CHANGE_MACHINE_UNIT_STATE } from 'graphql/mutations/machine';
 
 const machineRecords = () => {
   const { data: resData, loading } = useQuery(GET_MACHINES_INFO, {
     fetchPolicy: 'cache-and-network',
   });
+
+  const [changeMachineUnitState] = useMutation(CHANGE_MACHINE_UNIT_STATE, {
+    refetchQueries: [GET_MACHINES_INFO],
+  });
+
+  const onChangeMachineUnitState = async (data) => {
+    await changeMachineUnitState({
+      variables: {
+        data: {
+          id: data.id,
+          state: data.state,
+        },
+      },
+    });
+  };
 
   if (loading) {
     return <div>Loading...</div>;
@@ -35,16 +52,19 @@ const machineRecords = () => {
       filter: 'text',
     },
     {
-      Header: 'Estado',
-      accessor: 'state',
-      Filter: SelectFilter,
-      filter: 'equals',
-    },
-    {
       Header: 'Reservas hechas',
       accessor: 'reservationCount',
       Filter: RangeFilter,
       filter: 'between',
+    },
+    {
+      Header: 'Estado',
+      accessor: 'state',
+      Filter: SelectFilter,
+      filter: 'equals',
+      Cell: ActionsCell,
+      options: ['habilitada', 'mantenimiento', 'inhabilitada'],
+      onsubmit: onChangeMachineUnitState,
     },
   ];
 

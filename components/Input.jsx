@@ -19,7 +19,7 @@ const Input = ({
     </label>
     <input
       type={type}
-      className='w-full mt-1 flex rounded-md shadow-sm px-3 py-2 border-2 border-gray-200 outline-none focus:border-[#26DB84]'
+      className='w-full mt-1 flex rounded-md shadow-sm px-3 py-2 border-2 border-gray-500  outline-none focus:border-[#26DB84]'
       placeholder={placeholder}
       value={value}
       onChange={onChange}

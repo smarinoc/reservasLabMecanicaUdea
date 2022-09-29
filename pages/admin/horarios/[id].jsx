@@ -44,7 +44,7 @@ const diaryDetails = () => {
       },
     });
     toast.success('Horario Eliminado');
-    router.push('/admin/horarios');
+    router.push('/admin/horarios/horarios');
   };
 
   const onEditDiary = async (diaryP) => {
@@ -62,7 +62,7 @@ const diaryDetails = () => {
       },
     });
     toast.success('Horario Editado');
-    router.push('/admin/horarios');
+    router.push('/admin/horarios/horarios');
   };
 
   return (

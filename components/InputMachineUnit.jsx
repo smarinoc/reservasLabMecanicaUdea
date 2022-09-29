@@ -10,7 +10,7 @@ const InputMachineUnit = ({ unit }) => {
     setSerial(unit.serial);
   }, [unit]);
   return (
-    <div className='flex flex-row gap-1 border-2 border-blue-100 pr-2 p-1'>
+    <div className='flex flex-row gap-1 border-2 border-gray-400 pr-2 p-1'>
       <div className='flex flex-col gap-1 w-full  p-2'>
         <Input
           name='location'
