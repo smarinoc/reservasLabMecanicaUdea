@@ -54,9 +54,23 @@ const GET_MACHINES_INFO = gql`
   }
 `;
 
+const GET_MACHINE_DETAILS = gql`
+  query GetMachineDetails($id: ID) {
+    getMachineDetails(id: $id) {
+      name
+      image
+      description
+      recommendations
+      location
+      serial
+    }
+  }
+`;
+
 export {
   GET_MACHINES,
   GET_MACHINE_BY_ID,
   GET_MACHINES_AVAILABLE,
   GET_MACHINES_INFO,
+  GET_MACHINE_DETAILS,
 };

@@ -82,6 +82,36 @@ const MachineResolvers = {
 
       return res;
     },
+    getMachineDetails: async (parent, args) => {
+      const resData = await prisma.machineUnit.findUnique({
+        where: {
+          id: args.id,
+        },
+        select: {
+          location: true,
+          serial: true,
+          machine: {
+            select: {
+              name: true,
+              description: true,
+              recommendations: true,
+              image: true,
+            },
+          },
+        },
+      });
+
+      const res = {
+        image: resData.machine.image,
+        name: resData.machine.name,
+        description: resData.machine.description,
+        recommendations: resData.machine.recommendations,
+        location: resData.location,
+        serial: resData.serial,
+      };
+
+      return res;
+    },
   },
 
   Mutation: {
