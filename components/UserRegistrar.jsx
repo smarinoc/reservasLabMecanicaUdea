@@ -1,13 +1,13 @@
-/* eslint-disable react/no-array-index-key */
 /* eslint-disable no-unused-vars */
+/* eslint-disable react/no-array-index-key */
+import React, { useState } from 'react';
 import { useMutation } from '@apollo/client';
 import Button from '@components/Button';
 import ItemRegisterUser from '@components/ItemRegisterUser';
 import { CREATE_PROFILES } from 'graphql/mutations/user';
-import React, { useState } from 'react';
 import { toast } from 'react-toastify';
 
-const registerUsers = () => {
+const UserRegistrar = () => {
   const [email, setEmail] = useState('');
   const [emails, setEmails] = useState([]);
   const [CreateProfiles, { loading, error }] = useMutation(CREATE_PROFILES);
@@ -27,10 +27,12 @@ const registerUsers = () => {
         data: emails,
       },
     });
-    toast.success('Máquina Creada');
+    setEmail('');
+    setEmails([]);
+    toast.success('Usuarios registrados');
   };
   return (
-    <div className='flex flex-col drop-shadow-sm border-2 px-8 w-[876px] mx-auto gap-5 py-5 mt-10 bg-white items-center'>
+    <div className='flex flex-col drop-shadow-sm border-2 px-8 w-full gap-5 py-5 bg-white items-center'>
       <form onSubmit={addEmail} className='flex flex-row gap-2 w-full'>
         <input
           value={email}
@@ -39,7 +41,7 @@ const registerUsers = () => {
           }}
           type='email'
           placeholder='Correo...'
-          className='w-full px-3 py-2 rounded-lg border-2 border-gray-200 outline-none focus:border-[#26DB84]'
+          className='w-full px-3 py-2 rounded-lg border-2 border-gray-700 outline-none focus:border-[#26DB84]'
         />
         <Button isSubmit text='Añadir' w='w-[100px]' />
       </form>
@@ -57,15 +59,11 @@ const registerUsers = () => {
       <Button
         isSubmit={false}
         onClick={registerEmails}
-        text='Habilitar correos'
-        w='w-[300px]'
+        text='Habilitar Usuarios'
+        className='px-7'
       />
     </div>
   );
 };
 
-export default registerUsers;
-
-registerUsers.auth = {
-  role: ['admin'],
-};
+export default UserRegistrar;

@@ -14,4 +14,10 @@ const REGISTER_USER = gql`
   }
 `;
 
-export { CREATE_PROFILES, REGISTER_USER };
+const CHANGE_USER_STATE = gql`
+  mutation ChangeUserState($data: changeUserState) {
+    changeUserState(data: $data)
+  }
+`;
+
+export { CREATE_PROFILES, REGISTER_USER, CHANGE_USER_STATE };

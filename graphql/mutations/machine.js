@@ -24,4 +24,15 @@ const DELETE_MACHINE = gql`
   }
 `;
 
-export { CREATE_MACHINE, UPDATE_MACHINE, DELETE_MACHINE };
+const CHANGE_MACHINE_UNIT_STATE = gql`
+  mutation ChangeMachineUnitState($data: changeMachineUnitState) {
+    changeMachineUnitState(data: $data)
+  }
+`;
+
+export {
+  CREATE_MACHINE,
+  UPDATE_MACHINE,
+  DELETE_MACHINE,
+  CHANGE_MACHINE_UNIT_STATE,
+};

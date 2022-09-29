@@ -1,11 +1,14 @@
 import { gql } from '@apollo/client';
 
-const GET_DIARIES = gql`
-  query GetDiaries {
-    getDiaries {
+const GET_DIARIES_INFO = gql`
+  query GetDiariesInfo {
+    getDiariesInfo {
       id
       name
+      state
       machinesCount
+      firstDate
+      lastDate
     }
   }
 `;
@@ -70,7 +73,7 @@ const GET_ALL_SCHEDULES = gql`
 `;
 
 export {
-  GET_DIARIES,
+  GET_DIARIES_INFO,
   GET_MACHINES_UNIT_BY_SCHEDULE,
   GET_SCHEDULE_AVAILABLE,
   GET_DIARY_BY_ID,

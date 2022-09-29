@@ -51,7 +51,17 @@ const DiaryResolvers = {
       }),
   },
   Query: {
-    getDiaries: async () => await prisma.diary.findMany(),
+    getDiariesInfo: async () =>
+      await prisma.diary.findMany({
+        select: {
+          id: true,
+          name: true,
+          state: true,
+          machinesCount: true,
+          firstDate: true,
+          lastDate: true,
+        },
+      }),
     getMachinesUnitBySchedule: async (parent, args) => {
       const aux = await prisma.machineUnitOnSchedule.findMany({
         where: {
@@ -222,6 +232,18 @@ const DiaryResolvers = {
       return await prisma.diary.delete({
         where: {
           id: args.id,
+        },
+      });
+    },
+    changeDiaryState: async (parent, args) => {
+      await prisma.diary.update({
+        where: {
+          id: args.data.id,
+        },
+        data: {
+          state: {
+            set: args.data.state,
+          },
         },
       });
     },

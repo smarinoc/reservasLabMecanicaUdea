@@ -5,7 +5,7 @@ const ReservationTypes = gql`
     id: ID
     user: User
     userId: ID
-    state: String
+    state: ReservationState
     date: Date
     scheduleId: String
     machineUnitId: String
@@ -13,9 +13,15 @@ const ReservationTypes = gql`
     machineUnit: MachineUnit
   }
 
+  enum ReservationState {
+    reservada
+    cancelada
+    completada
+  }
+
   type ReservationInfo {
     userDocument: String
-    state: String
+    state: ReservationState
     hour: String
     date: Date
     serial: String

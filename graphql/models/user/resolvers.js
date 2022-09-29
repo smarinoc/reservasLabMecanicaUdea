@@ -11,12 +11,12 @@ const UserResolvers = {
         },
       }),
     getUsersInfo: async () => {
-      const restData = await prisma.profile.findMany({
+      const resData = await prisma.profile.findMany({
         include: {
           user: true,
         },
       });
-      const res = restData.map((profile) => ({
+      const res = resData.map((profile) => ({
         id: profile.user?.id || '',
         name: profile.user?.name || '',
         email: profile.user?.email || '',
@@ -25,6 +25,25 @@ const UserResolvers = {
         document: profile.document || '',
         userType: profile.userType || '',
         phoneNumber: profile.phoneNumber || '',
+      }));
+
+      return res;
+    },
+    getUsersInfoTableAdmin: async () => {
+      const resData = await prisma.profile.findMany({
+        select: {
+          document: true,
+          email: true,
+          state: true,
+          id: true,
+        },
+      });
+
+      const res = resData.map((item) => ({
+        id: item.id,
+        document: item.document || '',
+        email: item.email || '',
+        state: item.state || '',
       }));
 
       return res;
@@ -47,7 +66,7 @@ const UserResolvers = {
           document: args.data.document,
           userType: args.data.userType,
           phoneNumber: args.data.phoneNumber,
-          state: 'registered',
+          state: 'registrado',
           user: {
             connect: {
               email: args.data.email,
@@ -55,6 +74,18 @@ const UserResolvers = {
           },
         },
       }),
+    changeUserState: async (parent, args) => {
+      await prisma.profile.update({
+        where: {
+          id: args.data.id,
+        },
+        data: {
+          state: {
+            set: args.data.state,
+          },
+        },
+      });
+    },
   },
 };
 

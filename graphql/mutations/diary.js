@@ -24,4 +24,10 @@ const UPDATE_DIARY = gql`
   }
 `;
 
-export { CREATE_DIARY, DELETE_DIARY, UPDATE_DIARY };
+const CHANGE_DIARY_STATE = gql`
+  mutation ChangeDiaryState($data: changeDiaryState) {
+    changeDiaryState(data: $data)
+  }
+`;
+
+export { CREATE_DIARY, DELETE_DIARY, UPDATE_DIARY, CHANGE_DIARY_STATE };

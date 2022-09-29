@@ -44,6 +44,7 @@ const GET_MACHINES_AVAILABLE = gql`
 const GET_MACHINES_INFO = gql`
   query GetMachinesInfo {
     getMachinesInfo {
+      id
       name
       location
       serial

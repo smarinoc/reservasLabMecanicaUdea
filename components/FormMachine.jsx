@@ -104,7 +104,7 @@ const FormMachine = ({ machine, onSubmit, onDelete, loading }) => {
 
   return (
     <div className='flex flex-col drop-shadow-sm border-2 px-8 w-[876px] mx-auto gap-8 py-3 bg-white items-center my-10'>
-      <div className='flex w-full flex-col gap-5 border-2 items-center px-8 py-3'>
+      <div className='flex w-full flex-col gap-5 items-center px-8 py-3'>
         <UploadImage image={image} setImage={setImage} />
         <Input
           name='name'

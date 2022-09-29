@@ -24,14 +24,24 @@ const Layout = ({ children }) => {
     case 'admin':
       navigation = [
         { name: 'Log out', href: '/api/auth/signout' },
-        { name: 'Registrar usuarios', href: '/admin/registrar-usuarios' },
-        { name: 'Máquinas', href: '/admin/maquinas' },
-        { name: 'Crear máquina', href: '/admin/crear-maquina' },
-        { name: 'Crear horario', href: '/admin/crear-horario' },
-        { name: 'Horarios', href: '/admin/horarios' },
+        {
+          name: 'Usuarios',
+          href: '/admin/usuarios/administrar-usuarios',
+        },
+        { name: 'Máquinas', href: '/admin/maquinas/maquinas' },
+        { name: 'Crear máquina', href: '/admin/maquinas/crear-maquina' },
+        { name: 'Crear horario', href: '/admin/horarios/crear-horario' },
+        { name: 'Horarios', href: '/admin/horarios/horarios' },
         { name: 'Reservar', href: '/' },
         { name: 'Reservas', href: '/user/reservaciones' },
-        { name: 'Usuarios', href: '/admin/usuarios' },
+        {
+          name: 'Registros máquinas',
+          href: '/admin/maquinas/registros-maquinas',
+        },
+        {
+          name: 'Registros reservas',
+          href: '/admin/reservas/registros-reservas',
+        },
       ];
       break;
     default:

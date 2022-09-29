@@ -6,8 +6,15 @@ const DiaryTypes = gql`
     name: String
     schedules: [Schedule]
     machineUnits: [MachineUnit]
+    state: DiaryState
     firstDate: Date
     lastDate: Date
+  }
+
+  enum DiaryState {
+    habilitado
+    finalizado
+    inhabilitado
   }
 
   type Schedule {
@@ -38,10 +45,13 @@ const DiaryTypes = gql`
     lastDate: Date
   }
 
-  type diaryTableItem {
+  type DiaryInfo {
     id: ID
     name: String
     machinesCount: String
+    state: DiaryState
+    firstDate: Date
+    lastDate: Date
   }
 
   input scheduleGetMachinesUnit {
@@ -49,8 +59,13 @@ const DiaryTypes = gql`
     hour: String
   }
 
+  input changeDiaryState {
+    id: ID
+    state: DiaryState
+  }
+
   type Query {
-    getDiaries: [diaryTableItem]
+    getDiariesInfo: [DiaryInfo]
     getMachinesUnitBySchedule(id: ID): [MachineUnit]
     getScheduleAvailable: [Schedule]
     getAllSchedules: [Schedule]
@@ -62,6 +77,7 @@ const DiaryTypes = gql`
     createSchedules(schedules: [scheduleGetMachinesUnit]): String
     updateDiary(diary: DiaryInput): Diary
     deleteDiary(id: ID): Diary
+    changeDiaryState(data: changeDiaryState): ID
   }
 `;
 
