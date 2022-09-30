@@ -31,7 +31,7 @@ const Layout = ({ children }) => {
         { name: 'Máquinas', href: '/admin/maquinas/maquinas' },
         { name: 'Crear máquina', href: '/admin/maquinas/crear-maquina' },
         { name: 'Crear horario', href: '/admin/horarios/crear-horario' },
-        { name: 'Horarios', href: '/admin/horarios/horarios' },
+        { name: 'Horarios', href: '/admin/horarios/registro-horarios' },
         { name: 'Reservar', href: '/' },
         { name: 'Reservas', href: '/user/reservaciones' },
         {

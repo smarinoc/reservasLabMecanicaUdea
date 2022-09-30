@@ -11,7 +11,7 @@ const BasicFilter = ({ isSortedDesc, toggleSortBy, Header, children }) => {
     icon = 'fas fa-arrow-up';
   }
   return (
-    <div className='flex flex-col my-3 gap-2 w-full'>
+    <div className='flex flex-col my-3 gap-2 w-fulls'>
       <span className='block text-sm font-medium text-white'>{Header}</span>
       <div className='flex flex-row gap-1 mx-2'>
         {children}

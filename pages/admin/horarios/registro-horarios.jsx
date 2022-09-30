@@ -11,6 +11,7 @@ import { useRouter } from 'next/router';
 import React from 'react';
 import moment from 'moment';
 import 'moment/locale/es';
+import ButtonCell from '@components/ButtonCell';
 
 const schedules = () => {
   const router = useRouter();
@@ -34,7 +35,7 @@ const schedules = () => {
     });
   };
 
-  const onItem = (id) => {
+  const onEdit = (id) => {
     router.push(`/admin/horarios/${id}`);
   };
   if (loading) return <div>Loading....</div>;
@@ -72,6 +73,12 @@ const schedules = () => {
       Cell: ActionsCell,
       options: ['habilitado', 'finalizado', 'inhabilitado'],
       onsubmit: onChangeDiaryState,
+    },
+    {
+      Header: 'Acciones',
+      accessor: 'actions',
+      Cell: ButtonCell,
+      onsubmit: onEdit,
     },
   ];
 
