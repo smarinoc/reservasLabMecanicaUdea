@@ -1,4 +1,6 @@
 /* eslint-disable no-return-await */
+import { uploadCloudinary } from 'cloudinary/config';
+
 const { default: prisma } = require('config/prisma');
 
 const MachineResolvers = {
@@ -115,16 +117,20 @@ const MachineResolvers = {
   },
 
   Mutation: {
-    createMachine: async (parent, args) =>
-      await prisma.machine.create({
+    createMachine: async (parent, args) => {
+      const url = await uploadCloudinary(args.machine.image.file);
+      return await prisma.machine.create({
         data: {
           ...args.machine,
+          image: url,
           machineUnits: {
             create: args.machine.machineUnits,
           },
         },
-      }),
+      });
+    },
     updateMachine: async (parent, args) => {
+      const url = await uploadCloudinary(args.machine.image.file);
       await prisma.machine.update({
         where: {
           id: args.machine.id,
@@ -134,7 +140,7 @@ const MachineResolvers = {
             set: args.machine.name,
           },
           image: {
-            set: args.machine.image,
+            set: url,
           },
           description: {
             set: args.machine.description,

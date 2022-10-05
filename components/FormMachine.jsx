@@ -79,29 +79,6 @@ const FormMachine = ({ machine, onSubmit, onDelete, loading }) => {
     ]);
   };
 
-  const onUploadImage = async () => {
-    const formData = new FormData();
-    formData.append('upload_preset', 'in2dm1xw');
-    formData.append('folder', 'Image');
-    formData.append('file', image[0].file);
-    try {
-      const res = await fetch(
-        'https://api.cloudinary.com/v1_1/daef66ohy/image/upload',
-        {
-          method: 'POST',
-          body: formData,
-        }
-      );
-
-      if (!res.ok) return 'no';
-
-      const data = await res.json();
-      return data.secure_url;
-    } catch (error) {
-      return 'no';
-    }
-  };
-
   return (
     <div className='flex flex-col drop-shadow-sm border-2 px-8 w-[876px] mx-auto gap-8 py-3 bg-white items-center my-10'>
       <div className='flex w-full flex-col gap-5 items-center px-8 py-3'>
@@ -179,16 +156,16 @@ const FormMachine = ({ machine, onSubmit, onDelete, loading }) => {
           text={machine ? 'Editar máquina' : 'Crear máquina'}
           disabled={disabledButton}
           onClick={async () => {
-            const url = image[0].file ? await onUploadImage() : machine.image;
             await onSubmit({
               id: machine?.id,
               name,
-              image: url,
+              image: image[0].file,
               description,
               recommendations,
               amount: parseInt(amount, 10),
               machineUnits,
             });
+
             resetForm();
           }}
         />

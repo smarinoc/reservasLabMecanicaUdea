@@ -5,9 +5,13 @@ import Layout from 'layout/Layout';
 import Auth from '@components/Auth';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { createUploadLink } from 'apollo-upload-client';
 import Head from 'next/head';
 
+const link = createUploadLink({ uri: 'http://localhost:3000/api/graphql' });
+
 const client = new ApolloClient({
+  link,
   uri: 'http://localhost:3000/api/graphql',
   cache: new InMemoryCache(),
 });

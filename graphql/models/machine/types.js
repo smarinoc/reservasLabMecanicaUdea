@@ -54,7 +54,7 @@ const MachineTypes = gql`
   input MachineInput {
     id: ID
     name: String
-    image: String
+    image: Upload
     description: String
     amount: Int
     recommendations: [String]
