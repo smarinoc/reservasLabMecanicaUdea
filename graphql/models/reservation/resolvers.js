@@ -21,6 +21,12 @@ const ReservationResolvers = {
           id: parent.machineUnitId,
         },
       }),
+    diary: async (parent) =>
+      await prisma.diary.findUnique({
+        where: {
+          id: parent.diaryId,
+        },
+      }),
   },
   Query: {
     getReservations: async () => await prisma.reservation.findMany(),
@@ -86,6 +92,11 @@ const ReservationResolvers = {
               },
             },
           },
+          Diary: {
+            select: {
+              name: true,
+            },
+          },
         },
       });
 
@@ -96,6 +107,7 @@ const ReservationResolvers = {
         date: item.date,
         serial: item.machineUnit.serial,
         machineName: item.machineUnit.machine.name,
+        diary: item.diary.name,
       }));
 
       return res;
@@ -139,6 +151,7 @@ const ReservationResolvers = {
                 },
               },
               date: args.reservation.date,
+              diaryId: args.reservation.diaryId,
             },
           });
 

@@ -93,8 +93,7 @@ model MachineUnit {
   location               String
   state                  MachineUnitState        @default(habilitada)
   machineUnitsOnSchedule MachineUnitOnSchedule[]
-  Diary                  Diary?                  @relation(fields: [diaryId], references: [id])
-  diaryId                String?
+  diaries                Diary[]
   serial                 String
   createdAt              DateTime                @default(now())
   updatedAt              DateTime                @updatedAt
@@ -108,16 +107,18 @@ enum MachineUnitState {
 }
 
 model Diary {
-  id            String        @id @default(cuid())
-  name          String
-  machinesCount String
-  schedules     Schedule[]
-  machineUnits  MachineUnit[]
-  state         DiaryState    @default(habilitado)
-  firstDate     DateTime
-  lastDate      DateTime
-  createdAt     DateTime      @default(now())
-  updatedAt     DateTime      @updatedAt
+  id                    String                  @id @default(cuid())
+  name                  String
+  machinesCount         String
+  schedules             Schedule[]
+  machineUnits          MachineUnit[]
+  reservations          Reservation[]
+  state                 DiaryState              @default(habilitado)
+  firstDate             DateTime
+  lastDate              DateTime
+  createdAt             DateTime                @default(now())
+  updatedAt             DateTime                @updatedAt
+  MachineUnitOnSchedule MachineUnitOnSchedule[]
 }
 
 enum DiaryState {
@@ -142,6 +143,10 @@ model MachineUnitOnSchedule {
   machineUnitId String
   scheduleId    String
   state         MachineUnitOnScheduleState @default(available)
+  diary         Diary                      @relation(fields: [diaryId], references: [id])
+  diaryId       String
+
+  @@unique([machineUnitId, scheduleId])
 }
 
 enum MachineUnitOnScheduleState {
@@ -162,6 +167,8 @@ model Reservation {
   updatedAt     DateTime         @updatedAt
   scheduleId    String
   machineUnitId String
+  Diary         Diary?           @relation(fields: [diaryId], references: [id])
+  diaryId       String?
 }
 
 enum ReservationState {

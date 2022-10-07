@@ -44,7 +44,7 @@ const diaryDetails = () => {
       },
     });
     toast.success('Horario Eliminado');
-    router.push('/admin/horarios/horarios');
+    router.push('/admin/horarios/registro-horarios');
   };
 
   const onEditDiary = async (diaryP) => {
@@ -62,13 +62,14 @@ const diaryDetails = () => {
       },
     });
     toast.success('Horario Editado');
-    router.push('/admin/horarios/horarios');
+    router.push('/admin/horarios/registro-horarios');
   };
 
   return (
     <div>
       <FormSchedule
         type='edit'
+        diaryId={id}
         nameP={diary.getDiaryById.name}
         schedulesP={diary.getDiaryById.schedules.map((item) => ({
           id: item.id,

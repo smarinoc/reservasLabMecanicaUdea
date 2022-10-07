@@ -11,6 +11,8 @@ const ReservationTypes = gql`
     machineUnitId: String
     schedule: Schedule
     machineUnit: MachineUnit
+    diary: Diary
+    diaryId: String
   }
 
   enum ReservationState {
@@ -22,6 +24,7 @@ const ReservationTypes = gql`
   type ReservationInfo {
     userDocument: String
     state: ReservationState
+    diary: String
     hour: String
     date: Date
     serial: String
@@ -33,6 +36,7 @@ const ReservationTypes = gql`
     machineUnitId: ID
     userId: ID
     date: Date
+    diaryId: ID
   }
 
   input ReservationCancelInput {

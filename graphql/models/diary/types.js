@@ -6,6 +6,7 @@ const DiaryTypes = gql`
     name: String
     schedules: [Schedule]
     machineUnits: [MachineUnit]
+    reservations: [Reservation]
     state: DiaryState
     firstDate: Date
     lastDate: Date
@@ -32,7 +33,20 @@ const DiaryTypes = gql`
     schedule: Schedule
     machineUnitId: String
     scheduleId: String
-    countAvailable: Int
+    state: MachineUnitOnScheduleState
+  }
+
+  type ValidateFormDiaryRes {
+    machineUnitId: String
+    day: String
+    hour: String
+    isValid: Boolean
+  }
+
+  enum MachineUnitOnScheduleState {
+    available
+    busy
+    disabled
   }
 
   input DiaryInput {
@@ -49,6 +63,7 @@ const DiaryTypes = gql`
     id: ID
     name: String
     machinesCount: String
+    reservationCount: String
     state: DiaryState
     firstDate: Date
     lastDate: Date
@@ -64,12 +79,21 @@ const DiaryTypes = gql`
     state: DiaryState
   }
 
+  input machineUnitOnSchedule {
+    schedules: [InputID]
+    machineUnits: [InputID]
+    diaryId: ID
+  }
+
   type Query {
     getDiariesInfo: [DiaryInfo]
     getMachinesUnitBySchedule(id: ID): [MachineUnit]
     getScheduleAvailable: [Schedule]
     getAllSchedules: [Schedule]
     getDiaryById(id: ID): Diary
+    validateFormDiary(
+      machineUnitOnSchedule: machineUnitOnSchedule
+    ): [ValidateFormDiaryRes]
   }
 
   type Mutation {

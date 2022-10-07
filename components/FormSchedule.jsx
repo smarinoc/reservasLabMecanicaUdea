@@ -3,12 +3,16 @@ import Button from 'components/Button';
 import CatalogMachines from 'components/CatalogMachines';
 import Input from 'components/Input';
 import Schedule from 'components/Schedule';
-import { GET_MACHINES_AVAILABLE } from 'graphql/queries/machine';
-import { useQuery } from '@apollo/client';
+import { GET_MACHINES_UNITS } from 'graphql/queries/machine';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import PickerDate from 'components/PickerDate';
+import { VALIDATE_FORM_DIARY } from 'graphql/queries/diary';
+import { Dialog } from '@mui/material';
+import ValidFormScheduleDialog from 'components/ValidFormScheduleDialog';
 
 const FormSchedule = ({
   type,
+  diaryId,
   schedulesP,
   machinesP,
   nameP,
@@ -25,11 +29,22 @@ const FormSchedule = ({
   const [firstDate, setFirstDate] = useState(firstDateP || null);
   const [lastDate, setLastDate] = useState(lastDateP || null);
 
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const changeDialog = () => {
+    setOpenDeleteDialog(!openDeleteDialog);
+  };
+
+  const [noValidSchedules, setNoValidSchedules] = useState([]);
+
   const {
-    data: machinesAvailable,
+    data: machinesUnits,
     loading,
     refetch,
-  } = useQuery(GET_MACHINES_AVAILABLE, {
+  } = useQuery(GET_MACHINES_UNITS, {
+    fetchPolicy: 'network-only',
+  });
+
+  const [validateFormDiary] = useLazyQuery(VALIDATE_FORM_DIARY, {
     fetchPolicy: 'network-only',
   });
 
@@ -58,19 +73,50 @@ const FormSchedule = ({
 
   const onSubmit = async (e) => {
     e.preventDefault(false);
-    await onSubmitP({
-      name,
-      schedules,
-      machines,
-      firstDate: firstDate._d || firstDate,
-      lastDate: lastDate._d || lastDate,
+    console.log(diaryId);
+    const res = await validateFormDiary({
+      variables: {
+        machineUnitOnSchedule: {
+          schedules,
+          machineUnits: machines.map((item) => ({ id: item.id })),
+          diaryId,
+        },
+      },
     });
-    refetch();
-    setName('');
-    setSchedules([]);
-    setMachines([]);
-    setFirstDate(null);
-    setLastDate(null);
+
+    const noValid = res.data.validateFormDiary.filter((item) => !item.isValid);
+
+    if (noValid.length > 0) {
+      setNoValidSchedules(
+        noValid.map((item) => {
+          const findMachine = machines.find(
+            (element) => element.id === item.machineUnitId
+          );
+
+          return {
+            day: item.day,
+            hour: item.hour,
+            name: findMachine.machine.name,
+            serial: findMachine.serial,
+          };
+        })
+      );
+      changeDialog();
+    } else {
+      await onSubmitP({
+        name,
+        schedules,
+        machines,
+        firstDate: firstDate._d || firstDate,
+        lastDate: lastDate._d || lastDate,
+      });
+      refetch();
+      setName('');
+      setSchedules([]);
+      setMachines([]);
+      setFirstDate(null);
+      setLastDate(null);
+    }
   };
 
   if (loading) {
@@ -116,11 +162,7 @@ const FormSchedule = ({
         />
         <CatalogMachines
           type='formSchedule'
-          machines={
-            machinesP
-              ? [...machinesP, ...machinesAvailable.getMachinesAvailable]
-              : machinesAvailable.getMachinesAvailable
-          }
+          machines={machinesUnits.getMachinesUnits}
           onMachine={onItemMachine}
           alreadyChosen={alreadyChosenMachines}
         />
@@ -133,6 +175,12 @@ const FormSchedule = ({
           <Button isSubmit w='w-fit' text='Crear' />
         )}
       </form>
+      <Dialog open={openDeleteDialog} onClose={changeDialog}>
+        <ValidFormScheduleDialog
+          schedules={noValidSchedules}
+          closeDialog={changeDialog}
+        />
+      </Dialog>
     </div>
   );
 };

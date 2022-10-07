@@ -32,6 +32,7 @@ const GET_RESERVATION_INFO = gql`
     getReservationInfo {
       userDocument
       state
+      diary
       hour
       date
       serial

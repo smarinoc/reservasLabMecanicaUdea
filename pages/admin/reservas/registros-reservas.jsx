@@ -37,6 +37,12 @@ const reservationRecords = () => {
       filter: 'text',
     },
     {
+      Header: 'Horario',
+      accessor: 'diary',
+      Filter: SelectFilter,
+      filter: 'equals',
+    },
+    {
       Header: 'Fecha',
       accessor: 'date',
       Filter: DateRangeFilter,

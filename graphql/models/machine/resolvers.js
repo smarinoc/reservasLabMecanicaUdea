@@ -26,26 +26,11 @@ const MachineResolvers = {
           machineUnitId: parent.id,
         },
       }),
-    diary: async (parent) =>
-      await prisma.diary.findUnique({
-        where: {
-          id: parent.diaryId,
-        },
-      }),
   },
 
   Query: {
     getMachines: async () => await prisma.machine.findMany(),
-    getMachinesAvailable: async () =>
-      await prisma.machineUnit.findMany({
-        where: {
-          machineUnitsOnSchedule: {
-            every: {
-              id: '',
-            },
-          },
-        },
-      }),
+    getMachinesUnits: async () => await prisma.machineUnit.findMany(),
     getMachineByID: async (parent, args) =>
       await prisma.machine.findUnique({
         where: {

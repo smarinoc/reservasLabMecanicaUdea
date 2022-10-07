@@ -54,6 +54,12 @@ const schedules = () => {
       filter: 'between',
     },
     {
+      Header: 'Nro reservas',
+      accessor: 'reservationCount',
+      Filter: RangeFilter,
+      filter: 'between',
+    },
+    {
       Header: 'Fecha de inicio',
       accessor: 'firstDate',
       Filter: DateRangeFilter,
