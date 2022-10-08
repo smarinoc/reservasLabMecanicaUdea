@@ -115,7 +115,12 @@ const MachineResolvers = {
       });
     },
     updateMachine: async (parent, args) => {
-      const url = await uploadCloudinary(args.machine.image.file);
+      let url;
+      if (args.machine.image.file) {
+        url = await uploadCloudinary(args.machine.image.file);
+      } else {
+        url = args.machine.image;
+      }
       await prisma.machine.update({
         where: {
           id: args.machine.id,
@@ -177,6 +182,18 @@ const MachineResolvers = {
         data: {
           state: {
             set: args.data.state,
+          },
+          reservations: {
+            updateMany: {
+              where: {
+                state: 'reservada',
+              },
+              data: {
+                state: {
+                  set: 'cancelada',
+                },
+              },
+            },
           },
         },
       });

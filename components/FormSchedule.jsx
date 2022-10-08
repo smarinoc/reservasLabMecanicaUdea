@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from 'components/Button';
 import CatalogMachines from 'components/CatalogMachines';
 import Input from 'components/Input';
@@ -9,6 +9,7 @@ import PickerDate from 'components/PickerDate';
 import { VALIDATE_FORM_DIARY } from 'graphql/queries/diary';
 import { Dialog } from '@mui/material';
 import ValidFormScheduleDialog from 'components/ValidFormScheduleDialog';
+import { useLayoutContext } from 'context/LayoutContext';
 
 const FormSchedule = ({
   type,
@@ -28,7 +29,7 @@ const FormSchedule = ({
   const [machines, setMachines] = useState(machinesP || []);
   const [firstDate, setFirstDate] = useState(firstDateP || null);
   const [lastDate, setLastDate] = useState(lastDateP || null);
-
+  const layoutContext = useLayoutContext();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const changeDialog = () => {
     setOpenDeleteDialog(!openDeleteDialog);
@@ -44,9 +45,16 @@ const FormSchedule = ({
     fetchPolicy: 'network-only',
   });
 
-  const [validateFormDiary] = useLazyQuery(VALIDATE_FORM_DIARY, {
-    fetchPolicy: 'network-only',
-  });
+  const [validateFormDiary, { loading: loadingValidate }] = useLazyQuery(
+    VALIDATE_FORM_DIARY,
+    {
+      fetchPolicy: 'network-only',
+    }
+  );
+
+  useEffect(() => {
+    layoutContext.setLoading(loadingValidate);
+  }, [loadingValidate]);
 
   const onItemSchedule = (scheduleSelect) => {
     const index = schedules.findIndex(
@@ -73,7 +81,6 @@ const FormSchedule = ({
 
   const onSubmit = async (e) => {
     e.preventDefault(false);
-    console.log(diaryId);
     const res = await validateFormDiary({
       variables: {
         machineUnitOnSchedule: {

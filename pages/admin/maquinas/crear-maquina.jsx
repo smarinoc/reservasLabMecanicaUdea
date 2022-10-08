@@ -1,10 +1,13 @@
 /* eslint-disable no-shadow */
 import { useMutation } from '@apollo/client';
 import FormMachine from '@components/FormMachine';
+import { useLayoutContext } from 'context/LayoutContext';
 import { CREATE_MACHINE } from 'graphql/mutations/machine';
+import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 const createMachine = () => {
+  const layoutContext = useLayoutContext();
   const [createMachine, { loading }] = useMutation(CREATE_MACHINE);
   const onCreateMachine = async (machine) => {
     await createMachine({
@@ -15,7 +18,11 @@ const createMachine = () => {
     toast.success('Máquina creada');
   };
 
-  return <FormMachine onSubmit={onCreateMachine} loading={loading} />;
+  useEffect(() => {
+    layoutContext.setLoading(loading);
+  }, [loading]);
+
+  return <FormMachine onSubmit={onCreateMachine} />;
 };
 
 export default createMachine;

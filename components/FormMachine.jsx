@@ -1,6 +1,5 @@
 /* eslint-disable react/no-array-index-key */
-import { useLayoutContext } from 'context/LayoutContext';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { BsDiamondFill } from 'react-icons/bs';
 import Button from '@components/Button';
 import Input from '@components/Input';
@@ -9,7 +8,7 @@ import TextArea from '@components/TextArea';
 import UploadImage from '@components/UploadImage';
 import BsXlgButton from '@components/BsXlgButton';
 
-const FormMachine = ({ machine, onSubmit, onDelete, loading }) => {
+const FormMachine = ({ machine, onSubmit, onDelete }) => {
   const [name, setName] = useState(machine?.name || '');
   const [description, setDescription] = useState(machine?.description || '');
   const [recommendation, setRecommendation] = useState('');
@@ -29,8 +28,6 @@ const FormMachine = ({ machine, onSubmit, onDelete, loading }) => {
       },
     ]
   );
-  const [disabledButton, setDisabledButton] = useState(false);
-  const layoutContext = useLayoutContext();
 
   const changeAmount = (newAmount) => {
     const gap = newAmount - amount;
@@ -46,11 +43,6 @@ const FormMachine = ({ machine, onSubmit, onDelete, loading }) => {
       setMachineUnits(aux);
     }
   };
-
-  useEffect(() => {
-    layoutContext.setLoading(loading);
-    setDisabledButton(loading);
-  }, [loading]);
 
   const onSubmitRecommendation = (e) => {
     e.preventDefault(false);
@@ -154,12 +146,11 @@ const FormMachine = ({ machine, onSubmit, onDelete, loading }) => {
       >
         <Button
           text={machine ? 'Editar máquina' : 'Crear máquina'}
-          disabled={disabledButton}
           onClick={async () => {
             await onSubmit({
               id: machine?.id,
               name,
-              image: image[0].file,
+              image: image[0]?.file || image,
               description,
               recommendations,
               amount: parseInt(amount, 10),
@@ -170,11 +161,7 @@ const FormMachine = ({ machine, onSubmit, onDelete, loading }) => {
           }}
         />
         {onDelete ? (
-          <Button
-            text='Eliminar máquina'
-            onClick={() => onDelete(machine)}
-            disabled={disabledButton}
-          />
+          <Button text='Eliminar máquina' onClick={() => onDelete(machine)} />
         ) : (
           <></>
         )}

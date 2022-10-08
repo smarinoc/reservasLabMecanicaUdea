@@ -14,8 +14,10 @@ const GET_RESERVATIONS_BY_USER = gql`
       date
       schedule {
         hour
+        id
       }
       machineUnit {
+        id
         location
         serial
         machine {

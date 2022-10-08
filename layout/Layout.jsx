@@ -1,5 +1,6 @@
 /* eslint-disable react/jsx-no-constructed-context-values */
 import NavBar from '@components/NavBar';
+import { Backdrop } from '@mui/material';
 import { LayoutContext } from 'context/LayoutContext';
 import { useSession } from 'next-auth/react';
 import React, { useState } from 'react';
@@ -9,7 +10,7 @@ const Layout = ({ children }) => {
   const { data: session, status } = useSession();
   const [loading, setLoading] = useState(false);
   if (status === 'loading') {
-    return <></>;
+    return <div>loguin cargando</div>;
   }
   let navigation;
   switch (session?.user.rol) {
@@ -42,6 +43,10 @@ const Layout = ({ children }) => {
           name: 'Registros reservas',
           href: '/admin/reservas/registros-reservas',
         },
+        {
+          name: 'Registros Usuarios',
+          href: '/admin/usuarios/registros-usuarios',
+        },
       ];
       break;
     default:
@@ -52,9 +57,12 @@ const Layout = ({ children }) => {
     <LayoutContext.Provider value={{ loading, setLoading }}>
       <div className='flex flex-col justify-items-center w-full'>
         <NavBar navigation={navigation} />
-        <div className='fixed left-10 top-96'>
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open={loading}
+        >
           <ClipLoader size={70} color='#00F47F' loading={loading} />
-        </div>
+        </Backdrop>
         {children}
       </div>
     </LayoutContext.Provider>

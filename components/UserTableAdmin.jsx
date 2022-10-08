@@ -3,11 +3,13 @@ import ActionsCell from '@components/ActionsCell';
 import SelectFilter from '@components/SelectFilter';
 import Table from '@components/Table';
 import TextFilter from '@components/TextFilter';
+import { useLayoutContext } from 'context/LayoutContext';
 import { CHANGE_USER_STATE } from 'graphql/mutations/user';
 import { GET_USERS_INFO_TABLE_ADMIN } from 'graphql/queries/user';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const UserTableAdmin = () => {
+  const layoutContext = useLayoutContext();
   const { data: resData, loading: loadingGetInfo } = useQuery(
     GET_USERS_INFO_TABLE_ADMIN,
     {
@@ -15,9 +17,12 @@ const UserTableAdmin = () => {
     }
   );
 
-  const [changeUserState] = useMutation(CHANGE_USER_STATE, {
-    refetchQueries: [GET_USERS_INFO_TABLE_ADMIN],
-  });
+  const [changeUserState, { loading: loadingChange }] =
+    useMutation(CHANGE_USER_STATE);
+
+  useEffect(() => {
+    layoutContext.setLoading(loadingChange);
+  }, [loadingChange]);
 
   const onChangeUserState = async (data) => {
     await changeUserState({

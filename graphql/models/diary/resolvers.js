@@ -86,6 +86,9 @@ const DiaryResolvers = {
         where: {
           scheduleId: args.id,
           state: 'available',
+          machineUnit: {
+            state: 'habilitada',
+          },
         },
         include: {
           machineUnit: {
@@ -112,6 +115,12 @@ const DiaryResolvers = {
           machineUnitsOnSchedule: {
             some: {
               state: 'available',
+              diary: {
+                state: 'habilitado',
+              },
+              machineUnit: {
+                state: 'habilitada',
+              },
             },
           },
         },
@@ -159,7 +168,6 @@ const DiaryResolvers = {
           });
         }
       }
-      console.log(args.machineUnitOnSchedule.diaryId);
       const machineUnitOnScheduleData =
         await prisma.machineUnitOnSchedule.findMany({
           where: {
@@ -219,7 +227,7 @@ const DiaryResolvers = {
           machineUnits: {
             connect: args.diary.machineUnits,
           },
-          MachineUnitOnSchedule: {
+          machineUnitOnSchedule: {
             createMany: {
               data: machineUnitOnSchedule,
             },
@@ -307,11 +315,7 @@ const DiaryResolvers = {
     deleteDiary: async (parent, args) => {
       await prisma.machineUnitOnSchedule.deleteMany({
         where: {
-          machineUnit: {
-            Diary: {
-              id: args.id,
-            },
-          },
+          diaryId: args.id,
         },
       });
       return await prisma.diary.delete({
@@ -328,6 +332,18 @@ const DiaryResolvers = {
         data: {
           state: {
             set: args.data.state,
+          },
+          reservations: {
+            updateMany: {
+              where: {
+                state: 'reservada',
+              },
+              data: {
+                state: {
+                  set: 'cancelada',
+                },
+              },
+            },
           },
         },
       });

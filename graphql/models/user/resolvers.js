@@ -19,7 +19,7 @@ const UserResolvers = {
       const res = resData.map((profile) => ({
         id: profile.user?.id || '',
         name: profile.user?.name || '',
-        email: profile.user?.email || '',
+        email: profile.email || '',
         state: profile.state,
         documentType: profile.documentType || '',
         document: profile.document || '',

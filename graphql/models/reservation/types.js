@@ -36,13 +36,11 @@ const ReservationTypes = gql`
     machineUnitId: ID
     userId: ID
     date: Date
-    diaryId: ID
   }
 
   input ReservationCancelInput {
     scheduleId: ID
     machineUnitId: ID
-    userId: ID
     id: ID
   }
 

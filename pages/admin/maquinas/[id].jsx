@@ -2,23 +2,32 @@ import { useMutation, useQuery } from '@apollo/client';
 import DeleteDialog from '@components/DeleteDialog';
 import FormMachine from '@components/FormMachine';
 import { Dialog } from '@mui/material';
+import { useLayoutContext } from 'context/LayoutContext';
 import { DELETE_MACHINE, UPDATE_MACHINE } from 'graphql/mutations/machine';
 import { GET_MACHINE_BY_ID } from 'graphql/queries/machine';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 const machineDetails = () => {
   const router = useRouter();
   const { id } = router.query;
+  const layoutContext = useLayoutContext();
   const { data, loading } = useQuery(GET_MACHINE_BY_ID, {
     fetchPolicy: 'cache-and-network',
     variables: {
       id,
     },
   });
-  const [updateMachine] = useMutation(UPDATE_MACHINE);
-  const [deleteMachine] = useMutation(DELETE_MACHINE);
+
+  const [updateMachine, { loading: loadingUpdate }] =
+    useMutation(UPDATE_MACHINE);
+  const [deleteMachine, { loading: loadingDelete }] =
+    useMutation(DELETE_MACHINE);
+
+  useEffect(() => {
+    layoutContext.setLoading(loadingUpdate || loadingDelete);
+  }, [loadingUpdate, loadingDelete]);
   const onUpdate = async (machine) => {
     await updateMachine({
       variables: {

@@ -8,21 +8,26 @@ import TextFilter from '@components/TextFilter';
 import { CHANGE_DIARY_STATE } from 'graphql/mutations/diary';
 import { GET_DIARIES_INFO } from 'graphql/queries/diary';
 import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect } from 'react';
 import moment from 'moment';
 import 'moment/locale/es';
 import ButtonCell from '@components/ButtonCell';
+import { useLayoutContext } from 'context/LayoutContext';
 
 const schedules = () => {
   const router = useRouter();
+  const layoutContext = useLayoutContext();
 
   const { data: resData, loading } = useQuery(GET_DIARIES_INFO, {
     fetchPolicy: 'cache-and-network',
   });
 
-  const [changeDiaryState] = useMutation(CHANGE_DIARY_STATE, {
-    refetchQueries: [GET_DIARIES_INFO],
-  });
+  const [changeDiaryState, { loading: loadingChange }] =
+    useMutation(CHANGE_DIARY_STATE);
+
+  useEffect(() => {
+    layoutContext.setLoading(loadingChange);
+  }, [loadingChange]);
 
   const onChangeDiaryState = async (data) => {
     await changeDiaryState({
@@ -38,7 +43,7 @@ const schedules = () => {
   const onEdit = (id) => {
     router.push(`/admin/horarios/${id}`);
   };
-  if (loading) return <div>Loading....</div>;
+  if (loading) return <div>Loading here....</div>;
 
   const headers = [
     {

@@ -1,11 +1,17 @@
 import { useMutation } from '@apollo/client';
 import FormSchedule from '@components/FormSchedule';
+import { useLayoutContext } from 'context/LayoutContext';
 import { CREATE_DIARY } from 'graphql/mutations/diary';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 const createSchedule = () => {
-  const [createDiary] = useMutation(CREATE_DIARY);
+  const layoutContext = useLayoutContext();
+  const [createDiary, { loading }] = useMutation(CREATE_DIARY);
+
+  useEffect(() => {
+    layoutContext.setLoading(loading);
+  }, [loading]);
 
   const onCreateDiary = async (diary) => {
     await createDiary({

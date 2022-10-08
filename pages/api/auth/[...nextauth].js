@@ -13,7 +13,7 @@ const checkEmail = async (email) => {
     },
   });
   if (profile) {
-    if (profile.state === 'authorized' || profile.state === 'registered') {
+    if (profile.state === 'habilitado' || profile.state === 'registrado') {
       return true;
     }
   }

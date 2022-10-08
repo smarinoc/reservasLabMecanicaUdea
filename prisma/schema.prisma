@@ -97,7 +97,7 @@ model MachineUnit {
   serial                 String
   createdAt              DateTime                @default(now())
   updatedAt              DateTime                @updatedAt
-  reservation            Reservation[]
+  reservations            Reservation[]
 }
 
 enum MachineUnitState {
@@ -118,7 +118,7 @@ model Diary {
   lastDate              DateTime
   createdAt             DateTime                @default(now())
   updatedAt             DateTime                @updatedAt
-  MachineUnitOnSchedule MachineUnitOnSchedule[]
+  machineUnitOnSchedule MachineUnitOnSchedule[]
 }
 
 enum DiaryState {
@@ -167,7 +167,7 @@ model Reservation {
   updatedAt     DateTime         @updatedAt
   scheduleId    String
   machineUnitId String
-  Diary         Diary?           @relation(fields: [diaryId], references: [id])
+  diary         Diary?           @relation(fields: [diaryId], references: [id])
   diaryId       String?
 }
 

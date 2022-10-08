@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import Button from '@components/Button';
 import CatalogMachines from '@components/CatalogMachines';
 import Schedule from '@components/Schedule';
@@ -29,25 +29,27 @@ const Home = () => {
   const { data: session } = useSession();
   const {
     data: schedules,
-    loading: schedulesLoading,
+    loading,
     refetch: refetchScheduleAvailable,
   } = useQuery(GET_SCHEDULE_AVAILABLE, {
     fetchPolicy: 'cache-and-network',
   });
   const router = useRouter();
 
-  const { data, loading, refetch } = useQuery(GET_MACHINES_UNIT_BY_SCHEDULE, {
-    fetchPolicy: 'cache-and-network',
-    variables: {
-      id: schedule.id,
-    },
-  });
+  const [getMachinesUnitBySchedule, { data, loading: loadingMachines }] =
+    useLazyQuery(GET_MACHINES_UNIT_BY_SCHEDULE, {
+      fetchPolicy: 'cache-and-network',
+      variables: {
+        id: schedule.id,
+      },
+    });
 
-  const [createReservation] = useMutation(CREATE_RESERVATION);
+  const [createReservation, { loading: loadingCreate }] =
+    useMutation(CREATE_RESERVATION);
 
   useEffect(() => {
-    layoutContext.setLoading(loading);
-  }, [loading]);
+    layoutContext.setLoading(loadingCreate || loadingMachines);
+  }, [loadingCreate, loadingMachines]);
 
   useEffect(() => {
     if (schedules) {
@@ -57,7 +59,7 @@ const Home = () => {
 
   const onItemSchedule = (scheduleP) => {
     setShedule(scheduleP);
-    refetch();
+    getMachinesUnitBySchedule();
   };
 
   const onItemMachine = (machineItem) => {
@@ -91,7 +93,7 @@ const Home = () => {
     setShedule({ id: '-1' });
   };
 
-  if (schedulesLoading) return <div>Loading ...</div>;
+  if (loading) return <div>Loading ...</div>;
 
   return (
     <div className='flex flex-col gap-16 items-center'>

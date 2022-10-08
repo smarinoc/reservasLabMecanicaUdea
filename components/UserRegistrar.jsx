@@ -1,16 +1,24 @@
-/* eslint-disable no-unused-vars */
 /* eslint-disable react/no-array-index-key */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import Button from '@components/Button';
 import ItemRegisterUser from '@components/ItemRegisterUser';
 import { CREATE_PROFILES } from 'graphql/mutations/user';
 import { toast } from 'react-toastify';
+import { useLayoutContext } from 'context/LayoutContext';
+import { GET_USERS_INFO_TABLE_ADMIN } from 'graphql/queries/user';
 
 const UserRegistrar = () => {
   const [email, setEmail] = useState('');
   const [emails, setEmails] = useState([]);
-  const [CreateProfiles, { loading, error }] = useMutation(CREATE_PROFILES);
+  const layoutContext = useLayoutContext();
+  const [CreateProfiles, { loading }] = useMutation(CREATE_PROFILES, {
+    refetchQueries: [GET_USERS_INFO_TABLE_ADMIN],
+  });
+
+  useEffect(() => {
+    layoutContext.setLoading(loading);
+  }, [loading]);
   const addEmail = (e) => {
     e.preventDefault(false);
     setEmail('');

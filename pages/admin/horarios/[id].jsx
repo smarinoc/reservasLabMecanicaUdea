@@ -2,16 +2,17 @@ import { useMutation, useQuery } from '@apollo/client';
 import DeleteDialog from '@components/DeleteDialog';
 import FormSchedule from '@components/FormSchedule';
 import { Dialog } from '@mui/material';
+import { useLayoutContext } from 'context/LayoutContext';
 import { DELETE_DIARY, UPDATE_DIARY } from 'graphql/mutations/diary';
 import { GET_DIARY_BY_ID } from 'graphql/queries/diary';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 const diaryDetails = () => {
   const router = useRouter();
   const { id } = router.query;
-
+  const layoutContext = useLayoutContext();
   const { data: diary, loading: loadingGetDiary } = useQuery(GET_DIARY_BY_ID, {
     fetchPolicy: 'cache-and-network',
     variables: {
@@ -23,8 +24,12 @@ const diaryDetails = () => {
   const changeDialog = () => {
     setOpenDeleteDialog(!openDeleteDialog);
   };
-  const [updateDiary] = useMutation(UPDATE_DIARY);
-  const [deleteDiary] = useMutation(DELETE_DIARY);
+  const [updateDiary, { loading: loadingUpdate }] = useMutation(UPDATE_DIARY);
+  const [deleteDiary, { loading: loadingDelete }] = useMutation(DELETE_DIARY);
+
+  useEffect(() => {
+    layoutContext.setLoading(loadingUpdate || loadingDelete);
+  }, [loadingUpdate, loadingDelete]);
 
   if (loadingGetDiary) {
     return <></>;

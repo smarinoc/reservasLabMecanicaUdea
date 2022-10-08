@@ -51,9 +51,8 @@ const ReservationItem = ({ reservation, onCancel }) => {
             onSubmit={() => {
               onCancel({
                 id: reservation.id,
-                userId: reservation.userId,
-                machineUnitId: reservation.machineUnitId,
-                scheduleId: reservation.scheduleId,
+                machineUnitId: reservation.machineUnit.id,
+                scheduleId: reservation.schedule.id,
               });
             }}
             question='Seguro que quiere cancelar la reserva'

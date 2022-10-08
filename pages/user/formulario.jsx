@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { useMutation } from '@apollo/client';
 import Button from '@components/Button';
 import Input from '@components/Input';
@@ -16,12 +15,10 @@ const form = () => {
   const [userType, setUserType] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
   const layoutContext = useLayoutContext();
-  const [registerUser, { loading, error }] = useMutation(REGISTER_USER);
-  const [disabledButton, setDisabledButton] = useState(true);
+  const [registerUser, { loading }] = useMutation(REGISTER_USER);
 
   useEffect(() => {
     layoutContext.setLoading(loading);
-    setDisabledButton(loading);
   }, [loading]);
   const DocumentTypeOpc = [
     {
@@ -128,12 +125,7 @@ const form = () => {
           text='Número de telefono'
           type='tel'
         />
-        <Button
-          isSubmit
-          text='Registrar'
-          w='w-[300px]'
-          disabled={disabledButton}
-        />
+        <Button isSubmit text='Registrar' w='w-[300px]' />
       </div>
     </form>
   );
