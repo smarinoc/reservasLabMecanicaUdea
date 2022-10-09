@@ -2,12 +2,15 @@ import { useMutation } from '@apollo/client';
 import FormSchedule from '@components/FormSchedule';
 import { useLayoutContext } from 'context/LayoutContext';
 import { CREATE_DIARY } from 'graphql/mutations/diary';
+import { getSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
 const createSchedule = () => {
   const layoutContext = useLayoutContext();
   const [createDiary, { loading }] = useMutation(CREATE_DIARY);
+  const router = useRouter();
 
   useEffect(() => {
     layoutContext.setLoading(loading);
@@ -27,9 +30,23 @@ const createSchedule = () => {
       },
     });
     toast.success('Horario creado');
+    router.push('/admin/horarios/registro-horarios');
   };
 
   return <FormSchedule type='create' onSubmitP={onCreateDiary} />;
 };
 
 export default createSchedule;
+
+createSchedule.auth = {
+  role: ['admin'],
+};
+
+export const getServerSideProps = async (contex) => {
+  const session = await getSession(contex);
+  return {
+    props: {
+      session,
+    },
+  };
+};

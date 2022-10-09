@@ -1,10 +1,12 @@
 import { useMutation, useQuery } from '@apollo/client';
 import DeleteDialog from '@components/DeleteDialog';
 import FormSchedule from '@components/FormSchedule';
+import FormSkeleton from '@components/FormSkeleton';
 import { Dialog } from '@mui/material';
 import { useLayoutContext } from 'context/LayoutContext';
 import { DELETE_DIARY, UPDATE_DIARY } from 'graphql/mutations/diary';
 import { GET_DIARY_BY_ID } from 'graphql/queries/diary';
+import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
@@ -13,7 +15,7 @@ const diaryDetails = () => {
   const router = useRouter();
   const { id } = router.query;
   const layoutContext = useLayoutContext();
-  const { data: diary, loading: loadingGetDiary } = useQuery(GET_DIARY_BY_ID, {
+  const { data: diary, loading } = useQuery(GET_DIARY_BY_ID, {
     fetchPolicy: 'cache-and-network',
     variables: {
       id,
@@ -31,8 +33,8 @@ const diaryDetails = () => {
     layoutContext.setLoading(loadingUpdate || loadingDelete);
   }, [loadingUpdate, loadingDelete]);
 
-  if (loadingGetDiary) {
-    return <></>;
+  if (loading) {
+    return <FormSkeleton />;
   }
 
   const alreadyChosenSchedule = diary.getDiaryById.schedules.map((item) => ({
@@ -43,13 +45,17 @@ const diaryDetails = () => {
   }));
 
   const onDelete = async () => {
-    await deleteDiary({
-      variables: {
-        deleteDiaryId: id,
-      },
-    });
-    toast.success('Horario Eliminado');
-    router.push('/admin/horarios/registro-horarios');
+    try {
+      await deleteDiary({
+        variables: {
+          deleteDiaryId: id,
+        },
+      });
+      toast.success('Horario Eliminado');
+      router.push('/admin/horarios/registro-horarios');
+    } catch (e) {
+      toast.error('No se puede eliminar, dependecias con reservas');
+    }
   };
 
   const onEditDiary = async (diaryP) => {
@@ -103,3 +109,14 @@ const diaryDetails = () => {
 };
 
 export default diaryDetails;
+
+diaryDetails.auth = {
+  role: ['admin'],
+};
+
+export const getServerSideProps = async (contex) => {
+  const session = await getSession(contex);
+  return {
+    props: { session },
+  };
+};

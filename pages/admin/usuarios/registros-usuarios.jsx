@@ -2,17 +2,22 @@ import { useQuery } from '@apollo/client';
 import SelectFilter from '@components/SelectFilter';
 import Table from '@components/Table';
 import TextFilter from '@components/TextFilter';
+import { Skeleton } from '@mui/material';
 import { GET_USERS_INFO } from 'graphql/queries/user';
+import { getSession } from 'next-auth/react';
 import React from 'react';
 
-const Users = () => {
+const UserRecords = () => {
   const { data: resData, loading } = useQuery(GET_USERS_INFO, {
     fetchPolicy: 'cache-and-network',
   });
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (loading)
+    return (
+      <div className='mx-auto mt-20 w-[1200px]'>
+        <Skeleton variant='rounded' height={400} />
+      </div>
+    );
 
   const headers = [
     {
@@ -61,15 +66,24 @@ const Users = () => {
 
   const data = resData?.getUsersInfo;
 
-  if (!data) {
-    <div>Loading....</div>;
-  }
-
   return (
-    <div className='mx-auto mt-10'>
+    <div className='mx-auto my-10'>
       <Table headers={headers} data={data} />
     </div>
   );
 };
 
-export default Users;
+export default UserRecords;
+
+UserRecords.auth = {
+  role: ['admin'],
+};
+
+export const getServerSideProps = async (contex) => {
+  const session = await getSession(contex);
+  return {
+    props: {
+      session,
+    },
+  };
+};

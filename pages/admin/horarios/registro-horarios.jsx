@@ -13,8 +13,11 @@ import moment from 'moment';
 import 'moment/locale/es';
 import ButtonCell from '@components/ButtonCell';
 import { useLayoutContext } from 'context/LayoutContext';
+import { Skeleton } from '@mui/material';
+import { getSession } from 'next-auth/react';
+import { toast } from 'react-toastify';
 
-const schedules = () => {
+const scheduleRecords = () => {
   const router = useRouter();
   const layoutContext = useLayoutContext();
 
@@ -30,20 +33,29 @@ const schedules = () => {
   }, [loadingChange]);
 
   const onChangeDiaryState = async (data) => {
-    await changeDiaryState({
-      variables: {
-        data: {
-          id: data.id,
-          state: data.state,
+    try {
+      await changeDiaryState({
+        variables: {
+          data: {
+            id: data.id,
+            state: data.state,
+          },
         },
-      },
-    });
+      });
+    } catch (e) {
+      toast.error('No se puede habilitar el horario, conflicto de horarios');
+    }
   };
 
   const onEdit = (id) => {
     router.push(`/admin/horarios/${id}`);
   };
-  if (loading) return <div>Loading here....</div>;
+  if (loading)
+    return (
+      <div className='mx-auto mt-20 w-[1200px]'>
+        <Skeleton variant='rounded' height={400} />
+      </div>
+    );
 
   const headers = [
     {
@@ -99,15 +111,24 @@ const schedules = () => {
     lastDate: moment(item.lastDate).format('DD/MM/YYYY'),
   }));
 
-  if (!data) {
-    <div>Loading....</div>;
-  }
-
   return (
-    <div className='mx-auto mt-10'>
+    <div className='mx-auto my-10'>
       <Table headers={headers} data={data} />
     </div>
   );
 };
 
-export default schedules;
+export default scheduleRecords;
+
+scheduleRecords.auth = {
+  role: ['admin'],
+};
+
+export const getServerSideProps = async (contex) => {
+  const session = await getSession(contex);
+  return {
+    props: {
+      session,
+    },
+  };
+};

@@ -3,6 +3,7 @@ import { useMutation } from '@apollo/client';
 import FormMachine from '@components/FormMachine';
 import { useLayoutContext } from 'context/LayoutContext';
 import { CREATE_MACHINE } from 'graphql/mutations/machine';
+import { getSession } from 'next-auth/react';
 import { useEffect } from 'react';
 import { toast } from 'react-toastify';
 
@@ -29,4 +30,13 @@ export default createMachine;
 
 createMachine.auth = {
   role: ['admin'],
+};
+
+export const getServerSideProps = async (contex) => {
+  const session = await getSession(contex);
+  return {
+    props: {
+      session,
+    },
+  };
 };

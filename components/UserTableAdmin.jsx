@@ -3,6 +3,7 @@ import ActionsCell from '@components/ActionsCell';
 import SelectFilter from '@components/SelectFilter';
 import Table from '@components/Table';
 import TextFilter from '@components/TextFilter';
+import { Skeleton } from '@mui/material';
 import { useLayoutContext } from 'context/LayoutContext';
 import { CHANGE_USER_STATE } from 'graphql/mutations/user';
 import { GET_USERS_INFO_TABLE_ADMIN } from 'graphql/queries/user';
@@ -10,12 +11,9 @@ import React, { useEffect } from 'react';
 
 const UserTableAdmin = () => {
   const layoutContext = useLayoutContext();
-  const { data: resData, loading: loadingGetInfo } = useQuery(
-    GET_USERS_INFO_TABLE_ADMIN,
-    {
-      fetchPolicy: 'cache-and-network',
-    }
-  );
+  const { data: resData, loading } = useQuery(GET_USERS_INFO_TABLE_ADMIN, {
+    fetchPolicy: 'cache-and-network',
+  });
 
   const [changeUserState, { loading: loadingChange }] =
     useMutation(CHANGE_USER_STATE);
@@ -24,6 +22,12 @@ const UserTableAdmin = () => {
     layoutContext.setLoading(loadingChange);
   }, [loadingChange]);
 
+  if (loading)
+    return (
+      <div className='mx-auto mt-20 w-full'>
+        <Skeleton variant='rounded' height={400} />
+      </div>
+    );
   const onChangeUserState = async (data) => {
     await changeUserState({
       variables: {
@@ -35,9 +39,6 @@ const UserTableAdmin = () => {
     });
   };
 
-  if (loadingGetInfo) {
-    return <div>Loading....</div>;
-  }
   const headers = [
     {
       Header: 'Documento',
@@ -62,9 +63,6 @@ const UserTableAdmin = () => {
 
   const data = resData?.getUsersInfoTableAdmin;
 
-  if (!data) {
-    <div>Loading....</div>;
-  }
   return <Table headers={headers} data={data} />;
 };
 

@@ -108,7 +108,7 @@ const ReservationResolvers = {
         date: item.date,
         serial: item.machineUnit.serial,
         machineName: item.machineUnit.machine.name,
-        diary: item.diary.name,
+        diary: item.diary?.name,
       }));
 
       return res;

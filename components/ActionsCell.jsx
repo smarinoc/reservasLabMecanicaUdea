@@ -15,12 +15,12 @@ const ActionsCell = (props) => {
     <select
       className='rounded-md px-1 py-2 border-2 border-gray-700 outline-none focus:border-[#26DB84] font-normal text-xs w-full bg-white'
       value={filterValue}
-      onChange={(e) => {
-        setFilter(e.target.value || undefined);
-        onsubmit({
+      onChange={async (e) => {
+        await onsubmit({
           id,
           state: e.target.value,
         });
+        setFilter(e.target.value || undefined);
       }}
     >
       {options.map((option) => (

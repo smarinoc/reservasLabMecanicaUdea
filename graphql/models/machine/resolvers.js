@@ -115,6 +115,30 @@ const MachineResolvers = {
       });
     },
     updateMachine: async (parent, args) => {
+      const machineUnitsData = await prisma.machineUnit.findMany({
+        where: {
+          machineId: args.machine.id,
+        },
+      });
+
+      const news = args.machine.machineUnits.filter((item) => {
+        const find = machineUnitsData.find(
+          (element) =>
+            item.location === element.location && item.serial === element.serial
+        );
+
+        return find === undefined;
+      });
+
+      const removes = machineUnitsData.filter((item) => {
+        const find = args.machine.machineUnits.find(
+          (element) =>
+            item.location === element.location && item.serial === element.serial
+        );
+
+        return find === undefined;
+      });
+
       let url;
       if (args.machine.image.file) {
         url = await uploadCloudinary(args.machine.image.file);
@@ -141,22 +165,11 @@ const MachineResolvers = {
           amount: {
             set: args.machine.amount,
           },
-        },
-      });
-
-      await prisma.machineUnit.deleteMany({
-        where: {
-          machineId: args.machine.id,
-        },
-      });
-
-      return await prisma.machine.update({
-        where: {
-          id: args.machine.id,
-        },
-        data: {
           machineUnits: {
-            create: args.machine.machineUnits,
+            createMany: {
+              data: news,
+            },
+            deleteMany: removes,
           },
         },
       });

@@ -139,13 +139,19 @@ const FormMachine = ({ machine, onSubmit, onDelete }) => {
           ))}
         </div>
       </div>
-      <div
-        className={`flex w-full ${
-          onDelete ? 'flex-row justify-around' : 'justify-end'
-        }`}
-      >
+      <div className='flex w-full flex-row justify-around'>
+        {onDelete ? (
+          <Button
+            text='Eliminar'
+            className='w-60'
+            onClick={() => onDelete(machine)}
+          />
+        ) : (
+          <></>
+        )}
         <Button
-          text={machine ? 'Editar máquina' : 'Crear máquina'}
+          text={machine ? 'Editar' : 'Crear'}
+          className='w-60'
           onClick={async () => {
             await onSubmit({
               id: machine?.id,
@@ -160,11 +166,6 @@ const FormMachine = ({ machine, onSubmit, onDelete }) => {
             resetForm();
           }}
         />
-        {onDelete ? (
-          <Button text='Eliminar máquina' onClick={() => onDelete(machine)} />
-        ) : (
-          <></>
-        )}
       </div>
     </div>
   );

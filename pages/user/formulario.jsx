@@ -1,10 +1,11 @@
 import { useMutation } from '@apollo/client';
 import Button from '@components/Button';
+import FormSkeleton from '@components/FormSkeleton';
 import Input from '@components/Input';
 import SelectInput from '@components/SelectInput';
 import { useLayoutContext } from 'context/LayoutContext';
 import { REGISTER_USER } from 'graphql/mutations/user';
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
@@ -20,6 +21,10 @@ const form = () => {
   useEffect(() => {
     layoutContext.setLoading(loading);
   }, [loading]);
+
+  if (status === 'loading') {
+    return <FormSkeleton />;
+  }
   const DocumentTypeOpc = [
     {
       value: 'cédula de ciudadania',
@@ -69,12 +74,9 @@ const form = () => {
     }
   };
 
-  if (status === 'loading') {
-    return <></>;
-  }
   return (
     <form onSubmit={onSubmit}>
-      <div className='flex flex-col drop-shadow-sm border-2 px-8 w-[876px] mx-auto gap-5 py-3 bg-white items-center mt-10'>
+      <div className='flex flex-col drop-shadow-sm border-2 px-8 w-[876px] mx-auto gap-5 py-3 bg-white items-center my-10'>
         <Input
           name='email'
           value={session.user.email}
@@ -132,3 +134,16 @@ const form = () => {
 };
 
 export default form;
+
+form.auth = {
+  role: ['user'],
+};
+
+export const getServerSideProps = async (contex) => {
+  const session = await getSession(contex);
+  return {
+    props: {
+      session,
+    },
+  };
+};

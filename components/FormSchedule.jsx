@@ -10,6 +10,7 @@ import { VALIDATE_FORM_DIARY } from 'graphql/queries/diary';
 import { Dialog } from '@mui/material';
 import ValidFormScheduleDialog from 'components/ValidFormScheduleDialog';
 import { useLayoutContext } from 'context/LayoutContext';
+import CatalogMachinesSkeleton from 'components/CatalogMachinesSkeleton';
 
 const FormSchedule = ({
   type,
@@ -42,7 +43,7 @@ const FormSchedule = ({
     loading,
     refetch,
   } = useQuery(GET_MACHINES_UNITS, {
-    fetchPolicy: 'network-only',
+    fetchPolicy: 'cache-and-network',
   });
 
   const [validateFormDiary, { loading: loadingValidate }] = useLazyQuery(
@@ -126,13 +127,9 @@ const FormSchedule = ({
     }
   };
 
-  if (loading) {
-    return <div>loading.........</div>;
-  }
-
   return (
-    <div className='flex flex-col gap-8 p-12 items-center w-fit mx-auto'>
-      <form onSubmit={onSubmit}>
+    <div className='flex flex-col gap-8 p-12 items-center w-fit mx-auto mb-10'>
+      <form onSubmit={onSubmit} className='flex flex-col items-center'>
         <div className='flex flex-col drop-shadow-sm border-2 px-8 w-[876px] mx-auto gap-5 py-3 bg-white items-center'>
           <Input
             name='name'
@@ -161,25 +158,34 @@ const FormSchedule = ({
             }}
           />
         </div>
-
+        <span className='text-2xl font-semibold mx-auto text-gray-700 pt-10'>
+          Seleccione los horarios
+        </span>
         <Schedule
           onItemSchedule={onItemSchedule}
           type='formSchedule'
           alreadyChosen={alreadyChosenSchedule}
         />
-        <CatalogMachines
-          type='formSchedule'
-          machines={machinesUnits.getMachinesUnits}
-          onMachine={onItemMachine}
-          alreadyChosen={alreadyChosenMachines}
-        />
+        <span className='text-2xl font-semibold mx-auto text-gray-700 pt-10'>
+          Seleccione las máquinas
+        </span>
+        {loading ? (
+          <CatalogMachinesSkeleton />
+        ) : (
+          <CatalogMachines
+            type='formSchedule'
+            machines={machinesUnits.getMachinesUnits}
+            onMachine={onItemMachine}
+            alreadyChosen={alreadyChosenMachines}
+          />
+        )}
         {type === 'edit' ? (
           <div className='flex flex-row w-full justify-around'>
-            <Button isSubmit w='w-fit' text='Editar' />
-            <Button onClick={onDeleteP} w='w-fit' text='Eliminar' />
+            <Button onClick={onDeleteP} className='w-60' text='Eliminar' />
+            <Button isSubmit className='w-60' text='Editar' />
           </div>
         ) : (
-          <Button isSubmit w='w-fit' text='Crear' />
+          <Button isSubmit className='w-60' text='Crear' />
         )}
       </form>
       <Dialog open={openDeleteDialog} onClose={changeDialog}>

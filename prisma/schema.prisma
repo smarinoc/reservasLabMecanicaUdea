@@ -167,8 +167,8 @@ model Reservation {
   updatedAt     DateTime         @updatedAt
   scheduleId    String
   machineUnitId String
-  diary         Diary?           @relation(fields: [diaryId], references: [id])
-  diaryId       String?
+  diary         Diary           @relation(fields: [diaryId], references: [id])
+  diaryId       String
 }
 
 enum ReservationState {

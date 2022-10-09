@@ -2,7 +2,7 @@
 import NavBar from '@components/NavBar';
 import { Backdrop } from '@mui/material';
 import { LayoutContext } from 'context/LayoutContext';
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import React, { useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 

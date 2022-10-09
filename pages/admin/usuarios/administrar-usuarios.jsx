@@ -1,5 +1,6 @@
 import UserRegistrar from '@components/UserRegistrar';
 import UserTableAdmin from '@components/UserTableAdmin';
+import { getSession } from 'next-auth/react';
 import React from 'react';
 
 const UserAdmin = () => (
@@ -13,4 +14,13 @@ export default UserAdmin;
 
 UserAdmin.auth = {
   role: ['admin'],
+};
+
+export const getServerSideProps = async (contex) => {
+  const session = await getSession(contex);
+  return {
+    props: {
+      session,
+    },
+  };
 };

@@ -7,7 +7,7 @@ import {
   GET_MACHINES_UNIT_BY_SCHEDULE,
   GET_SCHEDULE_AVAILABLE,
 } from 'graphql/queries/diary';
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import { Dialog } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ConfirmReserveDialog from '@components/ConfirmReserveDialog';
@@ -16,6 +16,7 @@ import { toast } from 'react-toastify';
 import moment from 'moment';
 import 'moment/locale/es';
 import { CREATE_RESERVATION } from 'graphql/mutations/reservation';
+import FormSkeleton from '@components/FormSkeleton';
 
 const Home = () => {
   const [schedule, setShedule] = useState({ id: '-1' });
@@ -57,6 +58,8 @@ const Home = () => {
     }
   }, [schedules]);
 
+  if (loading) return <FormSkeleton />;
+
   const onItemSchedule = (scheduleP) => {
     setShedule(scheduleP);
     getMachinesUnitBySchedule();
@@ -93,15 +96,19 @@ const Home = () => {
     setShedule({ id: '-1' });
   };
 
-  if (loading) return <div>Loading ...</div>;
-
   return (
-    <div className='flex flex-col gap-16 items-center'>
+    <div className='flex flex-col items-center pb-10'>
+      <span className='text-2xl font-semibold mx-auto text-gray-700 pt-10'>
+        Eliga un horario
+      </span>
       <Schedule
         onItemSchedule={onItemSchedule}
         availableSchedules={availableSchedules}
         type='reserve'
       />
+      <span className='text-2xl font-semibold mx-auto text-gray-700 pt-10'>
+        Eliga una Máquina
+      </span>
       <CatalogMachines
         type='reserve'
         machines={data?.getMachinesUnitBySchedule}
@@ -116,7 +123,7 @@ const Home = () => {
           }
         }}
         text='Reservar'
-        w='w-fit'
+        className='w-60'
       />
       <Dialog open={openDeleteDialog} onClose={changeDialog}>
         <ConfirmReserveDialog
@@ -140,3 +147,12 @@ const Home = () => {
 };
 
 export default Home;
+
+export const getServerSideProps = async (contex) => {
+  const session = await getSession(contex);
+  return {
+    props: {
+      session,
+    },
+  };
+};

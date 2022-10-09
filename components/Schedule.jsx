@@ -4,6 +4,7 @@ import { GET_ALL_SCHEDULES } from 'graphql/queries/diary';
 import { useQuery } from '@apollo/client';
 import moment from 'moment';
 import 'moment/locale/es';
+import FormSkeleton from '@components/FormSkeleton';
 
 const Schedule = ({
   onItemSchedule,
@@ -11,16 +12,13 @@ const Schedule = ({
   type,
   alreadyChosen,
 }) => {
-  const { data: allSchedules, loading: loadingGetAllSchedules } = useQuery(
-    GET_ALL_SCHEDULES,
-    {
-      fetchPolicy: 'cache-and-network',
-    }
-  );
+  const { data: allSchedules, loading } = useQuery(GET_ALL_SCHEDULES, {
+    fetchPolicy: 'cache-and-network',
+  });
   const [select, setSelect] = useState(null);
 
-  if (loadingGetAllSchedules) {
-    return <></>;
+  if (loading) {
+    return <FormSkeleton />;
   }
 
   const schedulesHeadsDay = allSchedules?.getAllSchedules.reduce(

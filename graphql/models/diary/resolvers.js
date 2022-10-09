@@ -303,7 +303,7 @@ const DiaryResolvers = {
           machineUnits: {
             set: args.diary.machineUnits,
           },
-          MachineUnitOnSchedule: {
+          machineUnitOnSchedule: {
             createMany: {
               data: news,
             },
@@ -325,6 +325,45 @@ const DiaryResolvers = {
       });
     },
     changeDiaryState: async (parent, args) => {
+      const res = await prisma.diary.findUnique({
+        where: {
+          id: args.data.id,
+        },
+        select: {
+          machineUnits: true,
+          schedules: true,
+        },
+      });
+      if (args.data.state === 'habilitado') {
+        const machineUnitOnSchedule = [];
+        for (let i = 0; i < res.schedules.length; i += 1) {
+          for (let j = 0; j < res.machineUnits.length; j += 1) {
+            machineUnitOnSchedule.push({
+              scheduleId: res.schedules[i].id,
+              machineUnitId: res.machineUnits[j].id,
+            });
+          }
+        }
+        await prisma.diary.update({
+          where: {
+            id: args.data.id,
+          },
+          data: {
+            machineUnitOnSchedule: {
+              createMany: {
+                data: machineUnitOnSchedule,
+              },
+            },
+          },
+        });
+      } else {
+        await prisma.machineUnitOnSchedule.deleteMany({
+          where: {
+            diaryId: args.data.id,
+          },
+        });
+      }
+
       await prisma.diary.update({
         where: {
           id: args.data.id,

@@ -1,5 +1,7 @@
 import { useQuery } from '@apollo/client';
+import FormSkeleton from '@components/FormSkeleton';
 import { GET_MACHINE_DETAILS } from 'graphql/queries/machine';
+import { getSession } from 'next-auth/react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import React from 'react';
@@ -17,7 +19,7 @@ const MachineDetails = () => {
   });
 
   if (loading) {
-    return <div>Loading....</div>;
+    return <FormSkeleton />;
   }
 
   return (
@@ -70,3 +72,12 @@ const MachineDetails = () => {
 };
 
 export default MachineDetails;
+
+export const getServerSideProps = async (contex) => {
+  const session = await getSession(contex);
+  return {
+    props: {
+      session,
+    },
+  };
+};

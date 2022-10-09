@@ -7,15 +7,20 @@ import { GET_RESERVATION_INFO } from 'graphql/queries/reservation';
 import React from 'react';
 import moment from 'moment';
 import 'moment/locale/es';
+import { Skeleton } from '@mui/material';
+import { getSession } from 'next-auth/react';
 
 const reservationRecords = () => {
   const { data: resData, loading } = useQuery(GET_RESERVATION_INFO, {
     fetchPolicy: 'cache-and-network',
   });
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
+  if (loading)
+    return (
+      <div className='mx-auto mt-20 w-[1200px]'>
+        <Skeleton variant='rounded' height={400} />
+      </div>
+    );
 
   const headers = [
     {
@@ -67,15 +72,24 @@ const reservationRecords = () => {
     date: moment(item.date).format('DD/MM/YYYY'),
   }));
 
-  if (!data) {
-    <div>Loading....</div>;
-  }
-
   return (
-    <div className='mx-auto mt-10'>
+    <div className='mx-auto my-10'>
       <Table headers={headers} data={data} />
     </div>
   );
 };
 
 export default reservationRecords;
+
+reservationRecords.auth = {
+  role: ['admin'],
+};
+
+export const getServerSideProps = async (contex) => {
+  const session = await getSession(contex);
+  return {
+    props: {
+      session,
+    },
+  };
+};

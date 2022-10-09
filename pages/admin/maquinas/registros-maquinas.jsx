@@ -8,6 +8,8 @@ import React, { useEffect } from 'react';
 import ActionsCell from '@components/ActionsCell';
 import { CHANGE_MACHINE_UNIT_STATE } from 'graphql/mutations/machine';
 import { useLayoutContext } from 'context/LayoutContext';
+import { Skeleton } from '@mui/material';
+import { getSession } from 'next-auth/react';
 
 const machineRecords = () => {
   const layoutContext = useLayoutContext();
@@ -23,6 +25,13 @@ const machineRecords = () => {
     layoutContext.setLoading(loadingChange);
   }, [loadingChange]);
 
+  if (loading)
+    return (
+      <div className='mx-auto mt-20 w-[1200px]'>
+        <Skeleton variant='rounded' height={400} />
+      </div>
+    );
+
   const onChangeMachineUnitState = async (data) => {
     await changeMachineUnitState({
       variables: {
@@ -33,10 +42,6 @@ const machineRecords = () => {
       },
     });
   };
-
-  if (loading) {
-    return <div>Loading...</div>;
-  }
 
   const headers = [
     {
@@ -76,15 +81,24 @@ const machineRecords = () => {
 
   const data = resData?.getMachinesInfo;
 
-  if (!data) {
-    <div>Loading....</div>;
-  }
-
   return (
-    <div className='mx-auto mt-10'>
+    <div className='mx-auto my-10'>
       <Table headers={headers} data={data} />
     </div>
   );
 };
 
 export default machineRecords;
+
+machineRecords.auth = {
+  role: ['admin'],
+};
+
+export const getServerSideProps = async (contex) => {
+  const session = await getSession(contex);
+  return {
+    props: {
+      session,
+    },
+  };
+};
