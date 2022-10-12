@@ -5,7 +5,7 @@ import Button from '@components/Button';
 
 const UploadImage = ({ image, setImage }) => (
   <ImageUploading value={image} onChange={setImage} dataURLKey='data_url'>
-    {({ imageList, onImageUpload, isDragging, dragProps, onImageRemove }) => (
+    {({ imageList, onImageUpload, isDragging, dragProps }) => (
       <div className='w-fit flex flex-col gap-2'>
         <div className='border-2 border-gray-300 w-[400px] h-[250px]'>
           <button
@@ -31,7 +31,6 @@ const UploadImage = ({ image, setImage }) => (
         {imageList[0] ? (
           <div className='flex flex-row w-full justify-center gap-6'>
             <Button text='Cambiar foto' onClick={onImageUpload} />
-            <Button text='Eliminar foto' onClick={onImageRemove} />
           </div>
         ) : (
           <></>

@@ -7,15 +7,24 @@ import { useLayoutContext } from 'context/LayoutContext';
 import { REGISTER_USER } from 'graphql/mutations/user';
 import { getSession, useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
 const form = () => {
   const { data: session, status } = useSession();
-  const [documentType, setDocumentType] = useState('');
-  const [document, setDocument] = useState('');
-  const [userType, setUserType] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const [documentType, setDocumentType] = useState('cédula de ciudadania');
+  const [userType, setUserType] = useState('estudiante');
   const layoutContext = useLayoutContext();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: session.user.email,
+      name: session.user.name,
+    },
+  });
   const [registerUser, { loading }] = useMutation(REGISTER_USER);
 
   useEffect(() => {
@@ -54,17 +63,16 @@ const form = () => {
     },
   ];
 
-  const onSubmit = async (e) => {
-    e.preventDefault(false);
+  const onSubmit = async (data) => {
     try {
       await registerUser({
         variables: {
           data: {
             email: session.user.email,
             documentType,
-            document,
+            document: data.document,
             userType,
-            phoneNumber,
+            phoneNumber: data.phoneNumber,
           },
         },
       });
@@ -75,59 +83,64 @@ const form = () => {
   };
 
   return (
-    <form onSubmit={onSubmit}>
-      <div className='flex flex-col drop-shadow-sm border-2 px-8 w-[876px] mx-auto gap-5 py-3 bg-white items-center my-10'>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className='flex flex-col drop-shadow-sm border-2 px-8 w-[876px] mx-auto gap-5 py-10 bg-white items-center my-10'>
         <Input
-          name='email'
-          value={session.user.email}
           disabled
           text='Correo'
           type='email'
+          label='email'
+          register={register}
         />
         <Input
-          name='fullName'
-          value={session.user.name}
           disabled
           text='Nombre'
           type='text'
+          label='name'
+          register={register}
         />
         <SelectInput
           onChange={(e) => {
-            setDocumentType(e.value);
+            setDocumentType(e.target.value);
           }}
           options={DocumentTypeOpc}
           text='Tipo de documento'
           name='documentType'
         />
         <Input
-          name='document'
-          onChange={(e) => {
-            setDocument(e.target.value);
-          }}
-          value={document}
-          placeholder='1029478372'
-          text='Documento'
+          label='document'
+          register={register}
+          messageError='Ingrese el documento'
           type='text'
+          pattern={{
+            value: /^[0-9]+$/i,
+            message: 'Solo números',
+          }}
+          text='Documento'
+          error={errors.document}
         />
         <SelectInput
           onChange={(e) => {
-            setUserType(e.value);
+            setUserType(e.target.value);
           }}
           options={userTypeOpc}
           text='Rol'
           name='rol'
         />
         <Input
-          name='phoneNumber'
-          onChange={(e) => {
-            setPhoneNumber(e.target.value);
-          }}
-          value={phoneNumber}
+          label='phoneNumber'
+          register={register}
+          messageError='Ingrese el teléfono'
           placeholder='321233498'
-          text='Número de telefono'
+          text='Número de teléfono'
           type='tel'
+          pattern={{
+            value: /^[0-9]+$/i,
+            message: 'Solo números',
+          }}
+          error={errors.phoneNumber}
         />
-        <Button isSubmit text='Registrar' w='w-[300px]' />
+        <Button isSubmit text='Registrar' className='w-60 mt-' />
       </div>
     </form>
   );

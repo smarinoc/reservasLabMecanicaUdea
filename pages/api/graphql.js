@@ -1,6 +1,7 @@
 import 'reflect-metadata';
 import 'ts-tiny-invariant';
 import { ApolloServer } from 'apollo-server-micro';
+import 'cron/cron';
 import Cors from 'micro-cors';
 import { types } from 'graphql/types';
 import { resolvers } from 'graphql/resolvers';

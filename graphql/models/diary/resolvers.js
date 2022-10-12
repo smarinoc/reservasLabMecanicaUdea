@@ -1,7 +1,11 @@
 /* eslint-disable array-callback-return */
 /* eslint-disable no-return-await */
+import moment from 'moment';
+import 'moment/locale/es';
+
 const { default: prisma } = require('config/prisma');
 const schedulesJson = require('res/schedules.json');
+const { days, hours } = require('res/daysAndHours');
 
 const DiaryResolvers = {
   Diary: {
@@ -126,16 +130,31 @@ const DiaryResolvers = {
         },
       });
 
-      const result = schedules.reduce((acc, item) => {
+      let result = schedules.reduce((acc, item) => {
         if (
           !acc.find(
             (element) => item.day === element.day && item.hour === element.hour
           )
         ) {
-          acc.push(item);
+          if (item.day) acc.push(item);
         }
         return acc;
       }, []);
+
+      const dayNow = moment().format('dddd').toUpperCase();
+      const hourNow = Number(moment().format('H'));
+      const readyhourNow = hourNow - Number(hours[0].charAt(0));
+      result = result.filter((item) => {
+        const day = item.day.toUpperCase();
+        const indexhour = hours.findIndex((element) => item.hour === element);
+        const indexDaySchedule = days.findIndex((element) => element === day);
+        const indexDayNow = days.findIndex((element) => element === dayNow);
+        if (indexDaySchedule > indexDayNow) return true;
+        if (indexDaySchedule === indexDayNow) {
+          if (readyhourNow - indexhour < 1) return true;
+        }
+        return false;
+      });
 
       return result;
     },
