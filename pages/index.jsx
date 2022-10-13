@@ -69,6 +69,25 @@ const Home = () => {
     setMachine(machineItem);
   };
 
+  const validate = () => {
+    if (!session) {
+      toast.error('Inicie sesión ');
+      return false;
+    }
+
+    if (schedule.id === '-1') {
+      toast.error('Seleccione un horario');
+      return false;
+    }
+
+    if (!machine) {
+      toast.error('Seleccione una máquina');
+      return false;
+    }
+
+    return true;
+  };
+
   const onReserve = async () => {
     const res = await createReservation({
       variables: {
@@ -116,10 +135,8 @@ const Home = () => {
       />
       <Button
         onClick={() => {
-          if (session) {
+          if (validate()) {
             changeDialog();
-          } else {
-            router.push('/api/auth/signin/:google');
           }
         }}
         text='Reservar'

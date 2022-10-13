@@ -41,7 +41,7 @@ const Schedule = ({
   );
 
   return (
-    <div className='mx-auto grid w-[1200px] h-[1400px] grid-rows-14 grid-cols-7 items-end'>
+    <div className='mx-auto grid w-full xl:w-[1200px] h-[1400px] grid-rows-14 grid-cols-7 items-end'>
       <div className='col-start-2 col-span-6 grid grid-cols-6'>
         {schedulesHeadsDay.map((item, index) => {
           const dayNumber = moment()

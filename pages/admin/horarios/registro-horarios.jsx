@@ -7,7 +7,6 @@ import Table from '@components/Table';
 import TextFilter from '@components/TextFilter';
 import { CHANGE_DIARY_STATE } from 'graphql/mutations/diary';
 import { GET_DIARIES_INFO } from 'graphql/queries/diary';
-import { useRouter } from 'next/router';
 import React, { useEffect } from 'react';
 import moment from 'moment';
 import 'moment/locale/es';
@@ -16,9 +15,10 @@ import { useLayoutContext } from 'context/LayoutContext';
 import { Skeleton } from '@mui/material';
 import { getSession } from 'next-auth/react';
 import { toast } from 'react-toastify';
+import useRedirect from 'hooks/useRedirect';
 
 const scheduleRecords = () => {
-  const router = useRouter();
+  const { loading: loadingRouter, push } = useRedirect();
   const layoutContext = useLayoutContext();
 
   const { data: resData, loading } = useQuery(GET_DIARIES_INFO, {
@@ -29,8 +29,8 @@ const scheduleRecords = () => {
     useMutation(CHANGE_DIARY_STATE);
 
   useEffect(() => {
-    layoutContext.setLoading(loadingChange);
-  }, [loadingChange]);
+    layoutContext.setLoading(loadingChange || loadingRouter);
+  }, [loadingChange, loadingRouter]);
 
   const onChangeDiaryState = async (data) => {
     try {
@@ -48,7 +48,7 @@ const scheduleRecords = () => {
   };
 
   const onEdit = (id) => {
-    router.push(`/admin/horarios/${id}`);
+    push(`/admin/horarios/${id}`);
   };
   if (loading)
     return (

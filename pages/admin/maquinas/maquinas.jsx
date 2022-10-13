@@ -1,20 +1,24 @@
 import { useQuery } from '@apollo/client';
 import CatalogMachines from '@components/CatalogMachines';
 import CatalogMachinesSkeleton from '@components/CatalogMachinesSkeleton';
+import { useLayoutContext } from 'context/LayoutContext';
 import { GET_MACHINES } from 'graphql/queries/machine';
+import useRedirect from 'hooks/useRedirect';
 import { getSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 const maquinas = () => {
-  const router = useRouter();
-
+  const { loading: loadingRouter, push } = useRedirect();
+  const layoutContext = useLayoutContext();
   const { data, loading } = useQuery(GET_MACHINES, {
     fetchPolicy: 'cache-and-network',
   });
+  useEffect(() => {
+    layoutContext.setLoading(loadingRouter);
+  }, [loadingRouter]);
 
   const onMachine = (machine) => {
-    router.push(`/admin/maquinas/${machine.id}`);
+    push(`/admin/maquinas/${machine.id}`);
   };
 
   if (loading) return <CatalogMachinesSkeleton />;

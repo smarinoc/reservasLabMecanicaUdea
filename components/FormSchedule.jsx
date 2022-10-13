@@ -11,6 +11,8 @@ import { Dialog } from '@mui/material';
 import ValidFormScheduleDialog from 'components/ValidFormScheduleDialog';
 import { useLayoutContext } from 'context/LayoutContext';
 import CatalogMachinesSkeleton from 'components/CatalogMachinesSkeleton';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 const FormSchedule = ({
   type,
@@ -25,7 +27,6 @@ const FormSchedule = ({
   alreadyChosenSchedule,
   alreadyChosenMachines,
 }) => {
-  const [name, setName] = useState(nameP || '');
   const [schedules, setSchedules] = useState(schedulesP || []);
   const [machines, setMachines] = useState(machinesP || []);
   const [firstDate, setFirstDate] = useState(firstDateP || null);
@@ -35,8 +36,18 @@ const FormSchedule = ({
   const changeDialog = () => {
     setOpenDeleteDialog(!openDeleteDialog);
   };
-
   const [noValidSchedules, setNoValidSchedules] = useState([]);
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      name: nameP || '',
+    },
+  });
 
   const {
     data: machinesUnits,
@@ -80,8 +91,20 @@ const FormSchedule = ({
     }
   };
 
-  const onSubmit = async (e) => {
-    e.preventDefault(false);
+  const onSubmit = async (data) => {
+    if (firstDate === null || lastDate === null) {
+      toast.error('Ingrese las dos fechas');
+      return;
+    }
+    if (schedules.length === 0) {
+      toast.error('Seleccione al menos un horario');
+      return;
+    }
+    if (machines.length === 0) {
+      toast.error('Seleccione al menos una máquina');
+      return;
+    }
+
     const res = await validateFormDiary({
       variables: {
         machineUnitOnSchedule: {
@@ -112,34 +135,35 @@ const FormSchedule = ({
       changeDialog();
     } else {
       await onSubmitP({
-        name,
+        name: data.name,
         schedules,
         machines,
         firstDate: firstDate._d || firstDate,
         lastDate: lastDate._d || lastDate,
       });
       refetch();
-      setName('');
       setSchedules([]);
       setMachines([]);
       setFirstDate(null);
       setLastDate(null);
+      reset();
     }
   };
 
   return (
     <div className='flex flex-col gap-8 p-12 items-center w-fit mx-auto mb-10'>
-      <form onSubmit={onSubmit} className='flex flex-col items-center'>
-        <div className='flex flex-col drop-shadow-sm border-2 px-8 w-[876px] mx-auto gap-5 py-3 bg-white items-center'>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className='flex flex-col items-center'
+      >
+        <div className='flex flex-col drop-shadow-sm border-2 px-4 w-full  md:mx-auto md:w-[768px] md:px-8 gap-5 py-3 bg-white items-center'>
           <Input
-            name='name'
-            placeholder='Horario 1'
             text='Nombre'
-            type='text'
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
+            label='name'
+            register={register}
+            messageError='Ingrese el nombre'
+            placeholder='Horario 1'
+            error={errors.name}
           />
           <PickerDate
             name='firstDate'

@@ -6,13 +6,13 @@ import { Dialog } from '@mui/material';
 import { useLayoutContext } from 'context/LayoutContext';
 import { DELETE_DIARY, UPDATE_DIARY } from 'graphql/mutations/diary';
 import { GET_DIARY_BY_ID } from 'graphql/queries/diary';
+import useRedirect from 'hooks/useRedirect';
 import { getSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 const diaryDetails = () => {
-  const router = useRouter();
+  const { loading: loadingRouter, router, push } = useRedirect();
   const { id } = router.query;
   const layoutContext = useLayoutContext();
   const { data: diary, loading } = useQuery(GET_DIARY_BY_ID, {
@@ -30,8 +30,8 @@ const diaryDetails = () => {
   const [deleteDiary, { loading: loadingDelete }] = useMutation(DELETE_DIARY);
 
   useEffect(() => {
-    layoutContext.setLoading(loadingUpdate || loadingDelete);
-  }, [loadingUpdate, loadingDelete]);
+    layoutContext.setLoading(loadingUpdate || loadingDelete || loadingRouter);
+  }, [loadingUpdate, loadingDelete, loadingRouter]);
 
   if (loading) {
     return <FormSkeleton />;
@@ -52,7 +52,7 @@ const diaryDetails = () => {
         },
       });
       toast.success('Horario Eliminado');
-      router.push('/admin/horarios/registro-horarios');
+      push('/admin/horarios/registro-horarios');
     } catch (e) {
       toast.error('No se puede eliminar, dependecias con reservas');
     }
@@ -73,7 +73,7 @@ const diaryDetails = () => {
       },
     });
     toast.success('Horario Editado');
-    router.push('/admin/horarios/registro-horarios');
+    push('/admin/horarios/registro-horarios');
   };
 
   return (

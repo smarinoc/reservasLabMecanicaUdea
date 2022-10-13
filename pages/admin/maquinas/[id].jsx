@@ -6,13 +6,13 @@ import { Dialog } from '@mui/material';
 import { useLayoutContext } from 'context/LayoutContext';
 import { DELETE_MACHINE, UPDATE_MACHINE } from 'graphql/mutations/machine';
 import { GET_MACHINE_BY_ID } from 'graphql/queries/machine';
+import useRedirect from 'hooks/useRedirect';
 import { getSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 const machineDetails = () => {
-  const router = useRouter();
+  const { loading: loadingRouter, router, push } = useRedirect();
   const { id } = router.query;
   const layoutContext = useLayoutContext();
   const { data, loading } = useQuery(GET_MACHINE_BY_ID, {
@@ -28,8 +28,8 @@ const machineDetails = () => {
     useMutation(DELETE_MACHINE);
 
   useEffect(() => {
-    layoutContext.setLoading(loadingUpdate || loadingDelete);
-  }, [loadingUpdate, loadingDelete]);
+    layoutContext.setLoading(loadingUpdate || loadingDelete || loadingRouter);
+  }, [loadingUpdate, loadingDelete, loadingRouter]);
   const onUpdate = async (machine) => {
     try {
       await updateMachine({
@@ -46,8 +46,8 @@ const machineDetails = () => {
       toast.success('Máquina editada');
     } catch (e) {
       toast.error('No se puede editar, dependecias con reservas');
-      router.push('/admin/maquinas/maquinas');
     }
+    push('/admin/maquinas/maquinas');
   };
 
   const onDelete = (machine) => {
@@ -63,10 +63,10 @@ const machineDetails = () => {
         },
       });
       toast.success('Máquina Eliminada');
-      router.push('/admin/maquinas/maquinas');
     } catch (e) {
       toast.error('No se puede eliminar, dependecias con reservas');
     }
+    push('/admin/maquinas/maquinas');
   };
 
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);

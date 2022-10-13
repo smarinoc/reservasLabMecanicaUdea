@@ -102,7 +102,7 @@ const FormMachine = ({ machine, onSubmit, onDelete }) => {
   };
 
   return (
-    <div className='flex flex-col drop-shadow-sm border-2 px-8 w-[876px] mx-auto gap-8 py-3 bg-white items-center my-10'>
+    <div className='flex flex-col drop-shadow-sm border-2 px-4 w-full  md:mx-auto md:w-[768px] md:px-8 gap-8 py-3 bg-white items-center my-10'>
       <form
         className='w-full'
         onSubmit={handleSubmit(async (data) => {
@@ -120,7 +120,7 @@ const FormMachine = ({ machine, onSubmit, onDelete }) => {
           }
         })}
       >
-        <div className='flex w-full flex-col gap-5 items-center px-8 py-3'>
+        <div className='flex w-full flex-col gap-5 items-center  py-3'>
           <UploadImage image={image} setImage={setImage} />
           <Input
             text='Nombre'
