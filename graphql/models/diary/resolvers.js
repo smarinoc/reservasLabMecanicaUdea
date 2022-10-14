@@ -1,5 +1,3 @@
-/* eslint-disable array-callback-return */
-/* eslint-disable no-return-await */
 import moment from 'moment';
 import 'moment/locale/es';
 

@@ -1,23 +1,34 @@
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import Button from '@components/Button';
 import FormSkeleton from '@components/FormSkeleton';
 import Input from '@components/Input';
 import SelectInput from '@components/SelectInput';
 import { useLayoutContext } from 'context/LayoutContext';
 import { REGISTER_USER } from 'graphql/mutations/user';
+import { GET_USER_ID } from 'graphql/queries/user';
+import useRedirect from 'hooks/useRedirect';
 import { getSession, useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
 const form = () => {
-  const { data: session, status } = useSession();
+  const { data: session } = useSession();
   const [documentType, setDocumentType] = useState('cédula de ciudadania');
   const [userType, setUserType] = useState('estudiante');
   const layoutContext = useLayoutContext();
+  const { loading: loadingRouter, push } = useRedirect();
+  const { data: profile, loading } = useQuery(GET_USER_ID, {
+    fetchPolicy: 'cache-and-network',
+    variables: {
+      getUserId: session.user.id,
+    },
+  });
+
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     defaultValues: {
@@ -25,15 +36,27 @@ const form = () => {
       name: session.user.name,
     },
   });
-  const [registerUser, { loading }] = useMutation(REGISTER_USER);
 
   useEffect(() => {
-    layoutContext.setLoading(loading);
-  }, [loading]);
+    if (profile) {
+      reset({
+        document: profile?.getUser.profile.document,
+        phoneNumber: profile?.getUser.profile.phoneNumber,
+      });
+    }
+  }, [profile]);
 
-  if (status === 'loading') {
+  const [registerUser, { loading: loadingRegisterUser }] =
+    useMutation(REGISTER_USER);
+
+  useEffect(() => {
+    layoutContext.setLoading(loadingRegisterUser || loadingRouter);
+  }, [loadingRegisterUser, loadingRouter]);
+
+  if (loading) {
     return <FormSkeleton />;
   }
+
   const DocumentTypeOpc = [
     {
       value: 'cédula de ciudadania',
@@ -77,6 +100,7 @@ const form = () => {
         },
       });
       toast.success('Registro exitoso');
+      push('/');
     } catch {
       toast.error('Error');
     }
@@ -103,6 +127,7 @@ const form = () => {
           onChange={(e) => {
             setDocumentType(e.target.value);
           }}
+          defaultValue={profile?.getUser.profile.documentType}
           options={DocumentTypeOpc}
           text='Tipo de documento'
           name='documentType'
@@ -123,6 +148,7 @@ const form = () => {
           onChange={(e) => {
             setUserType(e.target.value);
           }}
+          defaultValue={profile?.getUser.profile.userType}
           options={userTypeOpc}
           text='Rol'
           name='rol'

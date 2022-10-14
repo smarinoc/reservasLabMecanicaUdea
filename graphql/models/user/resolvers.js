@@ -1,7 +1,14 @@
-/* eslint-disable no-return-await */
 import prisma from 'config/prisma';
 
 const UserResolvers = {
+  User: {
+    profile: async (parent) =>
+      await prisma.profile.findUnique({
+        where: {
+          userId: parent.id,
+        },
+      }),
+  },
   Query: {
     getUsers: async () => await prisma.user.findMany(),
     getUser: async (parent, args) =>

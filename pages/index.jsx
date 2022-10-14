@@ -11,7 +11,6 @@ import { getSession, useSession } from 'next-auth/react';
 import { Dialog } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ConfirmReserveDialog from '@components/ConfirmReserveDialog';
-import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import moment from 'moment';
 import 'moment/locale/es';
@@ -35,7 +34,6 @@ const Home = () => {
   } = useQuery(GET_SCHEDULE_AVAILABLE, {
     fetchPolicy: 'cache-and-network',
   });
-  const router = useRouter();
 
   const [getMachinesUnitBySchedule, { data, loading: loadingMachines }] =
     useLazyQuery(GET_MACHINES_UNIT_BY_SCHEDULE, {
@@ -75,6 +73,10 @@ const Home = () => {
       return false;
     }
 
+    if (!(session.user.profile.state === 'registrado')) {
+      toast.error('Llene antes el formulario');
+      return false;
+    }
     if (schedule.id === '-1') {
       toast.error('Seleccione un horario');
       return false;
@@ -155,7 +157,7 @@ const Home = () => {
               .format('D MMMM')}`,
             hour: schedule?.hour,
             userName: session?.user?.name,
-            userDocument: session?.profile?.document,
+            userDocument: session?.user.profile?.document,
           }}
         />
       </Dialog>

@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import React, { useEffect, useState } from 'react';
 import { useMutation } from '@apollo/client';
 import Button from '@components/Button';
@@ -77,7 +76,6 @@ const UserRegistrar = () => {
             onClick={() => {
               deleteEmail(index);
             }}
-            key={index}
           />
         ))}
       </div>

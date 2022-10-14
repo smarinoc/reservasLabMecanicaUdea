@@ -30,16 +30,12 @@ const NavBar = ({ rol }) => (
                 name='Horario'
                 options={[
                   {
-                    name: 'Administrar usuarios',
-                    href: '/admin/usuarios/administrar-usuarios',
-                  },
-                  {
                     name: 'Crear horario',
                     href: '/admin/horarios/crear-horario',
                   },
                   {
-                    name: 'Registros máquinas',
-                    href: '/admin/maquinas/registros-maquinas',
+                    name: 'Registros horarios',
+                    href: '/admin/horarios/registro-horarios',
                   },
                 ]}
               />
@@ -47,8 +43,8 @@ const NavBar = ({ rol }) => (
                 name='Usuarios'
                 options={[
                   {
-                    name: 'Registros horarios',
-                    href: '/admin/horarios/registro-horarios',
+                    name: 'Administrar usuarios',
+                    href: '/admin/usuarios/administrar-usuarios',
                   },
                   {
                     name: 'Registros Usuarios',
@@ -86,6 +82,13 @@ const NavBar = ({ rol }) => (
                 className='text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium'
               >
                 Mis reservas
+              </a>
+              <a
+                key='Formulario'
+                href='/user/formulario'
+                className='text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium'
+              >
+                Formulario
               </a>
             </div>
           ) : (

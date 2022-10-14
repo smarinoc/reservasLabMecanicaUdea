@@ -1,4 +1,3 @@
-/* eslint-disable no-return-await */
 import { uploadCloudinary } from 'cloudinary/config';
 
 const { default: prisma } = require('config/prisma');

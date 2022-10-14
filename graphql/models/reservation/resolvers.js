@@ -1,4 +1,3 @@
-/* eslint-disable no-return-await */
 const { default: prisma } = require('config/prisma');
 
 const ReservationResolvers = {
@@ -29,6 +28,17 @@ const ReservationResolvers = {
       }),
   },
   Query: {
+    getReservationByDocumentUser: async (parent, args) =>
+      await prisma.reservation.findMany({
+        where: {
+          user: {
+            profile: {
+              document: args.id,
+            },
+          },
+          state: 'reservada',
+        },
+      }),
     getReservations: async () => await prisma.reservation.findMany(),
     getReservationsByUser: async (parent, args) =>
       await prisma.reservation.findMany({
@@ -219,6 +229,18 @@ const ReservationResolvers = {
         data: {
           state: {
             set: 'cancelada',
+          },
+        },
+      });
+    },
+    changeReservationState: async (parent, args) => {
+      await prisma.reservation.update({
+        where: {
+          id: args.data.id,
+        },
+        data: {
+          state: {
+            set: args.data.state,
           },
         },
       });

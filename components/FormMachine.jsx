@@ -1,4 +1,3 @@
-/* eslint-disable react/no-array-index-key */
 import React, { useState } from 'react';
 import { BsDiamondFill } from 'react-icons/bs';
 import Button from '@components/Button';
@@ -155,10 +154,7 @@ const FormMachine = ({ machine, onSubmit, onDelete }) => {
               {recommendations.map((item, index) => (
                 <li className='flex flex-row items-center w-full pr-8 my-2'>
                   <BsDiamondFill color='#00F47F' className='ml-2' />
-                  <div
-                    className='text-black px-3 font-medium whitespace-normal w-full'
-                    key={index}
-                  >
+                  <div className='text-black px-3 font-medium whitespace-normal w-full'>
                     {item}
                   </div>
                   <BsXlgButton

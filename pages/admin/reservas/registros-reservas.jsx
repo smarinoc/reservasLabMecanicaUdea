@@ -9,6 +9,7 @@ import moment from 'moment';
 import 'moment/locale/es';
 import { Skeleton } from '@mui/material';
 import { getSession } from 'next-auth/react';
+import EnterReservation from '@components/EnterReservation';
 
 const reservationRecords = () => {
   const { data: resData, loading } = useQuery(GET_RESERVATION_INFO, {
@@ -73,7 +74,8 @@ const reservationRecords = () => {
   }));
 
   return (
-    <div className='mx-auto my-10'>
+    <div className='mx-auto my-10 flex flex-col gap-10'>
+      <EnterReservation />
       <Table headers={headers} data={data} />
     </div>
   );

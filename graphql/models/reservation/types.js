@@ -43,16 +43,22 @@ const ReservationTypes = gql`
     machineUnitId: ID
     id: ID
   }
+  input ChangeReservationState {
+    id: ID
+    state: ReservationState
+  }
 
   type Query {
     getReservations: [Reservation]
     getReservationsByUser(userId: ID): [Reservation]
     getReservationInfo: [ReservationInfo]
+    getReservationByDocumentUser(id: ID): [Reservation]
   }
 
   type Mutation {
     createReservation(reservation: ReservationInput): Reservation
     cancelReservation(reservation: ReservationCancelInput): Reservation
+    changeReservationState(data: ChangeReservationState): ID
   }
 `;
 

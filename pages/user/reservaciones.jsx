@@ -49,7 +49,11 @@ const reservations = () => {
   return (
     <div className='flex flex-col gap-4 mx-auto my-10'>
       {data.getReservationsByUser.map((reservation) => (
-        <ReservationItem reservation={reservation} onCancel={cancel} />
+        <ReservationItem
+          type='myReservations'
+          reservation={reservation}
+          onClick={cancel}
+        />
       ))}
     </div>
   );
