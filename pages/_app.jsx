@@ -8,11 +8,13 @@ import 'react-toastify/dist/ReactToastify.css';
 import { createUploadLink } from 'apollo-upload-client';
 import Head from 'next/head';
 
-const link = createUploadLink({ uri: process.env.HOST_GRAPHQL });
+const link = createUploadLink({
+  uri: 'https://reservas-phi.vercel.app/api/graphql',
+});
 
 const client = new ApolloClient({
   link,
-  uri: process.env.HOST_GRAPHQL,
+  uri: 'https://reservas-phi.vercel.app/api/graphql',
   cache: new InMemoryCache(),
 });
 
