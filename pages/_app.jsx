@@ -8,11 +8,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import { createUploadLink } from 'apollo-upload-client';
 import Head from 'next/head';
 
-const link = createUploadLink({ uri: 'http://localhost:3000/api/graphql' });
+const link = createUploadLink({ uri: process.env.HOST_GRAPHQL });
 
 const client = new ApolloClient({
   link,
-  uri: 'http://localhost:3000/api/graphql',
+  uri: process.env.HOST_GRAPHQL,
   cache: new InMemoryCache(),
 });
 
