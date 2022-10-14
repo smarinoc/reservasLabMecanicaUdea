@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
@@ -13,7 +12,7 @@ const checkEmail = async (email) => {
     },
   });
   if (profile) {
-    if (profile.state === 'authorized' || profile.state === 'registered') {
+    if (profile.state === 'habilitado' || profile.state === 'registrado') {
       return true;
     }
   }
@@ -22,10 +21,10 @@ const checkEmail = async (email) => {
 
 export default NextAuth({
   callbacks: {
-    async signIn({ account, profile }) {
+    async signIn({ profile }) {
       return profile.email_verified && checkEmail(profile.email);
     },
-    async session({ session, user, token }) {
+    async session({ user }) {
       const modifiedSession = await prisma.session.findFirst({
         where: {
           userId: user.id,

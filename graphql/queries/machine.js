@@ -27,9 +27,9 @@ const GET_MACHINE_BY_ID = gql`
   }
 `;
 
-const GET_MACHINES_AVAILABLE = gql`
-  query GetMachinesAvailable {
-    getMachinesAvailable {
+const GET_MACHINES_UNITS = gql`
+  query GetMachinesUnits {
+    getMachinesUnits {
       location
       id
       serial
@@ -70,7 +70,7 @@ const GET_MACHINE_DETAILS = gql`
 export {
   GET_MACHINES,
   GET_MACHINE_BY_ID,
-  GET_MACHINES_AVAILABLE,
+  GET_MACHINES_UNITS,
   GET_MACHINES_INFO,
   GET_MACHINE_DETAILS,
 };

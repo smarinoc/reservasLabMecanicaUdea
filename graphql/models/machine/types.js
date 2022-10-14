@@ -18,8 +18,6 @@ const MachineTypes = gql`
     location: String
     serial: String
     machineUnitsOnSchedule: [MachineUnitOnSchedule]
-    diary: Diary
-    diaryId: String
   }
 
   type MachineInfo {
@@ -54,7 +52,7 @@ const MachineTypes = gql`
   input MachineInput {
     id: ID
     name: String
-    image: String
+    image: Upload
     description: String
     amount: Int
     recommendations: [String]
@@ -74,7 +72,7 @@ const MachineTypes = gql`
 
   type Query {
     getMachines: [Machine]
-    getMachinesAvailable: [MachineUnit]
+    getMachinesUnits: [MachineUnit]
     getMachineByID(id: ID): Machine
     getMachinesInfo: [MachineInfo]
     getMachineDetails(id: ID): MachineDetails

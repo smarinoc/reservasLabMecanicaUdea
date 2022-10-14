@@ -7,6 +7,7 @@ const GET_DIARIES_INFO = gql`
       name
       state
       machinesCount
+      reservationCount
       firstDate
       lastDate
     }
@@ -72,10 +73,22 @@ const GET_ALL_SCHEDULES = gql`
   }
 `;
 
+const VALIDATE_FORM_DIARY = gql`
+  query ValidateFormDiary($machineUnitOnSchedule: machineUnitOnSchedule) {
+    validateFormDiary(machineUnitOnSchedule: $machineUnitOnSchedule) {
+      machineUnitId
+      day
+      hour
+      isValid
+    }
+  }
+`;
+
 export {
   GET_DIARIES_INFO,
   GET_MACHINES_UNIT_BY_SCHEDULE,
   GET_SCHEDULE_AVAILABLE,
   GET_DIARY_BY_ID,
   GET_ALL_SCHEDULES,
+  VALIDATE_FORM_DIARY,
 };

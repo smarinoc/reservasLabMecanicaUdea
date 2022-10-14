@@ -1,28 +1,62 @@
-/* eslint-disable no-unused-vars */
-import { useMutation } from '@apollo/client';
+import { useMutation, useQuery } from '@apollo/client';
 import Button from '@components/Button';
+import FormSkeleton from '@components/FormSkeleton';
 import Input from '@components/Input';
 import SelectInput from '@components/SelectInput';
 import { useLayoutContext } from 'context/LayoutContext';
 import { REGISTER_USER } from 'graphql/mutations/user';
-import { useSession } from 'next-auth/react';
+import { GET_USER_ID } from 'graphql/queries/user';
+import useRedirect from 'hooks/useRedirect';
+import { getSession, useSession } from 'next-auth/react';
 import React, { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
 const form = () => {
-  const { data: session, status } = useSession();
-  const [documentType, setDocumentType] = useState('');
-  const [document, setDocument] = useState('');
-  const [userType, setUserType] = useState('');
-  const [phoneNumber, setPhoneNumber] = useState('');
+  const { data: session } = useSession();
+  const [documentType, setDocumentType] = useState('cédula de ciudadania');
+  const [userType, setUserType] = useState('estudiante');
   const layoutContext = useLayoutContext();
-  const [registerUser, { loading, error }] = useMutation(REGISTER_USER);
-  const [disabledButton, setDisabledButton] = useState(true);
+  const { loading: loadingRouter, push } = useRedirect();
+  const { data: profile, loading } = useQuery(GET_USER_ID, {
+    fetchPolicy: 'cache-and-network',
+    variables: {
+      getUserId: session.user.id,
+    },
+  });
+
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      email: session.user.email,
+      name: session.user.name,
+    },
+  });
 
   useEffect(() => {
-    layoutContext.setLoading(loading);
-    setDisabledButton(loading);
-  }, [loading]);
+    if (profile) {
+      reset({
+        document: profile?.getUser.profile.document,
+        phoneNumber: profile?.getUser.profile.phoneNumber,
+      });
+    }
+  }, [profile]);
+
+  const [registerUser, { loading: loadingRegisterUser }] =
+    useMutation(REGISTER_USER);
+
+  useEffect(() => {
+    layoutContext.setLoading(loadingRegisterUser || loadingRouter);
+  }, [loadingRegisterUser, loadingRouter]);
+
+  if (loading) {
+    return <FormSkeleton />;
+  }
+
   const DocumentTypeOpc = [
     {
       value: 'cédula de ciudadania',
@@ -52,91 +86,103 @@ const form = () => {
     },
   ];
 
-  const onSubmit = async (e) => {
-    e.preventDefault(false);
+  const onSubmit = async (data) => {
     try {
       await registerUser({
         variables: {
           data: {
             email: session.user.email,
             documentType,
-            document,
+            document: data.document,
             userType,
-            phoneNumber,
+            phoneNumber: data.phoneNumber,
           },
         },
       });
       toast.success('Registro exitoso');
+      push('/');
     } catch {
       toast.error('Error');
     }
   };
 
-  if (status === 'loading') {
-    return <></>;
-  }
   return (
-    <form onSubmit={onSubmit}>
-      <div className='flex flex-col drop-shadow-sm border-2 px-8 w-[876px] mx-auto gap-5 py-3 bg-white items-center mt-10'>
+    <form onSubmit={handleSubmit(onSubmit)}>
+      <div className='flex flex-col drop-shadow-sm border-2 px-8 w-[876px] mx-auto gap-5 py-10 bg-white items-center my-10'>
         <Input
-          name='email'
-          value={session.user.email}
           disabled
           text='Correo'
           type='email'
+          label='email'
+          register={register}
         />
         <Input
-          name='fullName'
-          value={session.user.name}
           disabled
           text='Nombre'
           type='text'
+          label='name'
+          register={register}
         />
         <SelectInput
           onChange={(e) => {
-            setDocumentType(e.value);
+            setDocumentType(e.target.value);
           }}
+          defaultValue={profile?.getUser.profile.documentType}
           options={DocumentTypeOpc}
           text='Tipo de documento'
           name='documentType'
         />
         <Input
-          name='document'
-          onChange={(e) => {
-            setDocument(e.target.value);
-          }}
-          value={document}
-          placeholder='1029478372'
-          text='Documento'
+          label='document'
+          register={register}
+          messageError='Ingrese el documento'
           type='text'
+          pattern={{
+            value: /^[0-9]+$/i,
+            message: 'Solo números',
+          }}
+          text='Documento'
+          error={errors.document}
         />
         <SelectInput
           onChange={(e) => {
-            setUserType(e.value);
+            setUserType(e.target.value);
           }}
+          defaultValue={profile?.getUser.profile.userType}
           options={userTypeOpc}
           text='Rol'
           name='rol'
         />
         <Input
-          name='phoneNumber'
-          onChange={(e) => {
-            setPhoneNumber(e.target.value);
-          }}
-          value={phoneNumber}
+          label='phoneNumber'
+          register={register}
+          messageError='Ingrese el teléfono'
           placeholder='321233498'
-          text='Número de telefono'
+          text='Número de teléfono'
           type='tel'
+          pattern={{
+            value: /^[0-9]+$/i,
+            message: 'Solo números',
+          }}
+          error={errors.phoneNumber}
         />
-        <Button
-          isSubmit
-          text='Registrar'
-          w='w-[300px]'
-          disabled={disabledButton}
-        />
+        <Button isSubmit text='Registrar' className='w-60 mt-' />
       </div>
     </form>
   );
 };
 
 export default form;
+
+form.auth = {
+  role: ['user'],
+};
+
+export const getServerSideProps = async (contex) => {
+  const session = await getSession(contex);
+  return {
+    props: {
+      session,
+    },
+  };
+};

@@ -23,6 +23,7 @@ module.exports = {
     'react/prop-types': 'off',
     'react/react-in-jsx-scope': 'off',
     'react/require-default-props': 'off',
+    'no-return-await': 'off',
     'no-use-before-define': 'off',
     'arrow-body-style': 'warn',
     'no-underscore-dangle': 'off',

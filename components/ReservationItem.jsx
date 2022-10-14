@@ -3,8 +3,10 @@ import React, { useState } from 'react';
 import Button from '@components/Button';
 import { Dialog } from '@mui/material';
 import DeleteDialog from 'components/DeleteDialog';
+import moment from 'moment';
+import 'moment/locale/es';
 
-const ReservationItem = ({ reservation, onCancel }) => {
+const ReservationItem = ({ reservation, onClick, type }) => {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const changeDialog = () => {
     setOpenDeleteDialog(!openDeleteDialog);
@@ -30,7 +32,7 @@ const ReservationItem = ({ reservation, onCancel }) => {
           Serial: {reservation.machineUnit.serial}
         </span>
         <span className='text-start w-full text-base font-medium text-gray-700'>
-          Día: {reservation.date}
+          Día: {moment(reservation.date).format('DD/MM/YYYY')}
         </span>
         <span className='text-start w-full text-base font-medium text-gray-700'>
           hora: {reservation.schedule.hour}
@@ -42,27 +44,31 @@ const ReservationItem = ({ reservation, onCancel }) => {
           Documento: {reservation.user.profile?.document}
         </span>
       </div>
+      {type === 'myReservations' ? (
+        <div className='my-auto'>
+          <Button text='Cancelar' onClick={changeDialog} />
 
-      <div className='my-auto'>
-        <Button text='Cancelar' onClick={changeDialog} />
-
-        <Dialog open={openDeleteDialog} onClose={changeDialog}>
-          <DeleteDialog
-            onSubmit={() => {
-              onCancel({
-                id: reservation.id,
-                userId: reservation.userId,
-                machineUnitId: reservation.machineUnitId,
-                scheduleId: reservation.scheduleId,
-              });
-            }}
-            question='Seguro que quiere cancelar la reserva'
-            textButton='Cancelar reserva'
-            title='Cancelar'
-            closeDialog={changeDialog}
-          />
-        </Dialog>
-      </div>
+          <Dialog open={openDeleteDialog} onClose={changeDialog}>
+            <DeleteDialog
+              onSubmit={() => {
+                onClick({
+                  id: reservation.id,
+                  machineUnitId: reservation.machineUnit.id,
+                  scheduleId: reservation.schedule.id,
+                });
+              }}
+              question='Seguro que quiere cancelar la reserva'
+              textButton='Cancelar reserva'
+              title='Cancelar'
+              closeDialog={changeDialog}
+            />
+          </Dialog>
+        </div>
+      ) : (
+        <div className='my-auto'>
+          <Button text='Registrar' onClick={onClick} />
+        </div>
+      )}
     </div>
   );
 };

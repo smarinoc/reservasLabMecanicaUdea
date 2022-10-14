@@ -11,6 +11,8 @@ const ReservationTypes = gql`
     machineUnitId: String
     schedule: Schedule
     machineUnit: MachineUnit
+    diary: Diary
+    diaryId: String
   }
 
   enum ReservationState {
@@ -22,6 +24,7 @@ const ReservationTypes = gql`
   type ReservationInfo {
     userDocument: String
     state: ReservationState
+    diary: String
     hour: String
     date: Date
     serial: String
@@ -38,19 +41,24 @@ const ReservationTypes = gql`
   input ReservationCancelInput {
     scheduleId: ID
     machineUnitId: ID
-    userId: ID
     id: ID
+  }
+  input ChangeReservationState {
+    id: ID
+    state: ReservationState
   }
 
   type Query {
     getReservations: [Reservation]
     getReservationsByUser(userId: ID): [Reservation]
     getReservationInfo: [ReservationInfo]
+    getReservationByDocumentUser(id: ID): [Reservation]
   }
 
   type Mutation {
     createReservation(reservation: ReservationInput): Reservation
     cancelReservation(reservation: ReservationCancelInput): Reservation
+    changeReservationState(data: ChangeReservationState): ID
   }
 `;
 

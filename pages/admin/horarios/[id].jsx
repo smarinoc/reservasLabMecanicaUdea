@@ -1,18 +1,21 @@
 import { useMutation, useQuery } from '@apollo/client';
 import DeleteDialog from '@components/DeleteDialog';
 import FormSchedule from '@components/FormSchedule';
+import FormSkeleton from '@components/FormSkeleton';
 import { Dialog } from '@mui/material';
+import { useLayoutContext } from 'context/LayoutContext';
 import { DELETE_DIARY, UPDATE_DIARY } from 'graphql/mutations/diary';
 import { GET_DIARY_BY_ID } from 'graphql/queries/diary';
-import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import useRedirect from 'hooks/useRedirect';
+import { getSession } from 'next-auth/react';
+import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
 const diaryDetails = () => {
-  const router = useRouter();
+  const { loading: loadingRouter, router, push } = useRedirect();
   const { id } = router.query;
-
-  const { data: diary, loading: loadingGetDiary } = useQuery(GET_DIARY_BY_ID, {
+  const layoutContext = useLayoutContext();
+  const { data: diary, loading } = useQuery(GET_DIARY_BY_ID, {
     fetchPolicy: 'cache-and-network',
     variables: {
       id,
@@ -23,11 +26,15 @@ const diaryDetails = () => {
   const changeDialog = () => {
     setOpenDeleteDialog(!openDeleteDialog);
   };
-  const [updateDiary] = useMutation(UPDATE_DIARY);
-  const [deleteDiary] = useMutation(DELETE_DIARY);
+  const [updateDiary, { loading: loadingUpdate }] = useMutation(UPDATE_DIARY);
+  const [deleteDiary, { loading: loadingDelete }] = useMutation(DELETE_DIARY);
 
-  if (loadingGetDiary) {
-    return <></>;
+  useEffect(() => {
+    layoutContext.setLoading(loadingUpdate || loadingDelete || loadingRouter);
+  }, [loadingUpdate, loadingDelete, loadingRouter]);
+
+  if (loading) {
+    return <FormSkeleton />;
   }
 
   const alreadyChosenSchedule = diary.getDiaryById.schedules.map((item) => ({
@@ -38,13 +45,17 @@ const diaryDetails = () => {
   }));
 
   const onDelete = async () => {
-    await deleteDiary({
-      variables: {
-        deleteDiaryId: id,
-      },
-    });
-    toast.success('Horario Eliminado');
-    router.push('/admin/horarios/horarios');
+    try {
+      await deleteDiary({
+        variables: {
+          deleteDiaryId: id,
+        },
+      });
+      toast.success('Horario Eliminado');
+      push('/admin/horarios/registro-horarios');
+    } catch (e) {
+      toast.error('No se puede eliminar, dependecias con reservas');
+    }
   };
 
   const onEditDiary = async (diaryP) => {
@@ -62,13 +73,14 @@ const diaryDetails = () => {
       },
     });
     toast.success('Horario Editado');
-    router.push('/admin/horarios/horarios');
+    push('/admin/horarios/registro-horarios');
   };
 
   return (
     <div>
       <FormSchedule
         type='edit'
+        diaryId={id}
         nameP={diary.getDiaryById.name}
         schedulesP={diary.getDiaryById.schedules.map((item) => ({
           id: item.id,
@@ -97,3 +109,14 @@ const diaryDetails = () => {
 };
 
 export default diaryDetails;
+
+diaryDetails.auth = {
+  role: ['admin'],
+};
+
+export const getServerSideProps = async (contex) => {
+  const session = await getSession(contex);
+  return {
+    props: { session },
+  };
+};

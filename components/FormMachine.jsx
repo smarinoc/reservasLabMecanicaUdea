@@ -1,6 +1,4 @@
-/* eslint-disable react/no-array-index-key */
-import { useLayoutContext } from 'context/LayoutContext';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { BsDiamondFill } from 'react-icons/bs';
 import Button from '@components/Button';
 import Input from '@components/Input';
@@ -8,11 +6,10 @@ import InputMachineUnit from '@components/InputMachineUnit';
 import TextArea from '@components/TextArea';
 import UploadImage from '@components/UploadImage';
 import BsXlgButton from '@components/BsXlgButton';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
-const FormMachine = ({ machine, onSubmit, onDelete, loading }) => {
-  const [name, setName] = useState(machine?.name || '');
-  const [description, setDescription] = useState(machine?.description || '');
-  const [recommendation, setRecommendation] = useState('');
+const FormMachine = ({ machine, onSubmit, onDelete }) => {
   const [recommendations, setRecommendations] = useState(
     machine?.recommendations || []
   );
@@ -29,8 +26,24 @@ const FormMachine = ({ machine, onSubmit, onDelete, loading }) => {
       },
     ]
   );
-  const [disabledButton, setDisabledButton] = useState(false);
-  const layoutContext = useLayoutContext();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      name: machine?.name || '',
+      description: machine?.description || '',
+      amount: machine?.amount || 1,
+    },
+  });
+
+  const {
+    register: registerRecommendation,
+    handleSubmit: handleSubmitRecommendation,
+    setValue,
+  } = useForm();
 
   const changeAmount = (newAmount) => {
     const gap = newAmount - amount;
@@ -47,15 +60,9 @@ const FormMachine = ({ machine, onSubmit, onDelete, loading }) => {
     }
   };
 
-  useEffect(() => {
-    layoutContext.setLoading(loading);
-    setDisabledButton(loading);
-  }, [loading]);
-
-  const onSubmitRecommendation = (e) => {
-    e.preventDefault(false);
-    setRecommendation('');
-    setRecommendations([...recommendations, recommendation]);
+  const onSubmitRecommendation = (data) => {
+    setValue('recommendation', '');
+    setRecommendations([...recommendations, data.recommendation]);
   };
 
   const onCancelRecommendation = (index) => {
@@ -64,12 +71,26 @@ const FormMachine = ({ machine, onSubmit, onDelete, loading }) => {
     setRecommendations(aux);
   };
 
+  const validate = () => {
+    let valid = true;
+    machineUnits.forEach((item) => {
+      if (item.location === '' || item.serial === '') valid = false;
+    });
+
+    if (valid === false) {
+      toast.error('Ingrese todos los campos de ubicación y serial');
+    }
+
+    if (!image[0]?.file && !image) {
+      valid = false;
+      toast.error('Seleccione una foto');
+    }
+    return valid;
+  };
+
   const resetForm = () => {
-    setName('');
-    setDescription('');
+    reset();
     setImage('');
-    setAmount(1);
-    setRecommendation('');
     setRecommendations([]);
     setMachineUnits([
       {
@@ -79,129 +100,112 @@ const FormMachine = ({ machine, onSubmit, onDelete, loading }) => {
     ]);
   };
 
-  const onUploadImage = async () => {
-    const formData = new FormData();
-    formData.append('upload_preset', 'in2dm1xw');
-    formData.append('folder', 'Image');
-    formData.append('file', image[0].file);
-    try {
-      const res = await fetch(
-        'https://api.cloudinary.com/v1_1/daef66ohy/image/upload',
-        {
-          method: 'POST',
-          body: formData,
-        }
-      );
-
-      if (!res.ok) return 'no';
-
-      const data = await res.json();
-      return data.secure_url;
-    } catch (error) {
-      return 'no';
-    }
-  };
-
   return (
-    <div className='flex flex-col drop-shadow-sm border-2 px-8 w-[876px] mx-auto gap-8 py-3 bg-white items-center my-10'>
-      <div className='flex w-full flex-col gap-5 items-center px-8 py-3'>
-        <UploadImage image={image} setImage={setImage} />
-        <Input
-          name='name'
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          text='Nombre'
-          type='text'
-        />
-        <TextArea
-          name='description'
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          text='Descripción'
-        />
-        <div className='w-full flex flex-col gap-1'>
-          <form
-            className='w-full flex flex-row gap-2 items-end'
-            onSubmit={onSubmitRecommendation}
-          >
-            <Input
-              name='recommendation'
-              value={recommendation}
-              onChange={(e) => setRecommendation(e.target.value)}
-              text='Añadir recomendación'
-              type='text'
-            />
-            <Button isSubmit text='Añadir' w='w-[100px]' />
-          </form>
-          <ul className={recommendations.length > 0 ? 'border-2' : ''}>
-            {recommendations.map((item, index) => (
-              <li className='flex flex-row items-center w-full pr-8 my-2'>
-                <BsDiamondFill color='#00F47F' className='ml-2' />
-                <div
-                  className='text-black px-3 font-medium whitespace-normal w-full'
-                  key={index}
-                >
-                  {item}
-                </div>
-                <BsXlgButton
-                  onClick={() => {
-                    onCancelRecommendation(index);
-                  }}
-                />
-              </li>
-            ))}
-          </ul>
-        </div>
-        <Input
-          name='amount'
-          value={amount}
-          onChange={(e) => {
-            changeAmount(e.target.value);
-            setAmount(e.target.value);
-          }}
-          text='Cantidad'
-          type='number'
-        />
-        <div className='flex w-full flex-col gap-1 items-center'>
-          {machineUnits.map((item) => (
-            <div className='w-full'>
-              <InputMachineUnit unit={item} />
-            </div>
-          ))}
-        </div>
-      </div>
-      <div
-        className={`flex w-full ${
-          onDelete ? 'flex-row justify-around' : 'justify-end'
-        }`}
-      >
-        <Button
-          text={machine ? 'Editar máquina' : 'Crear máquina'}
-          disabled={disabledButton}
-          onClick={async () => {
-            const url = image[0].file ? await onUploadImage() : machine.image;
+    <div className='flex flex-col drop-shadow-sm border-2 px-4 w-full  md:mx-auto md:w-[768px] md:px-8 gap-8 py-3 bg-white items-center my-10'>
+      <form
+        className='w-full'
+        onSubmit={handleSubmit(async (data) => {
+          if (validate()) {
             await onSubmit({
               id: machine?.id,
-              name,
-              image: url,
-              description,
+              name: data.name,
+              image: image[0]?.file || image,
+              description: data.description,
               recommendations,
-              amount: parseInt(amount, 10),
+              amount: parseInt(data.amount, 10),
               machineUnits,
             });
             resetForm();
-          }}
-        />
-        {onDelete ? (
-          <Button
-            text='Eliminar máquina'
-            onClick={() => onDelete(machine)}
-            disabled={disabledButton}
+          }
+        })}
+      >
+        <div className='flex w-full flex-col gap-5 items-center  py-3'>
+          <UploadImage image={image} setImage={setImage} />
+          <Input
+            text='Nombre'
+            type='text'
+            label='name'
+            register={register}
+            messageError='Ingrese un nombre'
+            error={errors.name}
           />
-        ) : (
-          <></>
-        )}
-      </div>
+          <TextArea
+            text='Descripción'
+            label='description'
+            register={register}
+          />
+          <div className='w-full flex flex-col gap-1'>
+            <div className='w-full flex flex-row gap-2 items-end'>
+              <Input
+                label='recommendation'
+                register={registerRecommendation}
+                name='recommendation'
+                text='Añadir recomendación'
+                type='text'
+                messageError='...'
+              />
+              <Button
+                onClick={handleSubmitRecommendation(onSubmitRecommendation)}
+                text='Añadir'
+                w='w-[100px]'
+              />
+            </div>
+            <ul className={recommendations.length > 0 ? 'border-2' : ''}>
+              {recommendations.map((item, index) => (
+                <li className='flex flex-row items-center w-full pr-8 my-2'>
+                  <BsDiamondFill color='#00F47F' className='ml-2' />
+                  <div className='text-black px-3 font-medium whitespace-normal w-full'>
+                    {item}
+                  </div>
+                  <BsXlgButton
+                    onClick={() => {
+                      onCancelRecommendation(index);
+                    }}
+                  />
+                </li>
+              ))}
+            </ul>
+          </div>
+          <Input
+            label='amount'
+            register={register}
+            text='Cantidad'
+            messageError='Ingrese una cantidad'
+            error={errors.amount}
+            pattern={{
+              value: /^[1-9]+$/i,
+              message: 'Solo números mayores de 0',
+            }}
+            onChange={(e) => {
+              changeAmount(e.target.value);
+              setAmount(e.target.value);
+            }}
+          />
+          <div className='flex w-full flex-col gap-1 items-center'>
+            {machineUnits.map((item) => (
+              <div className='w-full'>
+                <InputMachineUnit unit={item} />
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className='flex w-full flex-row justify-around'>
+          {onDelete ? (
+            <Button
+              text='Eliminar'
+              className='w-60'
+              onClick={() => onDelete(machine)}
+            />
+          ) : (
+            <></>
+          )}
+          <Button
+            text={machine ? 'Editar' : 'Crear'}
+            className='w-60'
+            isSubmit
+          />
+        </div>
+      </form>
     </div>
   );
 };

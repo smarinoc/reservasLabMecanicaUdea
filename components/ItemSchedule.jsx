@@ -7,15 +7,15 @@ const ItemSchedule = ({ onClick, isAvailable, type, isSelectParam }) => {
     setIsSelect(isSelectParam);
   }, [isSelectParam]);
 
-  let className = 'w-full border-2 border-gray-400';
+  let className = 'w-full border-2 border-gray-400 h-20';
   let text = '';
   if (isAvailable) {
     className += ' hover:border-4';
     if (type === 'reserve') {
-      className += ' bg-green-500';
-      text = 'disponible';
+      className += ' bg-green-500 text-base';
+      text = 'Disponible';
       if (isSelect) {
-        className += ' border-gray-900 border-4';
+        className += ' border-gray-900';
       } else {
         className += ' hover:border-gray-800';
       }

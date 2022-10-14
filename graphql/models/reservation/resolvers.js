@@ -1,4 +1,3 @@
-/* eslint-disable no-return-await */
 const { default: prisma } = require('config/prisma');
 
 const ReservationResolvers = {
@@ -21,8 +20,25 @@ const ReservationResolvers = {
           id: parent.machineUnitId,
         },
       }),
+    diary: async (parent) =>
+      await prisma.diary.findUnique({
+        where: {
+          id: parent.diaryId,
+        },
+      }),
   },
   Query: {
+    getReservationByDocumentUser: async (parent, args) =>
+      await prisma.reservation.findMany({
+        where: {
+          user: {
+            profile: {
+              document: args.id,
+            },
+          },
+          state: 'reservada',
+        },
+      }),
     getReservations: async () => await prisma.reservation.findMany(),
     getReservationsByUser: async (parent, args) =>
       await prisma.reservation.findMany({
@@ -74,6 +90,7 @@ const ReservationResolvers = {
                   document: true,
                 },
               },
+              rol: true,
             },
           },
           machineUnit: {
@@ -86,16 +103,22 @@ const ReservationResolvers = {
               },
             },
           },
+          diary: {
+            select: {
+              name: true,
+            },
+          },
         },
       });
 
       const res = resData.map((item) => ({
-        userDocument: item.user.profile?.document || '',
+        userDocument: item.user.profile?.document || item.user.rol,
         state: item.state,
         hour: item.schedule.hour,
         date: item.date,
         serial: item.machineUnit.serial,
         machineName: item.machineUnit.machine.name,
+        diary: item.diary?.name,
       }));
 
       return res;
@@ -107,6 +130,11 @@ const ReservationResolvers = {
       const countReservationUser = await prisma.reservation.count({
         where: {
           userId: args.reservation.userId,
+          user: {
+            rol: {
+              not: 'admin',
+            },
+          },
           state: 'reservada',
         },
       });
@@ -117,6 +145,16 @@ const ReservationResolvers = {
               scheduleId: args.reservation.scheduleId,
               machineUnitId: args.reservation.machineUnitId,
               state: 'available',
+              diary: {
+                state: 'habilitado',
+              },
+              machineUnit: {
+                state: 'habilitada',
+              },
+            },
+            select: {
+              id: true,
+              diaryId: true,
             },
           });
 
@@ -136,6 +174,11 @@ const ReservationResolvers = {
               schedule: {
                 connect: {
                   id: args.reservation.scheduleId,
+                },
+              },
+              diary: {
+                connect: {
+                  id: machineUnitOnSchedule.diaryId,
                 },
               },
               date: args.reservation.date,
@@ -166,11 +209,12 @@ const ReservationResolvers = {
       return res;
     },
     cancelReservation: async (parent, args) => {
-      await prisma.machineUnitOnSchedule.updateMany({
+      await prisma.machineUnitOnSchedule.update({
         where: {
-          scheduleId: args.reservation.scheduleId,
-          machineUnitId: args.reservation.machineUnitId,
-          state: 'reservada',
+          machineUnitId_scheduleId: {
+            machineUnitId: args.reservation.machineUnitId,
+            scheduleId: args.reservation.scheduleId,
+          },
         },
         data: {
           state: {
@@ -185,6 +229,18 @@ const ReservationResolvers = {
         data: {
           state: {
             set: 'cancelada',
+          },
+        },
+      });
+    },
+    changeReservationState: async (parent, args) => {
+      await prisma.reservation.update({
+        where: {
+          id: args.data.id,
+        },
+        data: {
+          state: {
+            set: args.data.state,
           },
         },
       });

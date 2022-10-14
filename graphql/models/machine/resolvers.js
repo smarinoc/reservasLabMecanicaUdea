@@ -1,4 +1,5 @@
-/* eslint-disable no-return-await */
+import { uploadCloudinary } from 'cloudinary/config';
+
 const { default: prisma } = require('config/prisma');
 
 const MachineResolvers = {
@@ -24,26 +25,11 @@ const MachineResolvers = {
           machineUnitId: parent.id,
         },
       }),
-    diary: async (parent) =>
-      await prisma.diary.findUnique({
-        where: {
-          id: parent.diaryId,
-        },
-      }),
   },
 
   Query: {
     getMachines: async () => await prisma.machine.findMany(),
-    getMachinesAvailable: async () =>
-      await prisma.machineUnit.findMany({
-        where: {
-          machineUnitsOnSchedule: {
-            every: {
-              id: '',
-            },
-          },
-        },
-      }),
+    getMachinesUnits: async () => await prisma.machineUnit.findMany(),
     getMachineByID: async (parent, args) =>
       await prisma.machine.findUnique({
         where: {
@@ -115,16 +101,52 @@ const MachineResolvers = {
   },
 
   Mutation: {
-    createMachine: async (parent, args) =>
-      await prisma.machine.create({
+    createMachine: async (parent, args) => {
+      let url = '';
+      if (args.machine.image.file) {
+        url = await uploadCloudinary(args.machine.image.file);
+      }
+      return await prisma.machine.create({
         data: {
           ...args.machine,
+          image: url,
           machineUnits: {
             create: args.machine.machineUnits,
           },
         },
-      }),
+      });
+    },
     updateMachine: async (parent, args) => {
+      const machineUnitsData = await prisma.machineUnit.findMany({
+        where: {
+          machineId: args.machine.id,
+        },
+      });
+
+      const news = args.machine.machineUnits.filter((item) => {
+        const find = machineUnitsData.find(
+          (element) =>
+            item.location === element.location && item.serial === element.serial
+        );
+
+        return find === undefined;
+      });
+
+      const removes = machineUnitsData.filter((item) => {
+        const find = args.machine.machineUnits.find(
+          (element) =>
+            item.location === element.location && item.serial === element.serial
+        );
+
+        return find === undefined;
+      });
+
+      let url;
+      if (args.machine.image.file) {
+        url = await uploadCloudinary(args.machine.image.file);
+      } else {
+        url = args.machine.image;
+      }
       await prisma.machine.update({
         where: {
           id: args.machine.id,
@@ -134,7 +156,7 @@ const MachineResolvers = {
             set: args.machine.name,
           },
           image: {
-            set: args.machine.image,
+            set: url,
           },
           description: {
             set: args.machine.description,
@@ -145,22 +167,11 @@ const MachineResolvers = {
           amount: {
             set: args.machine.amount,
           },
-        },
-      });
-
-      await prisma.machineUnit.deleteMany({
-        where: {
-          machineId: args.machine.id,
-        },
-      });
-
-      return await prisma.machine.update({
-        where: {
-          id: args.machine.id,
-        },
-        data: {
           machineUnits: {
-            create: args.machine.machineUnits,
+            createMany: {
+              data: news,
+            },
+            deleteMany: removes,
           },
         },
       });
@@ -186,6 +197,18 @@ const MachineResolvers = {
         data: {
           state: {
             set: args.data.state,
+          },
+          reservations: {
+            updateMany: {
+              where: {
+                state: 'reservada',
+              },
+              data: {
+                state: {
+                  set: 'cancelada',
+                },
+              },
+            },
           },
         },
       });

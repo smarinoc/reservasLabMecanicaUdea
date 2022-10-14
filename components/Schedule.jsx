@@ -4,6 +4,7 @@ import { GET_ALL_SCHEDULES } from 'graphql/queries/diary';
 import { useQuery } from '@apollo/client';
 import moment from 'moment';
 import 'moment/locale/es';
+import FormSkeleton from '@components/FormSkeleton';
 
 const Schedule = ({
   onItemSchedule,
@@ -11,16 +12,13 @@ const Schedule = ({
   type,
   alreadyChosen,
 }) => {
-  const { data: allSchedules, loading: loadingGetAllSchedules } = useQuery(
-    GET_ALL_SCHEDULES,
-    {
-      fetchPolicy: 'cache-and-network',
-    }
-  );
+  const { data: allSchedules, loading } = useQuery(GET_ALL_SCHEDULES, {
+    fetchPolicy: 'cache-and-network',
+  });
   const [select, setSelect] = useState(null);
 
-  if (loadingGetAllSchedules) {
-    return <></>;
+  if (loading) {
+    return <FormSkeleton />;
   }
 
   const schedulesHeadsDay = allSchedules?.getAllSchedules.reduce(
@@ -43,7 +41,7 @@ const Schedule = ({
   );
 
   return (
-    <div className='mx-auto grid w-[1200px] h-[1400px] grid-rows-14 grid-cols-7 items-end'>
+    <div className='mx-auto grid w-full xl:w-[1200px] h-[1400px] grid-rows-14 grid-cols-7 items-end'>
       <div className='col-start-2 col-span-6 grid grid-cols-6'>
         {schedulesHeadsDay.map((item, index) => {
           const dayNumber = moment()

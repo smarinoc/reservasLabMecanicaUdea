@@ -1,14 +1,22 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Button from 'components/Button';
 import CatalogMachines from 'components/CatalogMachines';
 import Input from 'components/Input';
 import Schedule from 'components/Schedule';
-import { GET_MACHINES_AVAILABLE } from 'graphql/queries/machine';
-import { useQuery } from '@apollo/client';
+import { GET_MACHINES_UNITS } from 'graphql/queries/machine';
+import { useLazyQuery, useQuery } from '@apollo/client';
 import PickerDate from 'components/PickerDate';
+import { VALIDATE_FORM_DIARY } from 'graphql/queries/diary';
+import { Dialog } from '@mui/material';
+import ValidFormScheduleDialog from 'components/ValidFormScheduleDialog';
+import { useLayoutContext } from 'context/LayoutContext';
+import CatalogMachinesSkeleton from 'components/CatalogMachinesSkeleton';
+import { useForm } from 'react-hook-form';
+import { toast } from 'react-toastify';
 
 const FormSchedule = ({
   type,
+  diaryId,
   schedulesP,
   machinesP,
   nameP,
@@ -19,19 +27,46 @@ const FormSchedule = ({
   alreadyChosenSchedule,
   alreadyChosenMachines,
 }) => {
-  const [name, setName] = useState(nameP || '');
   const [schedules, setSchedules] = useState(schedulesP || []);
   const [machines, setMachines] = useState(machinesP || []);
   const [firstDate, setFirstDate] = useState(firstDateP || null);
   const [lastDate, setLastDate] = useState(lastDateP || null);
+  const layoutContext = useLayoutContext();
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const changeDialog = () => {
+    setOpenDeleteDialog(!openDeleteDialog);
+  };
+  const [noValidSchedules, setNoValidSchedules] = useState([]);
 
   const {
-    data: machinesAvailable,
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    defaultValues: {
+      name: nameP || '',
+    },
+  });
+
+  const {
+    data: machinesUnits,
     loading,
     refetch,
-  } = useQuery(GET_MACHINES_AVAILABLE, {
-    fetchPolicy: 'network-only',
+  } = useQuery(GET_MACHINES_UNITS, {
+    fetchPolicy: 'cache-and-network',
   });
+
+  const [validateFormDiary, { loading: loadingValidate }] = useLazyQuery(
+    VALIDATE_FORM_DIARY,
+    {
+      fetchPolicy: 'network-only',
+    }
+  );
+
+  useEffect(() => {
+    layoutContext.setLoading(loadingValidate);
+  }, [loadingValidate]);
 
   const onItemSchedule = (scheduleSelect) => {
     const index = schedules.findIndex(
@@ -56,40 +91,79 @@ const FormSchedule = ({
     }
   };
 
-  const onSubmit = async (e) => {
-    e.preventDefault(false);
-    await onSubmitP({
-      name,
-      schedules,
-      machines,
-      firstDate: firstDate._d || firstDate,
-      lastDate: lastDate._d || lastDate,
+  const onSubmit = async (data) => {
+    if (firstDate === null || lastDate === null) {
+      toast.error('Ingrese las dos fechas');
+      return;
+    }
+    if (schedules.length === 0) {
+      toast.error('Seleccione al menos un horario');
+      return;
+    }
+    if (machines.length === 0) {
+      toast.error('Seleccione al menos una máquina');
+      return;
+    }
+
+    const res = await validateFormDiary({
+      variables: {
+        machineUnitOnSchedule: {
+          schedules,
+          machineUnits: machines.map((item) => ({ id: item.id })),
+          diaryId,
+        },
+      },
     });
-    refetch();
-    setName('');
-    setSchedules([]);
-    setMachines([]);
-    setFirstDate(null);
-    setLastDate(null);
+
+    const noValid = res.data.validateFormDiary.filter((item) => !item.isValid);
+
+    if (noValid.length > 0) {
+      setNoValidSchedules(
+        noValid.map((item) => {
+          const findMachine = machines.find(
+            (element) => element.id === item.machineUnitId
+          );
+
+          return {
+            day: item.day,
+            hour: item.hour,
+            name: findMachine.machine.name,
+            serial: findMachine.serial,
+          };
+        })
+      );
+      changeDialog();
+    } else {
+      await onSubmitP({
+        name: data.name,
+        schedules,
+        machines,
+        firstDate: firstDate._d || firstDate,
+        lastDate: lastDate._d || lastDate,
+      });
+      refetch();
+      setSchedules([]);
+      setMachines([]);
+      setFirstDate(null);
+      setLastDate(null);
+      reset();
+    }
   };
 
-  if (loading) {
-    return <div>loading.........</div>;
-  }
-
   return (
-    <div className='flex flex-col gap-8 p-12 items-center w-fit mx-auto'>
-      <form onSubmit={onSubmit}>
-        <div className='flex flex-col drop-shadow-sm border-2 px-8 w-[876px] mx-auto gap-5 py-3 bg-white items-center'>
+    <div className='flex flex-col gap-8 p-12 items-center w-fit mx-auto mb-10'>
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className='flex flex-col items-center'
+      >
+        <div className='flex flex-col drop-shadow-sm border-2 px-4 w-full  md:mx-auto md:w-[768px] md:px-8 gap-5 py-3 bg-white items-center'>
           <Input
-            name='name'
-            placeholder='Horario 1'
             text='Nombre'
-            type='text'
-            value={name}
-            onChange={(e) => {
-              setName(e.target.value);
-            }}
+            label='name'
+            register={register}
+            messageError='Ingrese el nombre'
+            placeholder='Horario 1'
+            error={errors.name}
           />
           <PickerDate
             name='firstDate'
@@ -108,31 +182,42 @@ const FormSchedule = ({
             }}
           />
         </div>
-
+        <span className='text-2xl font-semibold mx-auto text-gray-700 pt-10'>
+          Seleccione los horarios
+        </span>
         <Schedule
           onItemSchedule={onItemSchedule}
           type='formSchedule'
           alreadyChosen={alreadyChosenSchedule}
         />
-        <CatalogMachines
-          type='formSchedule'
-          machines={
-            machinesP
-              ? [...machinesP, ...machinesAvailable.getMachinesAvailable]
-              : machinesAvailable.getMachinesAvailable
-          }
-          onMachine={onItemMachine}
-          alreadyChosen={alreadyChosenMachines}
-        />
+        <span className='text-2xl font-semibold mx-auto text-gray-700 pt-10'>
+          Seleccione las máquinas
+        </span>
+        {loading ? (
+          <CatalogMachinesSkeleton />
+        ) : (
+          <CatalogMachines
+            type='formSchedule'
+            machines={machinesUnits.getMachinesUnits}
+            onMachine={onItemMachine}
+            alreadyChosen={alreadyChosenMachines}
+          />
+        )}
         {type === 'edit' ? (
           <div className='flex flex-row w-full justify-around'>
-            <Button isSubmit w='w-fit' text='Editar' />
-            <Button onClick={onDeleteP} w='w-fit' text='Eliminar' />
+            <Button onClick={onDeleteP} className='w-60' text='Eliminar' />
+            <Button isSubmit className='w-60' text='Editar' />
           </div>
         ) : (
-          <Button isSubmit w='w-fit' text='Crear' />
+          <Button isSubmit className='w-60' text='Crear' />
         )}
       </form>
+      <Dialog open={openDeleteDialog} onClose={changeDialog}>
+        <ValidFormScheduleDialog
+          schedules={noValidSchedules}
+          closeDialog={changeDialog}
+        />
+      </Dialog>
     </div>
   );
 };

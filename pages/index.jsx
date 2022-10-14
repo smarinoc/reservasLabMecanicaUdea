@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@apollo/client';
+import { useLazyQuery, useMutation, useQuery } from '@apollo/client';
 import Button from '@components/Button';
 import CatalogMachines from '@components/CatalogMachines';
 import Schedule from '@components/Schedule';
@@ -7,15 +7,15 @@ import {
   GET_MACHINES_UNIT_BY_SCHEDULE,
   GET_SCHEDULE_AVAILABLE,
 } from 'graphql/queries/diary';
-import { useSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import { Dialog } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import ConfirmReserveDialog from '@components/ConfirmReserveDialog';
-import { useRouter } from 'next/router';
 import { toast } from 'react-toastify';
 import moment from 'moment';
 import 'moment/locale/es';
 import { CREATE_RESERVATION } from 'graphql/mutations/reservation';
+import FormSkeleton from '@components/FormSkeleton';
 
 const Home = () => {
   const [schedule, setShedule] = useState({ id: '-1' });
@@ -29,25 +29,26 @@ const Home = () => {
   const { data: session } = useSession();
   const {
     data: schedules,
-    loading: schedulesLoading,
+    loading,
     refetch: refetchScheduleAvailable,
   } = useQuery(GET_SCHEDULE_AVAILABLE, {
     fetchPolicy: 'cache-and-network',
   });
-  const router = useRouter();
 
-  const { data, loading, refetch } = useQuery(GET_MACHINES_UNIT_BY_SCHEDULE, {
-    fetchPolicy: 'cache-and-network',
-    variables: {
-      id: schedule.id,
-    },
-  });
+  const [getMachinesUnitBySchedule, { data, loading: loadingMachines }] =
+    useLazyQuery(GET_MACHINES_UNIT_BY_SCHEDULE, {
+      fetchPolicy: 'cache-and-network',
+      variables: {
+        id: schedule.id,
+      },
+    });
 
-  const [createReservation] = useMutation(CREATE_RESERVATION);
+  const [createReservation, { loading: loadingCreate }] =
+    useMutation(CREATE_RESERVATION);
 
   useEffect(() => {
-    layoutContext.setLoading(loading);
-  }, [loading]);
+    layoutContext.setLoading(loadingCreate || loadingMachines);
+  }, [loadingCreate, loadingMachines]);
 
   useEffect(() => {
     if (schedules) {
@@ -55,13 +56,38 @@ const Home = () => {
     }
   }, [schedules]);
 
+  if (loading) return <FormSkeleton />;
+
   const onItemSchedule = (scheduleP) => {
     setShedule(scheduleP);
-    refetch();
+    getMachinesUnitBySchedule();
   };
 
   const onItemMachine = (machineItem) => {
     setMachine(machineItem);
+  };
+
+  const validate = () => {
+    if (!session) {
+      toast.error('Inicie sesión ');
+      return false;
+    }
+
+    if (!(session.user.profile.state === 'registrado')) {
+      toast.error('Llene antes el formulario');
+      return false;
+    }
+    if (schedule.id === '-1') {
+      toast.error('Seleccione un horario');
+      return false;
+    }
+
+    if (!machine) {
+      toast.error('Seleccione una máquina');
+      return false;
+    }
+
+    return true;
   };
 
   const onReserve = async () => {
@@ -91,15 +117,19 @@ const Home = () => {
     setShedule({ id: '-1' });
   };
 
-  if (schedulesLoading) return <div>Loading ...</div>;
-
   return (
-    <div className='flex flex-col gap-16 items-center'>
+    <div className='flex flex-col items-center pb-10'>
+      <span className='text-2xl font-semibold mx-auto text-gray-700 pt-10'>
+        Eliga un horario
+      </span>
       <Schedule
         onItemSchedule={onItemSchedule}
         availableSchedules={availableSchedules}
         type='reserve'
       />
+      <span className='text-2xl font-semibold mx-auto text-gray-700 pt-10'>
+        Eliga una Máquina
+      </span>
       <CatalogMachines
         type='reserve'
         machines={data?.getMachinesUnitBySchedule}
@@ -107,14 +137,12 @@ const Home = () => {
       />
       <Button
         onClick={() => {
-          if (session) {
+          if (validate()) {
             changeDialog();
-          } else {
-            router.push('/api/auth/signin/:google');
           }
         }}
         text='Reservar'
-        w='w-fit'
+        className='w-60'
       />
       <Dialog open={openDeleteDialog} onClose={changeDialog}>
         <ConfirmReserveDialog
@@ -129,7 +157,7 @@ const Home = () => {
               .format('D MMMM')}`,
             hour: schedule?.hour,
             userName: session?.user?.name,
-            userDocument: session?.profile?.document,
+            userDocument: session?.user.profile?.document,
           }}
         />
       </Dialog>
@@ -138,3 +166,12 @@ const Home = () => {
 };
 
 export default Home;
+
+export const getServerSideProps = async (contex) => {
+  const session = await getSession(contex);
+  return {
+    props: {
+      session,
+    },
+  };
+};

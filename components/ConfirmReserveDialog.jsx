@@ -27,12 +27,6 @@ const ConfirmReserveDialog = ({ crearReserve, closeDialog, data }) => {
         />
         <InfoReserveDialog label='Documento' text={data.userDocument} />
       </div>
-
-      <span className='font-semibold text-lg text-red-600 w-full text-center'>
-        Después de 15 minutos sin presentarse a la hora y dia confirmados se
-        cancela la reserva y se sanciona con una semana sin poder reservar
-      </span>
-
       <div className='flex flex-row gap-5 w-full justify-center'>
         <Button text='Confirmar' onClick={onConfirm} />
         <Button text='Cancelar' onClick={cancel} />

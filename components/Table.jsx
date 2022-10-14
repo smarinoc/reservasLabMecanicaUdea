@@ -70,7 +70,15 @@ const Table = ({ headers, data }) => {
           {headerGroups.map((headerGroup) => (
             <tr {...headerGroup.getHeaderGroupProps()}>
               {headerGroup.headers.map((column) => (
-                <th {...column.getHeaderProps}>{column.render('Filter')}</th>
+                <th {...column.getHeaderProps}>
+                  {column.Filter ? (
+                    column.render('Filter')
+                  ) : (
+                    <div className='block text-sm font-medium text-white px-4'>
+                      {column.render('Header')}
+                    </div>
+                  )}
+                </th>
               ))}
             </tr>
           ))}
