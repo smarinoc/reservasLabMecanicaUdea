@@ -1,4 +1,5 @@
 import { Menu, MenuItem } from '@mui/material';
+import Link from 'next/link';
 import React, { useState } from 'react';
 
 const ButtonMenu = ({ name, options }) => {
@@ -22,13 +23,13 @@ const ButtonMenu = ({ name, options }) => {
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
         {options.map((item) => (
           <MenuItem onClick={handleClose}>
-            <a
+            <Link
               key={item.name}
               href={item.href}
               className='px-3 py-2 rounded-md text-sm font-medium'
             >
               {item.name}
-            </a>
+            </Link>
           </MenuItem>
         ))}
       </Menu>

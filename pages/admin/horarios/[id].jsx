@@ -54,7 +54,7 @@ const diaryDetails = () => {
       toast.success('Horario Eliminado');
       push('/admin/horarios/registro-horarios');
     } catch (e) {
-      toast.error('No se puede eliminar, dependecias con reservas');
+      toast.error('No se puede eliminar, dependencias con reservas');
     }
   };
 
@@ -113,6 +113,8 @@ export default diaryDetails;
 diaryDetails.auth = {
   role: ['admin'],
 };
+
+diaryDetails.title = 'Editar horario';
 
 export const getServerSideProps = async (contex) => {
   const session = await getSession(contex);

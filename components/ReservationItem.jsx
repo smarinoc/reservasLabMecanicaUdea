@@ -35,7 +35,7 @@ const ReservationItem = ({ reservation, onClick, type }) => {
           Día: {moment(reservation.date).format('DD/MM/YYYY')}
         </span>
         <span className='text-start w-full text-base font-medium text-gray-700'>
-          hora: {reservation.schedule.hour}
+          Hora: {reservation.schedule.hour}
         </span>
         <span className='text-start w-full text-base font-medium text-gray-700'>
           Nombre: {reservation.user.name}

@@ -42,6 +42,8 @@ createSchedule.auth = {
   role: ['admin'],
 };
 
+createSchedule.title = 'Crear horario';
+
 export const getServerSideProps = async (contex) => {
   const session = await getSession(contex);
   return {

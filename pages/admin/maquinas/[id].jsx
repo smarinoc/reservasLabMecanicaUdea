@@ -45,7 +45,7 @@ const machineDetails = () => {
       });
       toast.success('Máquina editada');
     } catch (e) {
-      toast.error('No se puede editar, dependecias con reservas');
+      toast.error('No se puede editar, dependencias con reservas');
     }
     push('/admin/maquinas/maquinas');
   };
@@ -64,7 +64,7 @@ const machineDetails = () => {
       });
       toast.success('Máquina Eliminada');
     } catch (e) {
-      toast.error('No se puede eliminar, dependecias con reservas');
+      toast.error('No se puede eliminar, dependencias con reservas');
     }
     push('/admin/maquinas/maquinas');
   };
@@ -102,6 +102,8 @@ export default machineDetails;
 machineDetails.auth = {
   role: ['admin'],
 };
+
+machineDetails.title = 'Editar máquina';
 
 export const getServerSideProps = async (contex) => {
   const session = await getSession(contex);

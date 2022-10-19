@@ -65,6 +65,8 @@ reservations.auth = {
   role: ['user', 'admin'],
 };
 
+reservations.title = 'Mis reservas';
+
 export const getServerSideProps = async (contex) => {
   const session = await getSession(contex);
   return {

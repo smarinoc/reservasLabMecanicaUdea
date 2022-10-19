@@ -94,6 +94,8 @@ machineRecords.auth = {
   role: ['admin'],
 };
 
+machineRecords.title = 'Registros de máquinas';
+
 export const getServerSideProps = async (contex) => {
   const session = await getSession(contex);
   return {

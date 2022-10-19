@@ -53,6 +53,9 @@ const EnterReservation = () => {
   };
   return (
     <div className='flex flex-col px-8 w-full gap-5 py-5 items-center'>
+      <span className='text-2xl font-semibold mx-auto text-gray-700'>
+        Registrar reserva
+      </span>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className='flex flex-row gap-2 w-full'
