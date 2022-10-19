@@ -65,13 +65,13 @@ const scheduleRecords = () => {
       filter: 'text',
     },
     {
-      Header: 'Nro máquinas',
+      Header: 'Nro. máquinas',
       accessor: 'machinesCount',
       Filter: RangeFilter,
       filter: 'between',
     },
     {
-      Header: 'Nro reservas',
+      Header: 'Nro. reservas',
       accessor: 'reservationCount',
       Filter: RangeFilter,
       filter: 'between',
@@ -123,6 +123,8 @@ export default scheduleRecords;
 scheduleRecords.auth = {
   role: ['admin'],
 };
+
+scheduleRecords.title = 'Registros de horarios';
 
 export const getServerSideProps = async (contex) => {
   const session = await getSession(contex);

@@ -31,6 +31,7 @@ export default createMachine;
 createMachine.auth = {
   role: ['admin'],
 };
+createMachine.title = 'Crear máquina';
 
 export const getServerSideProps = async (contex) => {
   const session = await getSession(contex);

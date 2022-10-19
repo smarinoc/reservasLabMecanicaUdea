@@ -46,7 +46,7 @@ const UserRegistrar = () => {
   return (
     <div className='flex flex-col drop-shadow-sm border-2 px-8 w-full gap-5 py-5 bg-white items-center'>
       <span className='text-xl font-semibold mx-auto text-gray-700'>
-        Sólo correos asociados a google
+        Solo correos asociados a Google
       </span>
       <form
         onSubmit={handleSubmit(addEmail)}
@@ -82,7 +82,7 @@ const UserRegistrar = () => {
       <Button
         isSubmit={false}
         onClick={registerEmails}
-        text='Habilitar Usuarios'
+        text='Habilitar correos'
         className='px-7'
       />
     </div>

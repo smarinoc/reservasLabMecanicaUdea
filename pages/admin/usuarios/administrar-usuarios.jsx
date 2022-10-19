@@ -16,6 +16,8 @@ UserAdmin.auth = {
   role: ['admin'],
 };
 
+UserAdmin.title = 'Administrar usuarios';
+
 export const getServerSideProps = async (contex) => {
   const session = await getSession(contex);
   return {

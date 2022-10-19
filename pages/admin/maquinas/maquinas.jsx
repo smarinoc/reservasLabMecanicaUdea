@@ -40,6 +40,8 @@ maquinas.auth = {
   role: ['admin'],
 };
 
+maquinas.title = 'Máquinas';
+
 export const getServerSideProps = async (contex) => {
   const session = await getSession(contex);
   return {

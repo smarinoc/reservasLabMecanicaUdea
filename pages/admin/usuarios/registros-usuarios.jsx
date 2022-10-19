@@ -39,7 +39,7 @@ const UserRecords = () => {
       filter: 'equals',
     },
     {
-      Header: 'Típo de documento',
+      Header: 'Tipo de documento',
       accessor: 'documentType',
       Filter: SelectFilter,
       filter: 'equals',
@@ -57,7 +57,7 @@ const UserRecords = () => {
       filter: 'equals',
     },
     {
-      Header: 'Télefono',
+      Header: 'Teléfono',
       accessor: 'phoneNumber',
       Filter: TextFilter,
       filter: 'text',
@@ -78,6 +78,8 @@ export default UserRecords;
 UserRecords.auth = {
   role: ['admin'],
 };
+
+UserRecords.title = 'Registros de usuarios';
 
 export const getServerSideProps = async (contex) => {
   const session = await getSession(contex);

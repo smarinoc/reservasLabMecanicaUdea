@@ -73,6 +73,8 @@ const MachineDetails = () => {
 
 export default MachineDetails;
 
+MachineDetails.title = 'Detalles';
+
 export const getServerSideProps = async (contex) => {
   const session = await getSession(contex);
   return {

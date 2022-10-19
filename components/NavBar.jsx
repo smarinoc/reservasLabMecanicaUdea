@@ -1,6 +1,7 @@
 import React from 'react';
 import { signOut, signIn } from 'next-auth/react';
 import ButtonMenu from 'components/ButtonMenu';
+import Link from 'next/link';
 
 const NavBar = ({ rol }) => (
   <nav className='bg-gray-800 w-full px-2 sm:px-6 lg:px-8'>
@@ -13,7 +14,7 @@ const NavBar = ({ rol }) => (
                 name='Máquinas'
                 options={[
                   {
-                    name: 'Catalogo máquinas',
+                    name: 'Catálogo máquinas',
                     href: '/admin/maquinas/maquinas',
                   },
                   {
@@ -69,27 +70,27 @@ const NavBar = ({ rol }) => (
           )}
           {rol === 'user' ? (
             <div className='flex space-x-4'>
-              <a
+              <Link
                 key='Reservar'
                 href='/'
                 className='text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium'
               >
                 Reservar
-              </a>
-              <a
+              </Link>
+              <Link
                 key='Mis reservas'
                 href='/user/reservaciones'
                 className='text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium'
               >
                 Mis reservas
-              </a>
-              <a
+              </Link>
+              <Link
                 key='Formulario'
                 href='/user/formulario'
                 className='text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium'
               >
                 Formulario
-              </a>
+              </Link>
             </div>
           ) : (
             <></>
@@ -100,7 +101,7 @@ const NavBar = ({ rol }) => (
               type='button'
               className='text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium'
               onClick={() => {
-                signOut();
+                signOut({ callbackUrl: '/' });
               }}
             >
               Cerrar sesión
@@ -110,7 +111,7 @@ const NavBar = ({ rol }) => (
               type='button'
               className='text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium'
               onClick={() => {
-                signIn('google');
+                signIn('google', { callbackUrl: '/' });
               }}
             >
               Iniciar sesión

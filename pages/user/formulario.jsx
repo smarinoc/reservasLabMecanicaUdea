@@ -59,8 +59,8 @@ const form = () => {
 
   const DocumentTypeOpc = [
     {
-      value: 'cédula de ciudadania',
-      label: 'Cédula de ciudadania',
+      value: 'cédula de ciudadanía',
+      label: 'Cédula de ciudadanía',
     },
     {
       value: 'documento de identidad',
@@ -177,6 +177,8 @@ export default form;
 form.auth = {
   role: ['user'],
 };
+
+form.title = 'Formulario';
 
 export const getServerSideProps = async (contex) => {
   const session = await getSession(contex);

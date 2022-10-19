@@ -69,7 +69,7 @@ const Home = () => {
 
   const validate = () => {
     if (!session) {
-      toast.error('Inicie sesión ');
+      toast.error('Inicie sesión');
       return false;
     }
 
@@ -103,7 +103,7 @@ const Home = () => {
     });
     switch (res.data.createReservation.id) {
       case '-1':
-        toast.error('El usuario ya tiene el limite de reservas activa');
+        toast.error('El usuario ya tiene el límite de reservas activa');
         break;
       case '-2':
         toast.error('La máquina ya se encuentra reservada');
@@ -120,7 +120,7 @@ const Home = () => {
   return (
     <div className='flex flex-col items-center pb-10'>
       <span className='text-2xl font-semibold mx-auto text-gray-700 pt-10'>
-        Eliga un horario
+        Elige un horario
       </span>
       <Schedule
         onItemSchedule={onItemSchedule}
@@ -128,7 +128,7 @@ const Home = () => {
         type='reserve'
       />
       <span className='text-2xl font-semibold mx-auto text-gray-700 pt-10'>
-        Eliga una Máquina
+        Elige una Máquina
       </span>
       <CatalogMachines
         type='reserve'
@@ -166,6 +166,8 @@ const Home = () => {
 };
 
 export default Home;
+
+Home.title = 'Reservar';
 
 export const getServerSideProps = async (contex) => {
   const session = await getSession(contex);

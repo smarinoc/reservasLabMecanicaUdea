@@ -23,7 +23,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }) {
     <SessionProvider session={session}>
       <ApolloProvider client={client}>
         <Head>
-          <title>{pageProps.name}</title>
+          <title>{Component.title}</title>
         </Head>
         <ToastContainer
           position='top-center'

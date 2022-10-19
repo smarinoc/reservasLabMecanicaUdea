@@ -47,4 +47,20 @@ export default NextAuth({
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
+  events: {
+    createUser: async ({ user }) => {
+      await prisma.profile.update({
+        where: {
+          email: user.email,
+        },
+        data: {
+          user: {
+            connect: {
+              id: user.id,
+            },
+          },
+        },
+      });
+    },
+  },
 });
