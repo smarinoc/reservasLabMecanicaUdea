@@ -25,18 +25,25 @@ export default NextAuth({
       return profile.email_verified && checkEmail(profile.email);
     },
     async session({ user }) {
-      const modifiedSession = await prisma.session.findFirst({
+
+      const profile=await prisma.profile.findUnique({
+        where: {
+          email: user.email
+        }
+      })
+
+      let modifiedSession = await prisma.session.findFirst({
         where: {
           userId: user.id,
-        },
+        }, 
         include: {
-          user: {
-            include: {
-              profile: true,
-            },
-          },
-        },
-      });
+          user: true
+      }});
+
+      modifiedSession = {
+        ...modifiedSession,
+          profile: profile
+        }
       return modifiedSession;
     },
   },

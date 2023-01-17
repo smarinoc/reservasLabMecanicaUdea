@@ -40,7 +40,6 @@ model User {
   emailVerified DateTime?
   image         String?
   profileId     String?
-  rol           Rol           @default(user)
   accounts      Account[]
   sessions      Session[]
   profile       Profile?
@@ -59,6 +58,7 @@ model Profile {
   document     String?
   userType     String?
   phoneNumber  String?
+  rol          Rol          @default(user)
   createdAt    DateTime     @default(now())
   updatedAt    DateTime     @updatedAt
 }

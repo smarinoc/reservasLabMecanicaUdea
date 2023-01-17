@@ -3,13 +3,13 @@ import React from 'react';
 
 const Auth = ({ children }) => {
   const { data: session } = useSession();
-  if (children.type.auth.role.map((rol) => rol).includes(session?.user.rol)) {
-    if (session?.user.rol === 'admin') {
+  if (children.type.auth.role.map((rol) => rol).includes(session?.profile.rol)) {
+    if (session?.profile.rol === 'admin') {
       return children;
     }
     if (
-      session?.user.rol === 'user' &&
-      session?.user.profile.state !== 'inhabilitado'
+      session?.profile.rol === 'user' &&
+      session?.profile.state !== 'inhabilitado'
     ) {
       return children;
     }

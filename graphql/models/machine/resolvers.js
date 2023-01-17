@@ -103,8 +103,8 @@ const MachineResolvers = {
   Mutation: {
     createMachine: async (parent, args) => {
       let url = '';
-      if (args.machine.image.file) {
-        url = await uploadCloudinary(args.machine.image.file);
+      if (args.machine.image) {
+        url = await uploadCloudinary(args.machine.image);
       }
       return await prisma.machine.create({
         data: {
@@ -141,12 +141,10 @@ const MachineResolvers = {
         return find === undefined;
       });
 
-      let url;
-      if (args.machine.image.file) {
-        url = await uploadCloudinary(args.machine.image.file);
-      } else {
-        url = args.machine.image;
-      }
+      let url= '';
+      if (args.machine.image) {
+        url = await uploadCloudinary(args.machine.image);
+      } 
       await prisma.machine.update({
         where: {
           id: args.machine.id,

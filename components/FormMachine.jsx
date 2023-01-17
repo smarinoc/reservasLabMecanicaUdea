@@ -14,7 +14,7 @@ const FormMachine = ({ machine, onSubmit, onDelete }) => {
     machine?.recommendations || []
   );
   const [amount, setAmount] = useState(machine?.amount || 1);
-  const [image, setImage] = useState(machine?.image || []);
+  const [image, setImage] = useState(machine?.image || '');
   const [machineUnits, setMachineUnits] = useState(
     machine?.machineUnits.map((item) => ({
       location: item.location,
@@ -81,10 +81,11 @@ const FormMachine = ({ machine, onSubmit, onDelete }) => {
       toast.error('Ingrese todos los campos de ubicación y serial');
     }
 
-    if (!image[0]?.file && !image) {
+    if (!image) {
       valid = false;
       toast.error('Seleccione una foto');
     }
+
     return valid;
   };
 
@@ -109,7 +110,7 @@ const FormMachine = ({ machine, onSubmit, onDelete }) => {
             await onSubmit({
               id: machine?.id,
               name: data.name,
-              image: image[0]?.file || image,
+              image: image,
               description: data.description,
               recommendations,
               amount: parseInt(data.amount, 10),

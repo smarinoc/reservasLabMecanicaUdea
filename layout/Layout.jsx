@@ -16,7 +16,7 @@ const Layout = ({ children }) => {
   return (
     <LayoutContext.Provider value={{ loading, setLoading }}>
       <div className='flex flex-col justify-items-center w-full'>
-        <NavBar rol={session?.user.rol} />
+        <NavBar rol={session?.profile.rol} />
         <Backdrop
           sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
           open={loading}
